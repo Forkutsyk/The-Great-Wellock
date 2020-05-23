@@ -45,7 +45,7 @@ def title_screen_selections():
     elif option.lower() == ("load"):
         load_game()
     while option.lower() not in ['play', 'help', 'quit', 'load']:
-        print("Please enter a valid command")
+        print("\n      Please enter a valid command\n")
         title_screen_selections()
 
 def title_screen():
@@ -134,7 +134,6 @@ _________________
 """
 ZONENAME = ''
 DESCRIPTION = 'description'
-EXAMINATION = 'examine'
 SOLVED = False
 UP = 'up', 'north'
 DOWN = 'down', 'south'
@@ -147,164 +146,149 @@ solved_places = {'a1': False, 'a2': False, 'a3': False, 'a4': False,
                  'd1': False, 'd2': False, 'd3': False, 'd4': False
                  }
 zonemap = {
-    'a1': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+    'a0': {
+        ZONENAME: 'Docks',
+        DESCRIPTION: " The initial location is the main port of the kingdom of Wellock. You mysteriously appeared at this location. The port is most of the infrastructure of the kingdom.",
         SOLVED: False,
-        UP: "",
-        DOWN: "b1",
+        UP: "a3",
+        DOWN: "",
         LEFT: "",
-        RIGHT: "a2"
-    },
-    'a2': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
-        SOLVED: False,
-        UP: "",
-        DOWN: "b2",
-        LEFT: "a1",
-        RIGHT: "a3"
+        RIGHT: ""
     },
     'a3': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'House of a Thousand Faces',
+        DESCRIPTION: "Area with taverns where you can eat and stay overnight. It is better not to walk here in the evening.",
         SOLVED: False,
-        UP: "",
-        DOWN: "b3",
+        UP: "b3",
+        DOWN: "a0",
         LEFT: "a2",
         RIGHT: "a4"
     },
-    'a4': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+    'a2': {
+        ZONENAME: 'Sharandar',
+        DESCRIPTION: "The ancient Feywild homeland of the Iliyanbruen elves.",
         SOLVED: False,
-        UP: "",
-        DOWN: "b4",
-        LEFT: "a3",
+        UP: "b2",
+        DOWN: "",
+        LEFT: "a1",
+        RIGHT: "a3"
+    },
+    'a1': {
+        ZONENAME: 'Stronghold',
+        DESCRIPTION: "Area with castles of large guilds.",
+        SOLVED: False,
+        UP: "b1",
+        DOWN: "",
+        LEFT: "",
+        RIGHT: "a2"
+    },
+    'a4': {
+        ZONENAME: 'Dwarven Valley',
+        DESCRIPTION: """Dwarven Valley, has been corrupted by dwarves from the Hammerstone dig up black ice, 
+        and the long dead barbarians who once served Akar Kessell rise once more to wage war in the name of their undying master.""",
+        SOLVED: False,
+        UP: "c4",
+        DOWN: "",
+        LEFT: "d3",
+        RIGHT: ""
+    },
+    'a5': {
+        ZONENAME: 'Icespire Peak',
+        DESCRIPTION: "The place of origin of black ice extracted by dwarves. Dangerous place, it seems that here can survive or very skilled heroes, or very stupid",
+        SOLVED: False,
+        UP: "b5",
+        DOWN: "",
+        LEFT: "a4",
         RIGHT: ""
     },
     'b1': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'Blacklake',
+        DESCRIPTION: "",
         SOLVED: False,
-        UP: "a1",
-        DOWN: "c1",
+        UP: "с1",
+        DOWN: "a1",
         LEFT: "",
         RIGHT: "b2"
     },
     'b2': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same... ",
+        ZONENAME: 'Nezeris',
+        DESCRIPTION: " ",
         SOLVED: False,
-        UP: "a2",
-        DOWN: "c2",
-        LEFT: "b1",
-        RIGHT: "b3"
+        UP: "c2",
+        DOWN: "a2",
+        LEFT: "a1",
+        RIGHT: "a3"
     },
     'b3': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'Absol',
+        DESCRIPTION: "",
         SOLVED: False,
-        UP: "a3",
-        DOWN: "c3",
+        UP: "c3",
+        DOWN: "a3",
         LEFT: "b2",
         RIGHT: "b4"
     },
     'b4': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'Cardcaster',
+        DESCRIPTION: "Cardcaster is built into the side of a mountain, and is known for having tough warriors. The ruler is fair and just, respected by the populace. ",
         SOLVED: False,
-        UP: "a4",
-        DOWN: "c4",
+        UP: "c4",
+        DOWN: "a4",
         LEFT: "b3",
+        RIGHT: "b5"
+    },
+    'b5': {
+        ZONENAME: 'Arahead',
+        DESCRIPTION: "",
+        SOLVED: False,
+        UP: "c5",
+        DOWN: "a5",
+        LEFT: "a4",
         RIGHT: ""
     },
     'c1': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'Wyllowwood',
+        DESCRIPTION: "",
         SOLVED: False,
-        UP: "b1",
+        UP: "",
         DOWN: "d1",
         LEFT: "",
         RIGHT: "c2"
     },
     'c2': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'Brickell Whyte',
+        DESCRIPTION: "",
         SOLVED: False,
-        UP: "b2",
+        UP: "",
         DOWN: "d2",
         LEFT: "c1",
         RIGHT: "c3"
     },
     'c3': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'The Well of Dragons ',
+        DESCRIPTION: "",
         SOLVED: False,
-        UP: "b3",
-        DOWN: "d3",
+        UP: "",
+        DOWN: "b3",
         LEFT: "c2",
         RIGHT: "c4"
     },
     'c4': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+        ZONENAME: 'The Yarlford',
+        DESCRIPTION: "",
         SOLVED: False,
-        UP: "b3",
-        DOWN: "d3",
+        UP: "",
+        DOWN: "b4",
         LEFT: "c3",
-        RIGHT: ""
+        RIGHT: "c5"
     },
-    'd1': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
+    'c5': {
+        ZONENAME: 'The final town',
+        DESCRIPTION: "",
         SOLVED: False,
-        UP: "c1",
-        DOWN: "",
-        LEFT: "",
-        RIGHT: "d2"
-    },
-    'd2': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
-        SOLVED: False,
-        UP: "c2",
-        DOWN: "",
-        LEFT: "d1",
-        RIGHT: "d3"
-    },
-    'd3': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
-        SOLVED: False,
-        UP: "c3",
-        DOWN: "",
-        LEFT: "d2",
-        RIGHT: "d4"
-    },
-    'd4': {
-        ZONENAME: 'Home',
-        DESCRIPTION: "It`s your home!",
-        EXAMINATION: "Your home looks the same ",
-        SOLVED: False,
-        UP: "c4",
-        DOWN: "",
-        LEFT: "d3",
+        UP: "",
+        DOWN: "b5",
+        LEFT: "c4",
         RIGHT: ""
     }
 }
@@ -312,20 +296,20 @@ zonemap = {
 
 ##### GAME INTERACTIVITY #####
 def location_print():
-    print('\n' + ('#' * (4 + len(myPlayer.location))))
-    print('# ' + myPlayer.location.upper() + ' #')
-    print('\n' + ('#' * (4 + len(myPlayer.location))))
+    print('\n' + (" " + '#' * (4 + len(zonemap[myPlayer.location][ZONENAME]))))
+    print(" " + '# ' + zonemap[myPlayer.location][ZONENAME].upper() + ' #')
+    print('\n' + (" " + '#' * (4 + len(zonemap[myPlayer.location][ZONENAME]))))
     print('\n' + (zonemap[myPlayer.location][DESCRIPTION]))
 
 
 #### PRINTING HERO STATS ####
 def show_stats(action):
-    print("Heroes name: ", myPlayer.name)
-    print("Heroes class: ", myPlayer.job)
-    print("HP: ", myPlayer.maxHP)
-    print("MP: ", myPlayer.maxMP)
-    print("Strength: ", myPlayer.STR)
-    print("Spels: ")
+    print(" Heroes name: ", myPlayer.name)
+    print(" Heroes class: ", myPlayer.job)
+    print(" HP: ", myPlayer.maxHP)
+    print(" MP: ", myPlayer.maxMP)
+    print(" Strength: ", myPlayer.STR)
+    print(" Spels: ")
     if myPlayer.job == "warrior":
         FireSword.show_details()
         blizzard.show_details()
@@ -347,12 +331,13 @@ def prompt():
     print(" What would you like to do?")
     print(" ! print 'help' to see abilities\n")
     action = input(" > ")
-    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help"]
+    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help","map"]
     while action.lower() not in acceptable_actions:
-        print("Unknown action, try again.\n")
-        action = input("> ")
+        print(" Unknown action, try again.\n")
+        action = input(" > ")
     if action.lower() == 'quit':
-        ask = input(" Would you like to save the game Y/N?")
+        print(" Would you like to save the game Y/N?", "\n")
+        ask = input(" > ")
         if ask.lower() == "y":
             saveGame = open('savegame.txt', 'wb')
             saveValues = (myPlayer.name, myPlayer.job, myPlayer.maxHP, myPlayer.maxMP, myPlayer.maxDEF, myPlayer.location, myPlayer.game_over, myPlayer.STR)
@@ -364,7 +349,7 @@ def prompt():
             sys.exit()
         else:
             print(" I dont know such komand please try again")
-            ask = input(" Would you like to save the game Y/N?").lower()
+            ask = input(" Would you like to save the game Y/N?"+"\n").lower()
             if ask == "y":
                 Save = player()
                 pickle.dump(Save, open("save_game.dat", "wb"))
@@ -378,6 +363,8 @@ def prompt():
         player_move(action.lower())
     elif action.lower() in ['examine', 'inspect', 'interact', 'look']:
         player_examine(action.lower())
+    elif action.lower() == "map":
+        location_print()
     elif action.lower() == "stats":
         show_stats(action.lower())
     elif action.lower() == "help":
@@ -385,8 +372,9 @@ def prompt():
 
 
 def player_move(myAction):
-    ask = "Where would you like to move to?\n"
-    dest = input(ask)
+    ask = " Where would you like to move to?\n"
+    print(ask)
+    dest = input(" ")
     if dest in ['up', 'west']:
         destination = zonemap[myPlayer.location][UP]
         movement_handler(destination)
@@ -402,17 +390,17 @@ def player_move(myAction):
 
 
 def movement_handler(destination):
-    print("\n" + "You have moved to the " + destination + ".")
+    print("\n" + " You have moved to the " + destination + ".")
     myPlayer.location = destination
     location_print()
 
 
 def player_examine(action): # Доделать
     if zonemap[myPlayer.location][SOLVED]:
-        print("You have already exhausted this zone.")
+        print(" You have already exhausted this zone.")
     else:
         # i = int(random.randrange(1, 16))
-        print("You can trigger a quest here.")
+        print(" You can trigger a quest here.")
        # if i == 1:
        #     print("""
        #              ~ You saw a strange young man. He wanna to say smth to you. But your ... frightens him.
@@ -436,6 +424,7 @@ NPC = "\x1b[1;36;40m"
 END = '\x1b[0m'
 
 def load_game():
+    os.system('cls')
     loadGame = open('savegame.txt', 'rb')
     loadValues = pickle.load(loadGame)
     myPlayer.name = loadValues[0]
