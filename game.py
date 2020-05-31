@@ -5,15 +5,15 @@ import sys
 import os
 import time
 from mage import Spell
-from character import player, enemy
+from character import Player, Enemy
 from diologs import dialogs
 import pickle
 import random
 
 #### Player Setup ####
 
-myPlayer = player()
-myEnemy = enemy()
+myPlayer = Player()
+myEnemy = Enemy()
 ### Create Black Magic
 fire = Spell("Fire", 25, 60, 0, "black")
 thunder = Spell("Thunder", 25, 60, 0, "black")
@@ -47,6 +47,7 @@ def title_screen_selections():
     while option.lower() not in ['play', 'help', 'quit', 'load']:
         print("\n      Please enter a valid command\n")
         title_screen_selections()
+
 
 def title_screen():
     os.system('cls')
@@ -86,7 +87,6 @@ def title_screen():
     title_screen_selections()
 
 
-
 def help_menu(): # доделать
     print("")
     print("                         ", '#' * 45)
@@ -110,6 +110,7 @@ def help_menu(): # доделать
     print("                         ", "#" * 45)
     print("                         ", "#" * 45)
     title_screen_selections()
+
 
 def game_help(action):  # доделать
     print(""" 
@@ -329,6 +330,7 @@ def show_stats(action):
         bloodKing.show_details()
         DarkDaggerTechnique.show_details()
 
+
 def show_enemy_stats():
     print(" Enemy name: ", myEnemy.name)
     print(" Enemy class: ", myEnemy.job)
@@ -340,6 +342,7 @@ def show_enemy_stats():
 
 def purse_print():
     print(" You`ve had", myPlayer.cash, "coins. \n")
+
 
 def prompt():
     print("\n" + " =======================")
@@ -366,7 +369,7 @@ def prompt():
             print(" I dont know such komand please try again")
             ask = input(" Would you like to save the game Y/N?"+"\n").lower()
             if ask == "y":
-                Save = player()
+                Save = Player()
                 pickle.dump(Save, open("save_game.dat", "wb"))
                 sys.exit()
             elif ask == "n":
@@ -386,6 +389,7 @@ def prompt():
         show_stats(action.lower())
     elif action.lower() == "help":
         game_help(action.lower())
+
 
 def player_move(myAction):
     ask = " Where would you like to move to?\n"
@@ -483,6 +487,7 @@ def randome_enemy():
         print(" On the way you met an aggressive wolf")
         fight()
 
+
 def main_game_loop():
     while myPlayer.game_over is False:
         prompt()
@@ -496,22 +501,23 @@ DANGER = "\x1b[1;31;40m"
 NPC = "\x1b[1;36;40m"
 END = '\x1b[0m'
 
+
 def load_game():
     os.system('cls')
-    loadGame = open('savegame.txt', 'rb')
-    loadValues = pickle.load(loadGame)
-    myPlayer.name = loadValues[0]
-    myPlayer.job = loadValues[1]
-    myPlayer.maxHP = loadValues[2]
-    myPlayer.maxMP = loadValues[3]
-    myPlayer.maxDEF = loadValues[4]
-    myPlayer.location = loadValues[5]
-    myPlayer.game_over = loadValues[6]
-    myPlayer.STR = loadValues[7]
-    myPlayer.level = loadValues[8]
-    myPlayer.cash = loadValues[9]
-    loadGame.close()
+    with open('savegame.txt', 'rb') as game_save:
+        load_values = pickle.load(game_save)
+    myPlayer.name = load_values[0]
+    myPlayer.job = load_values[1]
+    myPlayer.maxHP = load_values[2]
+    myPlayer.maxMP = load_values[3]
+    myPlayer.maxDEF = load_values[4]
+    myPlayer.location = load_values[5]
+    myPlayer.game_over = load_values[6]
+    myPlayer.STR = load_values[7]
+    myPlayer.level = load_values[8]
+    myPlayer.cash = load_values[9]
     main_game_loop()
+
 
 def fight():
     """Damage is calculated correctly but is not deducted
@@ -552,6 +558,7 @@ def fight():
             break
         else:
             print("\nNiestety,", choice, "nie jest prawidłowym wyborem.")
+
 
 def setup_game():
     os.system('cls')

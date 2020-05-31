@@ -1,6 +1,7 @@
 import random
 
-class player:
+
+class Player:
     def __init__(self):
         self.name = ''
         self.job = ''
@@ -10,12 +11,15 @@ class player:
         self.spels = []
         self.location = 'a0'
         self.cash = 0
-        self.level = 0
         self.xp = 0
         self.game_over = False
         self.STR = 0
         self.HP = self.maxHP
         self.MP = self.maxMP
+
+    @property
+    def level(self):
+        return (self.xp // 100) + 1
 
     def fight(self, enemy):
         damage = self.STR
@@ -33,17 +37,18 @@ class player:
 
     def flee(self):
         print("Uciekasz z pola walki.")
-        main_game_loop()
+        # main_game_loop()
 
     def heal(self):
-        self.maxHP += random.randrange(15, 30)
+        self.HP += random.randrange(15, 30)
         if self.maxHP > self.HP:
-             self.maxHP = self.HP
+             self.HP = self.HP
 
     def die(self):
         print("Jestem martwy. ~", self.name)
 
-class enemy(object):
+
+class Enemy(object):
     def __init__(self):
         self.name = ''
         self.job = ''
@@ -58,7 +63,6 @@ class enemy(object):
         enemy.maxHP -= dmg
         print(self.name, "atakuje.\n")
         print(dmg)
-
 
     def show(self):
         print("Zostało mi", self.maxHP, "hp. ~", self.name, "\n")
