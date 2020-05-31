@@ -19,18 +19,22 @@ class player:
 
     def fight(self, enemy):
         damage = self.STR
-        damage -= self.maxDEF
-        self.maxHP -= damage
-        if self.maxHP > 1:
-            self.maxHP += 0
+        # damage -= self.maxDEF
+        # self.maxHP -= damage
+        damage -= enemy.maxDEF
+        enemy.maxHP -= damage
+        if enemy.maxHP < 0:
+            enemy.maxHP = 0
         print("Atakujesz.\n")
         print(damage)
 
     def show(self):
         print(self.name, "Zostało mi", self.maxHP, "hp. ", "\n")
+
     def flee(self):
         print("Uciekasz z pola walki.")
         main_game_loop()
+
     def heal(self):
         self.maxHP += random.randrange(15, 30)
         if self.maxHP > self.HP:
@@ -50,8 +54,8 @@ class enemy(object):
 
     def walcz(self, enemy):
         dmg = self.STR
-        dmg -= self.maxDEF
-        self.maxHP -= dmg
+        dmg -= enemy.maxDEF
+        enemy.maxHP -= dmg
         print(self.name, "atakuje.\n")
         print(dmg)
 
@@ -61,6 +65,3 @@ class enemy(object):
 
     def die(self):
         print("Jestem martwy. ~", self.name)
-
-
-

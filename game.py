@@ -660,4 +660,5 @@ def setup_game():
     main_game_loop()
 
 
-title_screen()
+if __name__ == '__main__':
+    title_screen()
