@@ -27,13 +27,12 @@ class Quests:
         def conversation_loop(response=None):
             if not response:
                 print("""A stranger offers you to buy a lottery ticket.\nIf you win you will receive 25 coins. Are you interested?\nThe ticket costs 4 coins""")
-            response = input("""
-                        Choose one of the below answers\n1. Yes\n2. No\n""")
+            response = input("""Choose one of the below answers\n1. Yes\n2. No\n""")
             response = str(response).lower()
             if response in ('yes', '1'):
                 self.parent.myPlayer.cash -= 4
                 self.parent.myPlayer.xp += 5
-                result = random.randint(1, 10)
+                result = random.randint(1, 11)
                 if result == 10:
                     print("""YOU WON!!!""")
                     print("""YOU GOT 25 COINS PRIZE!!!""")
