@@ -72,7 +72,7 @@ class Player:
                 destination = zonemap[self.location][RIGHT]
                 self.movement_handler(destination)
         elif dest in ['down', 'south']:
-            if zonemap[self.location][DOWN] not in none_move:
+            if zonemap[self.location][DOWN] in none_move:
                 print(" !!! Here is a big wall !!!")
             else:
                 destination = zonemap[self.location][DOWN]

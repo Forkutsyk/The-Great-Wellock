@@ -97,8 +97,8 @@ zonemap = {
         SOLVED: False,
         UP: "c2",
         DOWN: "a2",
-        LEFT: "a1",
-        RIGHT: "a3"
+        LEFT: "b1",
+        RIGHT: "b3"
     },
     'b3': {
         ZONENAME: 'Absol',
@@ -124,7 +124,7 @@ zonemap = {
         SOLVED: False,
         UP: "c5",
         DOWN: "a5",
-        LEFT: "a4",
+        LEFT: "b4",
         RIGHT: "3"
     },
     'c1': {
@@ -132,7 +132,7 @@ zonemap = {
         DESCRIPTION: "",
         SOLVED: False,
         UP: "4",
-        DOWN: "d1",
+        DOWN: "b1",
         LEFT: "2",
         RIGHT: "c2"
     },
@@ -141,7 +141,7 @@ zonemap = {
         DESCRIPTION: "",
         SOLVED: False,
         UP: "4",
-        DOWN: "d2",
+        DOWN: "b2",
         LEFT: "c1",
         RIGHT: "c3"
     },

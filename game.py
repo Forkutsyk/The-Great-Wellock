@@ -89,9 +89,9 @@ class Game:
         self.show_map()
 
     def show_map(self):
-        map_coordinates = [['c1', 'c2', 'c3', 'c4'],
-                           ['b1', 'b2', 'b3', 'b4'],
-                           ['a1', 'a2', 'a3', 'a4']]
+        map_coordinates = [['c1', 'c2', 'c3', 'c4', 'c5'],
+                           ['b1', 'b2', 'b3', 'b4', 'b5'],
+                           ['a1', 'a2', 'a3', 'a4', 'a5']]
         for r_idx, row in enumerate(map_coordinates):
             for l_idx, loc in enumerate(row):
                 if loc == self.myPlayer.location:
