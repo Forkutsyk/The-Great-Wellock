@@ -12,9 +12,71 @@ from global_variables import *
 from quests import Quests
 
 
+#### COLORED TEXT IN PROMPT
+YOU = '\x1b[1;34;40m'
+SYSTEM = "\x1b[1;32;40m"
+DANGER = "\x1b[1;31;40m"
+NPC = "\x1b[1;36;40m"
+END = '\x1b[0m'
+
+
+class Text:
+    dialogs = dialogs()
+    YOU = '\x1b[1;34;40m'
+    SYSTEM = "\x1b[1;32;40m"
+    DANGER = "\x1b[1;31;40m"
+    NPC = "\x1b[1;36;40m"
+    END = '\x1b[0m'
+
+    @classmethod
+    def you(cls, text, begin_txt='YOU', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.YOU + text + cls.END
+        else:
+            val = cls.YOU + f"\n {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+    @classmethod
+    def system(cls, text, begin_txt='SYSTEM', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.SYSTEM + text + cls.END
+        else:
+            val = cls.SYSTEM + f" {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+    @classmethod
+    def npc(cls, text, begin_txt='Stranger', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.NPC + text + cls.END
+        else:
+            val = cls.NPC + f" {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+    @classmethod
+    def danger(cls, text, begin_txt='Strange voice', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.DANGER + text + cls.END
+        else:
+            val = cls.DANGER + f" {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+
 #### Player Setup ####
 class Game:
     def __init__(self):
+        self.text = Text()
         self.myPlayer = Player(self)
         self.myEnemy = Enemy(self)
         self.quests = Quests(self)
@@ -115,7 +177,7 @@ game = Game()
 
 def flee():
     print(" Uciekasz z pola walki.")
-    main_game_loop()
+    # main_game_loop()
 
 
 ##### Title Screen ####
@@ -321,12 +383,7 @@ def main_game_loop():
         prompt()
 
 
-#### COLORED TEXT IN PROMPT
-YOU = '\x1b[1;34;40m'
-SYSTEM = "\x1b[1;32;40m"
-DANGER = "\x1b[1;31;40m"
-NPC = "\x1b[1;36;40m"
-END = '\x1b[0m'
+
 
 def shop():
     print(" - Jou`re in the shop -\n")
