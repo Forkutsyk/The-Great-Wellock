@@ -3,7 +3,6 @@
 
 import sys
 import os
-import time
 from mage import Spell
 from character import Player, Enemy
 from diologs import dialogs
@@ -42,11 +41,9 @@ class Game:
     cut_scene = dialogs()
 
     def fight(self):
-        """Damage is calculated correctly but is not deducted
-            Unknown if heling works ... """
         show_enemy_stats()
         choice = None
-        while choice != "0" and self.myEnemy.maxHP > 0 and self.myPlayer.maxHP > 0:
+        while choice != "0" and self.myEnemy.HP > 0 and self.myPlayer.HP > 0:
             print("""    Fight
 
             0 - uciekaj
@@ -58,12 +55,12 @@ class Game:
             print()
             if choice == "1":
                 self.myPlayer.fight(self.myEnemy)
-                if self.myEnemy.maxHP < 1:
+                if self.myEnemy.HP < 1:
                     self.myEnemy.die()
                     break
                 self.myEnemy.show()
                 self.myEnemy.walcz(self.myPlayer)
-                if self.myPlayer.maxHP < 1:
+                if self.myPlayer.HP < 1:
                     self.myPlayer.die()
                     break
                 self.myPlayer.show()
@@ -71,12 +68,12 @@ class Game:
                 self.myPlayer.heal()
                 self.myPlayer.show()
                 self.myEnemy.walcz(self.myPlayer)
-                if self.myPlayer.maxHP < 1:
+                if self.myPlayer.HP < 1:
                     self.myPlayer.die()
                     break
                 self.myPlayer.show()
             elif choice == "0":
-                self.myPlayer.flee()
+                flee()
                 break
             else:
                 print("\nNiestety,", choice, "nie jest prawidłowym wyborem.")
@@ -85,17 +82,28 @@ class Game:
         print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
         print(" " + '# ' + zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
         print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
-        print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION]))
-        self.show_map()
+        print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
+
 
     def show_map(self):
-        map_coordinates = [['c1', 'c2', 'c3', 'c4', 'c5'],
-                           ['b1', 'b2', 'b3', 'b4', 'b5'],
-                           ['a1', 'a2', 'a3', 'a4', 'a5']]
+        map_coordinates = [['1', '1', '1', '1', '1', '1',  '1'],
+                           ['1', 'c1', 'c2', 'c3', 'c4', 'c5', '1', 'd3'],
+                           ['1', 'b1', 'b2', 'b3', 'b4', 'b5', '1', 'd2'],
+                           ['1', 'a1', 'a2', 'a3', 'a4', 'a5', '1', 'd1'],
+                           ['1', '1', '1', 'a0', '1', '1',   '1'],
+                           ['1', '1', '1',  '1', '1', '1', '1']]
         for r_idx, row in enumerate(map_coordinates):
             for l_idx, loc in enumerate(row):
                 if loc == self.myPlayer.location:
                     map_coordinates[r_idx][l_idx] = 'X'
+                elif loc == '1':
+                    map_coordinates[r_idx][l_idx] = '#'
+                elif loc == 'd1':
+                    map_coordinates[r_idx][l_idx] = '< District 1'
+                elif loc == 'd2':
+                    map_coordinates[r_idx][l_idx] = '< District 2'
+                elif loc == 'd3':
+                    map_coordinates[r_idx][l_idx] = '< District 3'
                 else:
                     map_coordinates[r_idx][l_idx] = ' '
         for i in map_coordinates:
@@ -103,6 +111,11 @@ class Game:
 
 
 game = Game()
+
+
+def flee():
+    print(" Uciekasz z pola walki.")
+    main_game_loop()
 
 
 ##### Title Screen ####
@@ -124,8 +137,8 @@ def title_screen_selections():
 def title_screen():
     os.system('cls')
     print(SYSTEM + """
-     
-                                                                                                     
+
+
   MMP""MM""YMM   MM                                                            mm        
   P'   MM   `7   MM                                                            MM          
        MM        MMpMMMb.   .gP"Ya       .P"Ybmmm `7Mb,od8  .gP"Ya   ,6"Yb.  mmMMmm         
@@ -133,8 +146,8 @@ def title_screen():
        MM        MM    MM  8M''''''      WmmmP"     MM     8M''''''  ,pm9MM    MM           
        MM        MM    MM  YM.    ,     8M          MM     YM.    , 8M   MM    MM           
      .JMML.    .JMML  JMML. `Mbmmd'      YMMMMMb  .JMML.    `Mbmmd' `Moo9^Yo.  `Mbmo      
-       
-   
+
+
      `7MMF'     A     `7MF'         `7MM  `7MM                     `7MM      
        `MA     ,MA     ,V             MM    MM                       MM      
         VM:   ,VVM:   ,V    .gP"Ya    MM    MM   ,pW"Wq.   ,p6"bo    MM  ,MP'
@@ -142,9 +155,9 @@ def title_screen():
          `MM A'  `MM A'    8M''''''   MM    MM  8M     M8 8M         MM;Mm   
           :MM;    :MM;     YM.    ,   MM    MM  YA.   ,A9 YM.    ,   MM `Mb. 
            VF      VF       `Mbmmd' .JMML..JMML. `Ybmd9'   YMbmd'  .JMML. YA.
-     
-     
-     """+ END)
+
+
+     """ + END)
     print("""
                           ###############################
                           ~~~ Welcome to the Text RPG ~~~
@@ -159,7 +172,7 @@ def title_screen():
     title_screen_selections()
 
 
-def help_menu(): # доделать
+def help_menu():  # доделать
     print("")
     print("                         ", '#' * 45)
     print("                          Written by Poplavskyi Oleksandr")
@@ -202,8 +215,8 @@ def show_stats(action):
     print(" Heroes name: ", game.myPlayer.name)
     print(" Heroes class: ", game.myPlayer.job)
     print(" Heroes level: ", game.myPlayer.level)
-    print(" HP: ", game.myPlayer.maxHP)
-    print(" MP: ", game.myPlayer.maxMP)
+    print(" HP: ", game.myPlayer.HP)
+    print(" MP: ", game.myPlayer.MP)
     print(" Strength: ", game.myPlayer.STR)
     print(" Defense: ", game.myPlayer.maxDEF)
     print(" Spels: ")
@@ -224,12 +237,12 @@ def show_stats(action):
 
 
 def show_enemy_stats():
-    print(" Enemy name: ", game.myEnemy.name)
+    print("\n Enemy name: ", game.myEnemy.name)
     print(" Enemy class: ", game.myEnemy.job)
-    print(" HP: ", game.myEnemy.maxHP)
-    print(" MP: ", game.myEnemy.maxMP)
+    print(" HP: ", game.myEnemy.HP)
+    print(" MP: ", game.myEnemy.MP)
     print(" Strength: ", game.myEnemy.STR)
-    print(" Defense: ", game.myEnemy.maxDEF)
+    print(" Defense: ", game.myEnemy.maxDEF, "\n")
 
 
 def purse_print():
@@ -241,7 +254,7 @@ def prompt():
     print(" What would you like to do?")
     print(" ! print 'help' to see abilities\n")
     action = input(" > ")
-    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help","map", "purse"]
+    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse", "heal"]
     while action.lower() not in acceptable_actions:
         print(" Unknown action, try again.\n")
         action = input(" > ")
@@ -250,7 +263,10 @@ def prompt():
         ask = input(" > ")
         if ask.lower() == "y":
             saveGame = open('savegame.txt', 'wb')
-            saveValues = (game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF, game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.level, game.myPlayer.cash)
+            saveValues = (
+            game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
+            game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp, game.myPlayer.cash,
+            game.myPlayer.HP, game.myPlayer.MP)
             pickle.dump(saveValues, saveGame)
             saveGame.close()
             sys.exit()
@@ -259,7 +275,7 @@ def prompt():
             sys.exit()
         else:
             print(" I dont know such command please try again")
-            ask = input(" Would you like to save the game Y/N?"+"\n").lower()
+            ask = input(" Would you like to save the game Y/N?" + "\n").lower()
             if ask == "y":
                 Save = game.myPlayer
                 pickle.dump(Save, open("save_game.dat", "wb"))
@@ -274,18 +290,22 @@ def prompt():
     elif action.lower() in ['examine', 'inspect', 'interact', 'look']:
         player_examine(action.lower())
     elif action.lower() == "map":
-        game.location_print()
+        game.show_map()
     elif action.lower() == "purse":
         purse_print()
+    elif action.lower() == "heal":
+        game.myPlayer.heal()
     elif action.lower() == "stats":
         show_stats(action.lower())
     elif action.lower() == "help":
         game_help(action.lower())
 
 
-def player_examine(action): # Доделать
+def player_examine(action):  # Доделать
     if zonemap[game.myPlayer.location][SOLVED]:
         print(" You have already exhausted this zone.")
+    elif zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
+        shop()
     else:
         try:
             quest = getattr(game.quests, f'quest_{game.myPlayer.location}')
@@ -300,8 +320,6 @@ def main_game_loop():
     while game.myPlayer.game_over is False:
         prompt()
 
-        # here handle if quest have been solved, boss defeated, explored everything, etc.
-
 
 #### COLORED TEXT IN PROMPT
 YOU = '\x1b[1;34;40m'
@@ -309,6 +327,10 @@ SYSTEM = "\x1b[1;32;40m"
 DANGER = "\x1b[1;31;40m"
 NPC = "\x1b[1;36;40m"
 END = '\x1b[0m'
+
+def shop():
+    print(" - Jou`re in the shop -\n")
+    input(" ")
 
 
 def load_game():
@@ -323,8 +345,10 @@ def load_game():
     game.myPlayer.location = load_values[5]
     game.myPlayer.game_over = load_values[6]
     game.myPlayer.STR = load_values[7]
-    # myPlayer.level = load_values[8]
+    game.myPlayer.xp = load_values[8]
     game.myPlayer.cash = load_values[9]
+    game.myPlayer.HP = load_values[10]
+    game.myPlayer.MP = load_values[11]
     main_game_loop()
 
 
@@ -369,7 +393,9 @@ def setup_game():
     ##### PLAYER STATS
     if game.myPlayer.job == 'warrior':
         game.myPlayer.maxHP = 160
+        game.myPlayer.HP = 160
         game.myPlayer.maxMP = 20
+        game.myPlayer.MP = 20
         game.myPlayer.STR = 45
         game.myPlayer.maxDEF = 15
         game.myPlayer.cash = 0
@@ -377,7 +403,9 @@ def setup_game():
     if game.myPlayer.job == 'mage':
         game.myPlayer.STR = 15
         game.myPlayer.maxHP = 70
+        game.myPlayer.HP = 70
         game.myPlayer.maxMP = 120
+        game.myPlayer.MP = 120
         game.myPlayer.maxDEF = 10
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
@@ -385,7 +413,9 @@ def setup_game():
     if game.myPlayer.job == 'ranger':
         game.myPlayer.STR = 70
         game.myPlayer.maxHP = 90
+        game.myPlayer.HP = 90
         game.myPlayer.maxMP = 60
+        game.myPlayer.MP = 60
         game.myPlayer.maxDEF = 6
         game.myPlayer.cash = 0
         game.myPlayer.spels = [game.bloodKing, game.DarkDaggerTechnique]
@@ -403,7 +433,7 @@ def setup_game():
  Maybe you will know where you are and what is happening here\n\n""" + END
     print(game.cut_scene.dialog)
 
-    game.cut_scene.dialog = NPC + " Old man: " + END +"""Oh young man, you are in the kingdom of Wellock. 
+    game.cut_scene.dialog = NPC + " Old man: " + END + """Oh young man, you are in the kingdom of Wellock. 
           It consists of a total of 16 quarters, we are now in the Blacklake quarter i. 
           After the young princess is kidnapped by the great magician Elminster,
           the King is still looking for a brave hero who will save her from captivity
@@ -412,17 +442,20 @@ def setup_game():
 """
     game.cut_scene.dialog_print0025()
     input(" You > ")
-    game.cut_scene.dialog = ("\n"+NPC + " Old man: " + END +"And remember, on the way between the quarters you can meet a lot of monsters or robbers.\n" + "\n")
+    game.cut_scene.dialog = (
+                "\n" + NPC + " Old man: " + END + "And remember, on the way between the quarters you can meet a lot of monsters or robbers.\n" + "\n")
     game.cut_scene.dialog_print0025()
     print(" ### The old man just disappeared ###\n")
     game.myPlayer.cash += 10
-    print(SYSTEM + " ! You have found 10 coins"+ END)
-    game.cut_scene.dialog = (DANGER+ " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ", game.myPlayer.name, ", the ", game.myPlayer.job, "!\n")
+    print(SYSTEM + " ! You have found 10 coins" + END)
+    game.cut_scene.dialog = (
+    DANGER + " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ",
+    game.myPlayer.name, ", the ", game.myPlayer.job, "!\n")
     game.cut_scene.dialog_print0025()
-    game.cut_scene.dialog = (SYSTEM + " System: " + END, "Good luck, I hope you enjoy the gameplay\n         If you don't die soon...\n         Hehehe.....\n")
+    game.cut_scene.dialog = (SYSTEM + " System: " + END,
+                             "Good luck, I hope you enjoy the gameplay\n         If you don't die soon...\n         Hehehe.....\n")
     game.cut_scene.dialog_print0025()
     input(" You > ")
-
 
     os.system('cls')
     print("")

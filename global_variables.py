@@ -68,7 +68,7 @@ zonemap = {
         DESCRIPTION: """ Dwarven Valley, has been corrupted by dwarves from the Hammerstone dig up black ice, 
  and the long dead barbarians who once served Akar Kessell rise once more to wage war in the name of their undying master.""",
         SOLVED: False,
-        UP: "c4",
+        UP: "b4",
         DOWN: "1",
         LEFT: "a3",
         RIGHT: "a5"

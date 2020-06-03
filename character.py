@@ -16,36 +16,34 @@ class Player:
         self.xp = 0
         self.game_over = False
         self.STR = 0
-        self.HP = self.maxHP
-        self.MP = self.maxMP
+        self.HP = 0
+        self.MP = 0
 
     @property
     def level(self):
         return (self.xp // 100) + 1
 
+    # maxHP ?
     def fight(self, enemy):
         damage = self.STR
         damage -= enemy.maxDEF
-        enemy.maxHP -= damage
-        if enemy.maxHP < 0:
-            enemy.maxHP = 0
-        print("Atakujesz.\n")
+        enemy.HP -= damage
+        if enemy.HP < 0:
+            enemy.HP = 0
+        print(" Atakujesz.\n")
         print(damage)
 
     def show(self):
-        print(self.name, "Zostało mi", self.maxHP, "hp. ", "\n")
-
-    def flee(self):
-        print("Uciekasz z pola walki.")
-        # main_game_loop()
+        print(self.name, " Zostało mi", self.HP, "hp. ", "\n")
 
     def heal(self):
         self.HP += random.randrange(15, 30)
-        if self.maxHP > self.HP:
-             self.HP = self.HP
+        if self.HP > self.maxHP:
+             self.HP = self.maxHP
 
     def die(self):
-        print("Jestem martwy. ~", self.name)
+        print(" Jestem martwy. ~", self.name)
+
 
     def move(self, dest=None):
         if not dest:
@@ -90,20 +88,19 @@ class Enemy(object):
         self.parent = parent
         self.name = ''
         self.job = ''
-        self.maxHP = 0
-        self.maxMP = 0
-        self.maxSTR = 0
+        self.HP = 0
+        self.HP = 0
         self.STR = 0
 
     def walcz(self, enemy):
         dmg = self.STR
         dmg -= enemy.maxDEF
-        enemy.maxHP -= dmg
+        enemy.HP -= dmg
         print(self.name, "atakuje.\n")
         print(dmg)
 
     def show(self):
-        print("Zostało mi", self.maxHP, "hp. ~", self.name, "\n")
+        print("Zostało mi", self.HP, "hp. ~", self.name, "\n")
 
     def die(self):
         print("Jestem martwy. ~", self.name)
@@ -115,8 +112,8 @@ class Enemy(object):
         elif i == 2:
             self.name = 'robber'
             self.job = 'robber'
-            self.maxHP = 100
-            self.maxMP = 20
+            self.HP = 80
+            self.MP = 20
             self.maxDEF = 5
             self.STR = 60
             print(" On the way you met a robber")
@@ -124,8 +121,8 @@ class Enemy(object):
         elif i == 3:
             self.name = 'goblins'
             self.job = 'robber'
-            self.maxHP = 70
-            self.maxMP = 0
+            self.HP = 45
+            self.MP = 0
             self.maxDEF = 2
             self.STR = 45
             print(" On the way you met a goblins")
@@ -133,8 +130,8 @@ class Enemy(object):
         elif i == 4:
             self.name = 'traveling warrior'
             self.job = 'warrior'
-            self.maxHP = 150
-            self.maxMP = 20
+            self.HP = 98
+            self.MP = 20
             self.maxDEF = 10
             self.STR = 65
             print(" On the way you met a traveling warrior")
@@ -142,8 +139,8 @@ class Enemy(object):
         elif i == 5:
             self.name = 'aggressive wolf'
             self.job = 'animal'
-            self.maxHP = 90
-            self.maxMP = 0
+            self.HP = 76
+            self.MP = 0
             self.maxDEF = 0
             self.STR = 55
             print(" On the way you met an aggressive wolf")
