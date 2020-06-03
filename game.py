@@ -146,7 +146,6 @@ class Game:
         print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
         print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
 
-
     def show_map(self):
         map_coordinates = [['1', '1', '1', '1', '1', '1',  '1'],
                            ['1', 'c1', 'c2', 'c3', 'c4', 'c5', '1', 'd3'],
