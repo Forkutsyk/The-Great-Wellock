@@ -86,7 +86,7 @@ class Quests:
                 conversation_loop(response)
         conversation_loop()
 
-    def quest_a4(self):
+    def quest_b3(self):
         def conversation_loop(response=None):
             if not response:
                 self.parent.text.system(text=""" In a local tavern you spot a man wearing black cloak sitting in shady corner.\nYou approach him\n""")
@@ -94,11 +94,11 @@ class Quests:
                 self.parent.text.you(" HHhow you know my name?!\n")
                 self.parent.text.npc(f" Let's say... I know much...\n For example I know you will lose a guessing game with me!\n", begin_txt='The Gamer')
 
-            self.parent.text.system("Choose one of the below answers\n1. Pfff \n I can win with you. Let's play\n2. I'm out.. Bye\n3. How to play the game?\n", txt_only=True)
+            self.parent.text.system("Choose one of the below answers\n1. Pfff. I can win with you. Let's play\n2. I'm out.. Bye\n3. How to play the game?\n", txt_only=True)
             response = input(">  ")
             response = str(response).lower()
             if response == '1':
-                self.parent.text.you(" Pfff not possible\n Let us have a quick round")
+                self.parent.text.you(" Pfff not possible. Let us have a quick round\n")
                 tries = 5
                 number = random.randint(1, 42)
                 while True:
@@ -109,24 +109,24 @@ class Quests:
                     except:
                         continue
                     if your_guess == number:
-                        self.parent.text.npc("Wow! You won!\n Take your money and come back again", begin_txt='The Gamer')
+                        self.parent.text.npc("Wow! You won!. Take your money and come back again\n", begin_txt='The Gamer')
                         self.parent.myPlayer.cash += 100
                         self.parent.myPlayer.xp += 100
                         break
                     elif your_guess > number:
-                        self.parent.text.npc("Nope, the number is too big", begin_txt='The Gamer')
+                        self.parent.text.npc("Nope, the number is too big\n", begin_txt='The Gamer')
                     elif your_guess < number:
-                        self.parent.text.npc("No, the number is too small", begin_txt='The Gamer')
+                        self.parent.text.npc("No, the number is too small\n", begin_txt='The Gamer')
                     tries -= 1
                     if tries == 0:
-                        self.parent.text.npc(f"It is too late {self.parent.myPlayer.name}. You lost the game", begin_txt='The Gamer')
+                        self.parent.text.npc(f"It is too late {self.parent.myPlayer.name}. You lost the game\n", begin_txt='The Gamer')
                         break
             elif response == '2':
                 self.parent.text.you(" If you say so.. Bye\n")
                 self.parent.myPlayer.xp += 30
             elif response == '3':
                 self.parent.text.you(" How to play the game?\n")
-                self.parent.text.npc(f" It is very simple, I will guess a number between 1 and 42 and will have guess it in several tries", begin_txt='The Gamer')
+                self.parent.text.npc(f" It is very simple, I will guess a number between 1 and 42 and will have guess it in several tries\n", begin_txt='The Gamer')
                 self.parent.text.you(" Sounds easy\n")
                 conversation_loop(response)
             else:
