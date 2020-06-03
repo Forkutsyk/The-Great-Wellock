@@ -3,7 +3,6 @@
 
 import sys
 import os
-import time
 from mage import Spell
 from character import Player, Enemy
 from diologs import dialogs
@@ -44,7 +43,7 @@ class Game:
     def fight(self):
         show_enemy_stats()
         choice = None
-        while choice != "0" and self.myEnemy.maxHP > 0 and self.myPlayer.maxHP > 0:
+        while choice != "0" and self.myEnemy.HP > 0 and self.myPlayer.HP > 0:
             print("""    Fight
 
             0 - uciekaj
@@ -56,12 +55,12 @@ class Game:
             print()
             if choice == "1":
                 self.myPlayer.fight(self.myEnemy)
-                if self.myEnemy.maxHP < 1:
+                if self.myEnemy.HP < 1:
                     self.myEnemy.die()
                     break
                 self.myEnemy.show()
                 self.myEnemy.walcz(self.myPlayer)
-                if self.myPlayer.maxHP < 1:
+                if self.myPlayer.HP < 1:
                     self.myPlayer.die()
                     break
                 self.myPlayer.show()
@@ -69,7 +68,7 @@ class Game:
                 self.myPlayer.heal()
                 self.myPlayer.show()
                 self.myEnemy.walcz(self.myPlayer)
-                if self.myPlayer.maxHP < 1:
+                if self.myPlayer.HP < 1:
                     self.myPlayer.die()
                     break
                 self.myPlayer.show()
@@ -78,25 +77,33 @@ class Game:
                 break
             else:
                 print("\nNiestety,", choice, "nie jest prawidłowym wyborem.")
-    def flee():
-        print("Uciekasz z pola walki.")
-        main_game_loop()
 
     def location_print(self):
         print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
         print(" " + '# ' + zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
         print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
-        print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION])+ "\n")
-        self.show_map()
+        print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
+
 
     def show_map(self):
-        map_coordinates = [['c1', 'c2', 'c3', 'c4', 'c5'],
-                           ['b1', 'b2', 'b3', 'b4', 'b5'],
-                           ['a1', 'a2', 'a3', 'a4', 'a5']]
+        map_coordinates = [['1', '1', '1', '1', '1', '1',  '1'],
+                           ['1', 'c1', 'c2', 'c3', 'c4', 'c5', '1', 'd3'],
+                           ['1', 'b1', 'b2', 'b3', 'b4', 'b5', '1', 'd2'],
+                           ['1', 'a1', 'a2', 'a3', 'a4', 'a5', '1', 'd1'],
+                           ['1', '1', '1', 'a0', '1', '1',   '1'],
+                           ['1', '1', '1',  '1', '1', '1', '1']]
         for r_idx, row in enumerate(map_coordinates):
             for l_idx, loc in enumerate(row):
                 if loc == self.myPlayer.location:
                     map_coordinates[r_idx][l_idx] = 'X'
+                elif loc == '1':
+                    map_coordinates[r_idx][l_idx] = '#'
+                elif loc == 'd1':
+                    map_coordinates[r_idx][l_idx] = '< District 1'
+                elif loc == 'd2':
+                    map_coordinates[r_idx][l_idx] = '< District 2'
+                elif loc == 'd3':
+                    map_coordinates[r_idx][l_idx] = '< District 3'
                 else:
                     map_coordinates[r_idx][l_idx] = ' '
         for i in map_coordinates:
@@ -104,6 +111,11 @@ class Game:
 
 
 game = Game()
+
+
+def flee():
+    print(" Uciekasz z pola walki.")
+    main_game_loop()
 
 
 ##### Title Screen ####
@@ -203,8 +215,8 @@ def show_stats(action):
     print(" Heroes name: ", game.myPlayer.name)
     print(" Heroes class: ", game.myPlayer.job)
     print(" Heroes level: ", game.myPlayer.level)
-    print(" HP: ", game.myPlayer.maxHP)
-    print(" MP: ", game.myPlayer.maxMP)
+    print(" HP: ", game.myPlayer.HP)
+    print(" MP: ", game.myPlayer.MP)
     print(" Strength: ", game.myPlayer.STR)
     print(" Defense: ", game.myPlayer.maxDEF)
     print(" Spels: ")
@@ -225,12 +237,12 @@ def show_stats(action):
 
 
 def show_enemy_stats():
-    print(" Enemy name: ", game.myEnemy.name)
+    print("\n Enemy name: ", game.myEnemy.name)
     print(" Enemy class: ", game.myEnemy.job)
-    print(" HP: ", game.myEnemy.maxHP)
-    print(" MP: ", game.myEnemy.maxMP)
+    print(" HP: ", game.myEnemy.HP)
+    print(" MP: ", game.myEnemy.MP)
     print(" Strength: ", game.myEnemy.STR)
-    print(" Defense: ", game.myEnemy.maxDEF)
+    print(" Defense: ", game.myEnemy.maxDEF, "\n")
 
 
 def purse_print():
@@ -242,7 +254,7 @@ def prompt():
     print(" What would you like to do?")
     print(" ! print 'help' to see abilities\n")
     action = input(" > ")
-    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse"]
+    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse", "heal"]
     while action.lower() not in acceptable_actions:
         print(" Unknown action, try again.\n")
         action = input(" > ")
@@ -253,7 +265,8 @@ def prompt():
             saveGame = open('savegame.txt', 'wb')
             saveValues = (
             game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
-            game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.level, game.myPlayer.cash)
+            game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp, game.myPlayer.cash,
+            game.myPlayer.HP, game.myPlayer.MP)
             pickle.dump(saveValues, saveGame)
             saveGame.close()
             sys.exit()
@@ -277,9 +290,11 @@ def prompt():
     elif action.lower() in ['examine', 'inspect', 'interact', 'look']:
         player_examine(action.lower())
     elif action.lower() == "map":
-        game.location_print()
+        game.show_map()
     elif action.lower() == "purse":
         purse_print()
+    elif action.lower() == "heal":
+        game.myPlayer.heal()
     elif action.lower() == "stats":
         show_stats(action.lower())
     elif action.lower() == "help":
@@ -289,6 +304,8 @@ def prompt():
 def player_examine(action):  # Доделать
     if zonemap[game.myPlayer.location][SOLVED]:
         print(" You have already exhausted this zone.")
+    elif zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
+        shop()
     else:
         try:
             quest = getattr(game.quests, f'quest_{game.myPlayer.location}')
@@ -311,6 +328,10 @@ DANGER = "\x1b[1;31;40m"
 NPC = "\x1b[1;36;40m"
 END = '\x1b[0m'
 
+def shop():
+    print(" - Jou`re in the shop -\n")
+    input(" ")
+
 
 def load_game():
     os.system('cls')
@@ -324,8 +345,10 @@ def load_game():
     game.myPlayer.location = load_values[5]
     game.myPlayer.game_over = load_values[6]
     game.myPlayer.STR = load_values[7]
-    # myPlayer.level = load_values[8]
+    game.myPlayer.xp = load_values[8]
     game.myPlayer.cash = load_values[9]
+    game.myPlayer.HP = load_values[10]
+    game.myPlayer.MP = load_values[11]
     main_game_loop()
 
 
@@ -370,7 +393,9 @@ def setup_game():
     ##### PLAYER STATS
     if game.myPlayer.job == 'warrior':
         game.myPlayer.maxHP = 160
+        game.myPlayer.HP = 160
         game.myPlayer.maxMP = 20
+        game.myPlayer.MP = 20
         game.myPlayer.STR = 45
         game.myPlayer.maxDEF = 15
         game.myPlayer.cash = 0
@@ -378,7 +403,9 @@ def setup_game():
     if game.myPlayer.job == 'mage':
         game.myPlayer.STR = 15
         game.myPlayer.maxHP = 70
+        game.myPlayer.HP = 70
         game.myPlayer.maxMP = 120
+        game.myPlayer.MP = 120
         game.myPlayer.maxDEF = 10
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
@@ -386,7 +413,9 @@ def setup_game():
     if game.myPlayer.job == 'ranger':
         game.myPlayer.STR = 70
         game.myPlayer.maxHP = 90
+        game.myPlayer.HP = 90
         game.myPlayer.maxMP = 60
+        game.myPlayer.MP = 60
         game.myPlayer.maxDEF = 6
         game.myPlayer.cash = 0
         game.myPlayer.spels = [game.bloodKing, game.DarkDaggerTechnique]

@@ -19,7 +19,7 @@ class Quests:
             elif response in ('no', '2'):
                 print(""" You tell the pilgrim to go away as you have more urgent business on your mind""")
             else:
-                print('Wrong input')
+                print(' Wrong input')
                 conversation_loop(response)
         conversation_loop()
 
@@ -31,19 +31,45 @@ class Quests:
                         Choose one of the below answers\n1. Yes\n2. No\n""")
             response = str(response).lower()
             if response in ('yes', '1'):
-                self.parent.myPlayer.cash -= 4
-                self.parent.myPlayer.xp += 5
-                result = random.randint(1, 10)
-                if result == 10:
-                    print(""" YOU WON!!!""")
-                    print(""" YOU GOT 25 COINS PRIZE!!!""")
-                    self.parent.myPlayer.cash += 25
-                    self.parent.myPlayer.xp += 100
+                if self.parent.myPlayer.cash >= 4:
+                    self.parent.myPlayer.cash -= 4
+                    self.parent.myPlayer.xp += 5
+                    result = random.randint(1, 10)
+                    if result == 10:
+                        print(""" YOU WON!!!""")
+                        print(""" YOU GOT 25 COINS PRIZE!!!""")
+                        self.parent.myPlayer.cash += 25
+                        self.parent.myPlayer.xp += 100
+                    else:
+                        print(""" YOU LOST!!!""")
                 else:
-                    print(""" YOU LOST!!!""")
+                    print(" You don't have enough money")
             elif response in ('no', '2'):
                 print(""" You tell the pilgrim to go away as you have more urgent business on your mind""")
             else:
                 print('Wrong input')
                 conversation_loop(response)
+
         conversation_loop()
+
+    def quest_a5(self):
+        def conversation_loop(response=None):
+            if not response:
+                print("""Yo u can go to:\n 1.Stable\n 2.Black ice mines""")
+                answer = input(" > ")
+                if answer == "1":
+                    print(""" A owner of the stable says he's heard strange singing in the night in his stable, but whenever he goes out to look, he doesn't find anyone.\n If that wasn't strange enough, one morning he found scarecrows which was in a drawn circle on the porch""")
+                    response = input(""" Could you help him understand what's going on?\n 1. Yes, I will take you there\n 2. No\n""")
+                    response = str(response).lower()
+                    if response in ('yes', '1'):
+                        print(" ")
+                    elif response in ('no', '2'):
+                        print(""" You tell the farmer to go away as you have more urgent business on your mind""")
+                    else:
+                        print(' Wrong input')
+                        conversation_loop(response)
+                elif answer == "2":
+                    print("...")
+
+        conversation_loop()
+
