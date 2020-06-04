@@ -1,5 +1,6 @@
 # Python Text RPG
 # Poplavskyi Oleksandr
+# Group: sr-13
 
 import sys
 import os
@@ -12,9 +13,71 @@ from global_variables import *
 from quests import Quests
 
 
+#### COLORED TEXT IN PROMPT
+YOU = '\x1b[1;34;40m'
+SYSTEM = "\x1b[1;32;40m"
+DANGER = "\x1b[1;31;40m"
+NPC = "\x1b[1;36;40m"
+END = '\x1b[0m'
+
+
+class Text:
+    dialogs = dialogs()
+    YOU = '\x1b[1;34;40m'
+    SYSTEM = "\x1b[1;32;40m"
+    DANGER = "\x1b[1;31;40m"
+    NPC = "\x1b[1;36;40m"
+    END = '\x1b[0m'
+
+    @classmethod
+    def you(cls, text, begin_txt='YOU', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.YOU + text + cls.END
+        else:
+            val = cls.YOU + f"\n {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+    @classmethod
+    def system(cls, text, begin_txt='SYSTEM', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.SYSTEM + text + cls.END
+        else:
+            val = cls.SYSTEM + f" {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+    @classmethod
+    def npc(cls, text, begin_txt='Stranger', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.NPC + text + cls.END
+        else:
+            val = cls.NPC + f" {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+    @classmethod
+    def danger(cls, text, begin_txt='Strange voice', txt_only=False, print_text=True, print_function='dialog_print0025'):
+        if txt_only:
+            val = cls.DANGER + text + cls.END
+        else:
+            val = cls.DANGER + f" {begin_txt}: " + cls.END + text
+        if print_text:
+            cls.dialogs.dialog = val
+            func = getattr(cls.dialogs, print_function)
+            func()
+
+
 #### Player Setup ####
 class Game:
     def __init__(self):
+        self.text = Text()
         self.myPlayer = Player(self)
         self.myEnemy = Enemy(self)
         self.quests = Quests(self)
@@ -54,7 +117,7 @@ class Game:
             choice = input(" Choose: ")
             print()
             if choice == "1":
-                self.myPlayer.fight(self.myEnemy)
+                self.myPlayer.fight(self.myEnemy, self.myPlayer)
                 if self.myEnemy.HP < 1:
                     self.myEnemy.die()
                     break
@@ -84,6 +147,21 @@ class Game:
         print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
         print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
 
+    def list_of_spells(self):
+        if self.myPlayer.job == "warrior":
+            self.FireSword.show_details()
+            self.blizzard.show_details()
+
+        if self.myPlayer.job == "mage":
+            self.fire.show_details()
+            self.thunder.show_details()
+            self.meteor.show_details()
+            self.cure.show_details()
+            self.cura.show_details()
+            self.curaga.show_details()
+        if self.myPlayer.job == "ranger":
+            self.bloodKing.show_details()
+            self.DarkDaggerTechnique.show_details()
 
     def show_map(self):
         map_coordinates = [['1', '1', '1', '1', '1', '1',  '1'],
@@ -115,7 +193,7 @@ game = Game()
 
 def flee():
     print(" Uciekasz z pola walki.")
-    main_game_loop()
+    # main_game_loop()
 
 
 ##### Title Screen ####
@@ -220,20 +298,9 @@ def show_stats(action):
     print(" Strength: ", game.myPlayer.STR)
     print(" Defense: ", game.myPlayer.maxDEF)
     print(" Spels: ")
-    if game.myPlayer.job == "warrior":
-        game.FireSword.show_details()
-        game.blizzard.show_details()
+    game.list_of_spells()
 
-    if game.myPlayer.job == "mage":
-        game.fire.show_details()
-        game.thunder.show_details()
-        game.meteor.show_details()
-        game.cure.show_details()
-        game.cura.show_details()
-        game.curaga.show_details()
-    if game.myPlayer.job == "ranger":
-        game.bloodKing.show_details()
-        game.DarkDaggerTechnique.show_details()
+
 
 
 def show_enemy_stats():
@@ -262,7 +329,7 @@ def prompt():
         print(" Would you like to save the game Y/N?", "\n")
         ask = input(" > ")
         if ask.lower() == "y":
-            saveGame = open('savegame.txt', 'wb')
+            saveGame = open('save_game.txt', 'wb')
             saveValues = (
             game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
             game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp, game.myPlayer.cash,
@@ -278,7 +345,7 @@ def prompt():
             ask = input(" Would you like to save the game Y/N?" + "\n").lower()
             if ask == "y":
                 Save = game.myPlayer
-                pickle.dump(Save, open("save_game.dat", "wb"))
+                pickle.dump(Save, open("save_game.txt", "wb"))
                 sys.exit()
             elif ask == "n":
                 print(" Okay, maybe next time!")
@@ -306,6 +373,8 @@ def player_examine(action):  # Доделать
         print(" You have already exhausted this zone.")
     elif zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
         shop()
+    elif zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
+        print(" I have nothing to do here , i have to go up ")
     else:
         try:
             quest = getattr(game.quests, f'quest_{game.myPlayer.location}')
@@ -321,21 +390,75 @@ def main_game_loop():
         prompt()
 
 
-#### COLORED TEXT IN PROMPT
-YOU = '\x1b[1;34;40m'
-SYSTEM = "\x1b[1;32;40m"
-DANGER = "\x1b[1;31;40m"
-NPC = "\x1b[1;36;40m"
-END = '\x1b[0m'
+
 
 def shop():
-    print(" - Jou`re in the shop -\n")
-    input(" ")
-
+    print("\n - Jou`re in the shop -\n")
+    print(" Hello stranger !\n I greet you in the dwarf shop\n ")
+    print(" Here you can buy things which will upgrade your stats ! ")
+    print(" This is the only such place in whole Wellock")
+    print(""" So, what would you like ?
+   1. Weapon - 25 coints
+   2. Armor - 25 coins
+   3. Magic stuff -25 coins
+   4. Artifact enhancing the spirit - 30 coins 
+   5. YOU: What is  that things ?
+   6. YOU: Ok, thanks maybe next time...
+""")
+    answer = input(" > ")
+    if game.myPlayer.cash >= 25:
+        if answer == "1":
+            weapons = ['Wooden sword', 'Iron sword of a knight', 'Stylish lightweight sword', 'The sword of the former general']
+            game.myPlayer.cash -= 25
+            buff = random.randrange(5, 20)
+            game.myPlayer.STR += buff
+            print(" You've got: ", random.choice(weapons), "; And it will add you, ", buff, "strenght.")
+        elif answer == "2":
+            armor = ['Lether armor', 'Iron chain mail', 'Full iron armor', 'Armor of a fallen general']
+            game.myPlayer.cash -= 25
+            buff = random.randrange(5, 40)
+            game.myPlayer.maxDEF += buff
+            print(" You've got: ", random.choice(armor), "; And it will add you, ", buff, "defense.")
+        elif answer == "3":
+            magic = ['The mana ring of the beast', "Midnight Demon's Bone Necklaces", ' ????????? ', 'The ring of the fallen general']
+            game.myPlayer.cash -= 25
+            buff = random.randrange(5, 40)
+            game.myPlayer.maxMP += buff
+            print(" You've got: ", random.choice(magic), "; And it will add you, ", buff, "mana points.")
+        elif answer == "4":
+            artifact = ['The bone of a colossal beast', "Midnight Demon's eye", ' The king grail', '']
+            game.myPlayer.cash -= 25
+            choise = random.randrange(1, 3)
+            if choise == 1:
+                buff = random.randrange(5, 40)
+                game.myPlayer.maxHP += buff
+                print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "health points.")
+            elif choise == 2:
+                buff = random.randrange(5, 40)
+                game.myPlayer.maxMP += buff
+                print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "mana points.")
+            elif choise == 3:
+                buff = random.randrange(5, 40)
+                game.myPlayer.maxDEF += buff
+                print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "defense.")
+        elif answer == "5":
+           print("""  Dwarf Shop:
+        ~  If you choose weapon you will get random weapon which will add you strength
+        ~  If you choose Armor you will get random armor which will add you defense
+        ~  If you choose Magic stuff you will get random magic stuff which will add you mana points
+        ~  If you choose Artifact you will get random Artifact which will add points to your one random characteristic(It could be health also)
+            """)
+           shop()
+        elif answer == "6":
+            print(" Come when you want, stranger! ")
+            main_game_loop()
+    else:
+        print(" I'm sorry you don't have enough money")
+        main_game_loop()
 
 def load_game():
     os.system('cls')
-    with open('savegame.txt', 'rb') as game_save:
+    with open('save_game.txt', 'rb') as game_save:
         load_values = pickle.load(game_save)
     game.myPlayer.name = load_values[0]
     game.myPlayer.job = load_values[1]
@@ -446,7 +569,7 @@ def setup_game():
                 "\n" + NPC + " Old man: " + END + "And remember, on the way between the quarters you can meet a lot of monsters or robbers.\n" + "\n")
     game.cut_scene.dialog_print0025()
     print(" ### The old man just disappeared ###\n")
-    game.myPlayer.cash += 10
+    game.myPlayer.cash += 100
     print(SYSTEM + " ! You have found 10 coins" + END)
     game.cut_scene.dialog = (
     DANGER + " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ",

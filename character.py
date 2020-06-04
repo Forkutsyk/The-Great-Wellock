@@ -1,6 +1,6 @@
 import random
+import sys
 from global_variables import *
-
 
 class Player:
     def __init__(self, parent):
@@ -18,20 +18,25 @@ class Player:
         self.STR = 0
         self.HP = 0
         self.MP = 0
-
     @property
     def level(self):
         return (self.xp // 100) + 1
 
-    # maxHP ?
-    def fight(self, enemy):
-        damage = self.STR
-        damage -= enemy.maxDEF
-        enemy.HP -= damage
-        if enemy.HP < 0:
-            enemy.HP = 0
-        print(" Atakujesz.\n")
-        print(damage)
+    # i dont know how to realize spells atacking
+    def fight(self, enemy, player):
+        print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
+        choise = input(" > ")
+        if choise == "1":
+            damage = self.STR
+            damage -= enemy.maxDEF
+            enemy.HP -= damage
+            if enemy.HP < 0:
+                enemy.HP = 0
+            print(" Atakujesz.\n")
+            print(damage)
+        if choise == "2":
+            #player.list_of_spells()
+            print(" Which of them do you wanna use ?")
 
     def show(self):
         print(self.name, " Zostało mi", self.HP, "hp. ", "\n")
@@ -43,7 +48,7 @@ class Player:
 
     def die(self):
         print(" Jestem martwy. ~", self.name)
-
+        # sys.exit()
 
     def move(self, dest=None):
         if not dest:
@@ -70,7 +75,7 @@ class Player:
                 destination = zonemap[self.location][RIGHT]
                 self.movement_handler(destination)
         elif dest in ['down', 'south']:
-            if zonemap[self.location][DOWN] not in none_move:
+            if zonemap[self.location][DOWN] in none_move:
                 print(" !!! Here is a big wall !!!")
             else:
                 destination = zonemap[self.location][DOWN]

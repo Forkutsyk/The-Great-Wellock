@@ -1,6 +1,5 @@
 
 
-
 #### MAP ####
 """
 
@@ -21,10 +20,10 @@ DOWN = 'down', 'south'
 LEFT = 'left', 'west'
 RIGHT = 'right', 'east'
 
-solved_places = {'a1': False, 'a2': False, 'a3': False, 'a4': False,
-                 'b1': False, 'b2': False, 'b3': False, 'b4': False,
-                 'c1': False, 'c2': False, 'c3': False, 'c4': False,
-                 'd1': False, 'd2': False, 'd3': False, 'd4': False
+
+solved_places = {'a1': False, 'a2': False, 'a3': False, 'a4': False, 'a5': False,
+                 'b1': False, 'b2': False, 'b3': False, 'b4': False, 'b5': False,
+                 'c1': False, 'c2': False, 'c3': False, 'c4': False, 'c5': False,
                  }
 zonemap = {
     'a0': {
@@ -33,8 +32,8 @@ zonemap = {
         SOLVED: False,
         UP: "a3",
         DOWN: "0",
-        LEFT: "0",
-        RIGHT: "0"
+        LEFT: "1",
+        RIGHT: "1"
     },
     'a3': {
         ZONENAME: 'House of a Thousand Faces',
@@ -86,7 +85,7 @@ zonemap = {
         ZONENAME: 'Blacklake',
         DESCRIPTION: "",
         SOLVED: False,
-        UP: "с1",
+        UP: "c1",
         DOWN: "a1",
         LEFT: "2",
         RIGHT: "b2"
