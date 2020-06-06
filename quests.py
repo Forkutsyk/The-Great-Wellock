@@ -96,7 +96,6 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 conversation_loop(response)
-
         conversation_loop()
 
     def quest_b3(self):
@@ -219,14 +218,47 @@ class Quests:
                         self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                         conversation_loop(response)
                 elif self.stablequest == True and self.minequest == False:
-                    pself.parent.text.system(' You have already passed this quest, try to go to the mine')
+                    self.parent.text.system(' You have already passed this quest, try to go to the mine')
                 elif self.stablequest == False and self.minequest == True:
-                    pself.parent.text.system(' You have already passed this quest, try to go to the stable')
+                    self.parent.text.system(' You have already passed this quest, try to go to the stable')
                 elif self.stablequest == True and self.minequest == True:
-                    pself.parent.text.system(' You have already passed all quests, try to go to location')
+                    self.parent.text.system(' You have already passed all quests, try to go to location')
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 conversation_loop(response)
-
         conversation_loop()
 
+    def quest_b2(self):
+        def conversation_loop(response=None):
+            if not response:
+                self.parent.text.system(
+                    text=""" Welcome to Nezeris\n""")
+            self.parent.text.system(
+                "Choose one of the below actions\n1. Enter tavern\n2. Talk to \n3. Take it with you\n",
+                txt_only=True)
+            response = input(">  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.system(" You turn to a broad street leading to Mayor Habakuk's mansion\n")
+                self.parent.text.npc(" Welcome traveller, what brings you to my town?\n", begin_txt='Habakuk')
+                self.parent.text.you(
+                    " Good afternoon Sir! I found this ring nearby. I thought that you might know who is the owner of it\n")
+                self.parent.text.npc(" Oh! Thank you very much. This belongs to my beloved daughter!\n",
+                                     begin_txt='Habakuk')
+                self.parent.text.npc(" Take this small gift as a 'thank you' from me.", begin_txt='Habakuk')
+                self.parent.text.you(" Thank you\n")
+                self.parent.text.system(" You receive 100 coins\n")
+                self.parent.myPlayer.cash += 100
+                self.parent.myPlayer.xp += 150
+            elif response == '2':
+                self.parent.text.you(" Hmmm, I better leave it where it is so the one who lost it can find it\n")
+                self.parent.myPlayer.xp += 30
+            elif response == '3':
+                self.parent.text.you(" What a lucky day! GOLD!\n")
+                self.parent.text.system(" You receive 150 coins\n")
+                self.parent.myPlayer.cash += 150
+                self.parent.myPlayer.xp += 10
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                conversation_loop(response)
+        conversation_loop()

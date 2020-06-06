@@ -301,8 +301,6 @@ def show_stats(action):
     game.list_of_spells()
 
 
-
-
 def show_enemy_stats():
     print("\n Enemy name: ", game.myEnemy.name)
     print(" Enemy class: ", game.myEnemy.job)
@@ -393,7 +391,7 @@ def main_game_loop():
 
 
 def shop():
-    print("\n - Jou`re in the shop -\n")
+    print("\n - You`re in the shop -\n")
     print(" Hello stranger !\n I greet you in the dwarf shop\n ")
     print(" Here you can buy things which will upgrade your stats ! ")
     print(" This is the only such place in whole Wellock")
@@ -455,6 +453,7 @@ def shop():
     else:
         print(" I'm sorry you don't have enough money")
         main_game_loop()
+
 
 def load_game():
     os.system('cls')
