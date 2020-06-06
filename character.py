@@ -1,5 +1,5 @@
 import random
-import sys
+#import sys
 from global_variables import *
 
 class Player:
@@ -150,3 +150,12 @@ class Enemy(object):
             self.STR = 55
             print(" On the way you met an aggressive wolf")
             self.parent.fight()
+    def mini_boss(self):
+        self.name = 'Big buddy'
+        self.job = 'animal'
+        self.HP = 200
+        self.MP = 0
+        self.maxDEF = 15
+        self.STR = 20
+        print(" Holly molly it`s a Big buddy !")
+        self.parent.fight()
