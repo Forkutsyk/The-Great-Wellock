@@ -63,7 +63,7 @@ class Text:
             func()
 
     @classmethod
-    def danger(cls, text, begin_txt='Strange voice', txt_only=False, print_text=True, print_function='dialog_print0025'):
+    def danger(cls, text, begin_txt='Strange noise', txt_only=False, print_text=True, print_function='dialog_print0025'):
         if txt_only:
             val = cls.DANGER + text + cls.END
         else:
@@ -200,7 +200,7 @@ def flee():
 def title_screen_selections():
     option = input("      > ")
     if option.lower() == ("play"):
-        setup_game()  # placeholder until written
+        setup_game()
     elif option.lower() == ("help"):
         help_menu()
     elif option.lower() == ("quit"):
@@ -342,15 +342,21 @@ def prompt():
             sys.exit()
         else:
             print(" I dont know such command please try again")
-            ask = input(" Would you like to save the game Y/N?" + "\n").lower()
-            if ask == "y":
-                Save = game.myPlayer
-                pickle.dump(Save, open("save_game.txt", "wb"))
+            print(" Would you like to save the game Y/N?", "\n")
+            ask = input(" > ")
+            if ask.lower() == "y":
+                saveGame = open('save_game.txt', 'wb')
+                saveValues = (
+                    game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP,
+                    game.myPlayer.maxDEF,
+                    game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
+                    game.myPlayer.cash,
+                    game.myPlayer.HP, game.myPlayer.MP)
+                pickle.dump(saveValues, saveGame)
+                saveGame.close()
                 sys.exit()
-            elif ask == "n":
+            elif ask.lower() == "n":
                 print(" Okay, maybe next time!")
-                sys.exit()
-            else:
                 sys.exit()
     elif action.lower() in ['move', 'go', 'travel', 'walk']:
         game.myPlayer.move()
@@ -548,7 +554,9 @@ def setup_game():
     game.cut_scene.dialog = SYSTEM + "\n SYSTEM: " + END + "Welcome, " + player_name + " the " + player_class + "! " + "\n"
     game.cut_scene.dialog_print005()
 
-    input("\n\n\n To start playing press enter")
+    skip = input("\n\n\n To start playing press enter")
+    if skip == 's':
+        main_game_loop()
     os.system('cls')
     game.cut_scene.dialog = SYSTEM + """ 
 \n Not far from you noticed an old man. 

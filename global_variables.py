@@ -1,5 +1,4 @@
 
-
 #### MAP ####
 """
 
@@ -172,3 +171,6 @@ zonemap = {
         RIGHT: "3"
     }
 }
+stablequest = False
+minequest = False
+piligrimquest = False
