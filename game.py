@@ -81,6 +81,7 @@ class Game:
         self.myPlayer = Player(self)
         self.myEnemy = Enemy(self)
         self.quests = Quests(self)
+        self.zonemap = zonemap
 
     ### Create Black Magic
     fire = Spell("Fire", 25, 60, 0, "black")
@@ -141,11 +142,22 @@ class Game:
             else:
                 print("\nNiestety,", choice, "nie jest prawidłowym wyborem.")
 
+    def fight_dragon(self):
+        # setup dragon stats
+        self.myEnemy.name = 'Dragon'
+        self.myEnemy.job = 'legendary animal'
+        self.myEnemy.HP = 250
+        self.myEnemy.MP = 0
+        self.myEnemy.maxDEF = 0
+        self.myEnemy.STR = 55
+        self.text.danger("On your way to dark valley you see it.\n Huge wings, lots of fire and the appaling smell.\n Chances of survival are pretty much zero but you try to kill the dragon anyway...")
+        self.fight()
+
     def location_print(self):
-        print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
-        print(" " + '# ' + zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
-        print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
-        print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
+        print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
+        print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
+        print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
+        print('\n' + (game.zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
 
     def list_of_spells(self):
         if self.myPlayer.job == "warrior":
@@ -373,11 +385,11 @@ def prompt():
 
 
 def player_examine(action):  # Доделать
-    if zonemap[game.myPlayer.location][SOLVED]:
+    if game.zonemap[game.myPlayer.location][SOLVED]:
         print(" You have already exhausted this zone.")
-    elif zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
+    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
         shop()
-    elif zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
+    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
         print(" I have nothing to do here , i have to go up ")
     else:
         try:

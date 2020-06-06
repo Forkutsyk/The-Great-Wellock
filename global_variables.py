@@ -11,9 +11,9 @@ _________________
 _________________
 ----| Start |----
 """
-ZONENAME = ''
+ZONENAME = 'ZONENAME'
 DESCRIPTION = 'description'
-SOLVED = False
+SOLVED = 'SOLVED'
 UP = 'up', 'north'
 DOWN = 'down', 'south'
 LEFT = 'left', 'west'
@@ -37,7 +37,7 @@ zonemap = {
     'a3': {
         ZONENAME: 'House of a Thousand Faces',
         DESCRIPTION: " Area with taverns where you can eat and stay overnight. It is better not to walk here in the evening.",
-        SOLVED: False,
+        'SOLVED': False,
         UP: "b3",
         DOWN: "a0",
         LEFT: "a2",

@@ -150,6 +150,7 @@ class Enemy(object):
             self.STR = 55
             print(" On the way you met an aggressive wolf")
             self.parent.fight()
+
     def mini_boss(self):
         self.name = 'Big buddy'
         self.job = 'animal'
