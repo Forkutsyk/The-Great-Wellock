@@ -45,6 +45,7 @@ class Quests:
                     self.parent.myPlayer.xp += 100
                     self.parent.zonemap['a2']['SOLVED'] = True
                 else:
+                    self.parent.text.system(f' YOUR NUMBER: {result}\n')
                     self.parent.text.danger(' YOU LOST!!!\n', begin_txt='SYSTEM')
             else:
                 self.parent.text.system(" You don't have enough money\n")
@@ -65,7 +66,7 @@ class Quests:
             self.parent.text.npc(" Welcome traveller, what brings you to my town?\n", begin_txt='Habakuk')
             self.parent.text.you(" Good afternoon Sir! I found this ring nearby. I thought that you might know who is the owner of it\n")
             self.parent.text.npc(" Oh! Thank you very much. This belongs to my beloved daughter!\n", begin_txt='Habakuk')
-            self.parent.text.npc(" Take this small gift as a 'thank you' from me.", begin_txt='Habakuk')
+            self.parent.text.npc(" Take this small gift as a 'thank you' from me.\n", begin_txt='Habakuk')
             self.parent.text.you(" Thank you\n")
             self.parent.text.system(" You receive 100 coins\n")
             self.parent.myPlayer.cash += 100
@@ -378,7 +379,7 @@ class Quests:
                 self.parent.text.you(" I do not hurt animals. Even dangerous ones\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_a1(response_2)
+                self.quest_c3(response_2)
         elif response == '2':
             # TOWN MARKET
             self.parent.text.you(" Hmmm, I'm hungry. Let's buy something to eat\n")
@@ -408,9 +409,145 @@ class Quests:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_a1(response_3)
+                self.quest_c3(response_3)
         #elif response in ['1',' 2'] and quest1 == True and quest2 == True:
             #self.parent.zonemap['c3']['SOLVED'] = True
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_a1(response)
+            self.quest_c3(response)
+
+    def quest_c4(self, response=None):
+        if not response:
+            self.parent.text.system(text=""" You meet a funny person on your way\n""")
+            self.parent.text.npc(text="""Hey buddy, I'm a local jester.\n""", begin_txt='Jester')
+            self.parent.text.you(text='Oh great... can you just let me go and leave me alone?\n')
+            self.parent.text.npc(text="""No. Can I go with you? Please. I have no idea how to fight BUT\n""", begin_txt='Jester')
+            self.parent.text.npc(text="""I know how to sing!\n""", begin_txt='Jester')
+            self.parent.text.you(text="Please don't..\n")
+            self.parent.text.npc(text="""Let us make a deal. If my song will be great enough for you, you will take me as your companion. Do you agree?\n""", begin_txt='Jester')
+            self.parent.text.you(text="Hmm I guess there is no other way to get rid of you.. so yes\n")
+
+        self.parent.text.system(
+            f"Choose next sentence\n 1. Oh {self.parent.myPlayer.name} the Great warrior\n2. Oh valley of plenty\n3. Once upon a time\n",
+            txt_only=True)
+        response = input(" >  ")
+        response = str(response).lower()
+        if response == '1':
+            self.parent.text.npc(text=f"Oh {self.parent.myPlayer.name} the Great warrior\n", begin_txt='Jester')
+        elif response == '2':
+            self.parent.text.npc(text=f"Oh valley of plenty\n", begin_txt='Jester')
+        elif response == '3':
+            self.parent.text.npc(text=f"Once upon a time\n", begin_txt='Jester')
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            self.quest_c4(response)
+
+        self.parent.text.system(
+            f"Choose next sentence\n 1. The weather is so nice yesterday!\n2. {self.parent.myPlayer.name} and his best companiooon\n3. Who let the dogs out?!\n",
+            txt_only=True)
+        response = input(" >  ")
+        response = str(response).lower()
+        if response == '1':
+            self.parent.text.npc(text=f"The weather is so nice yesterday!\n", begin_txt='Jester')
+        elif response == '2':
+            self.parent.text.npc(text=f"{self.parent.myPlayer.name} and his best companiooon\n", begin_txt='Jester')
+        elif response == '3':
+            self.parent.text.npc(text=f"Who let the dogs out?!\n", begin_txt='Jester')
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            self.quest_c4(response)
+
+        self.parent.text.system(
+            f"Choose next sentence\n 1. Roses are red\n2. La la lalala\n3. Pam pa ram pam pam\n",
+            txt_only=True)
+        response = input(" >  ")
+        response = str(response).lower()
+        if response == '1':
+            self.parent.text.npc(text=f"Roses are red\n", begin_txt='Jester')
+        elif response == '2':
+            self.parent.text.npc(text=f"La la lalala\n", begin_txt='Jester')
+        elif response == '3':
+            self.parent.text.npc(text=f"Pam pa ram pam pam\n", begin_txt='Jester')
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            self.quest_c4(response)
+        self.parent.text.you(text="OK STOP, please\n")
+        self.parent.text.npc(text=f"Do you like it my lord?\n", begin_txt='Jester')
+        self.parent.text.you(text="It was the worst thing I have ever heard\n")
+        self.parent.text.npc(text=f"Ah, no one gets my songs. They are so deep\n Can you then at least help me with samll amount of cash?\n", begin_txt='Jester')
+        self.parent.text.system(
+            f"Choose answer\n 1. Yes (-10 coins)\n2. No\n",
+            txt_only=True)
+        response = input(" >  ")
+        response = str(response).lower()
+        if response in ('1', 'yes') and self.parent.myPlayer.cash >= 10:
+            self.parent.myPlayer.cash -= 10
+            self.parent.myPlayer.xp += 150
+            self.parent.text.you(text="Yes, here you go\n")
+            self.parent.text.npc(text=f"Thank you my lord\n", begin_txt='Jester')
+            self.parent.text.system(text='Your give 10 coins')
+            self.parent.zonemap['c4']['SOLVED'] = True
+        elif response in ('2', 'no'):
+            self.parent.myPlayer.xp += 130
+            self.parent.text.you(text="No, I don't think you deserve it\n")
+            self.parent.text.npc(text=f"Then Bye\n", begin_txt='Jester')
+            self.parent.zonemap['c4']['SOLVED'] = True
+        else:
+            self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
+            self.quest_c4(response)
+
+    def quest_b1(self):
+        self.parent.text.system(text=""" In tavern you see an old man with long beard\n""")
+        self.parent.text.npc(text="""My name is Tetrex. I have been fighting all my life. Also if you pay me I can teach you some self defense technics that can help you survive in this world\n""", begin_txt='Old warrior')
+        self.parent.text.you(text=f'Hello, I am {self.parent.myPlayer.name}?\n It would be an honor to learn something from you\n')
+        self.parent.text.npc(text="""Ok then, let us go to outside\n""", begin_txt='Old warrior')
+        self.parent.text.system(text=""" After almost whole day of training you finally make it to increase you maximum HP\n""")
+        self.parent.text.system(text=""" Your max HP increases by 30\n""")
+        self.parent.myPlayer.maxHP += 30
+        self.parent.text.npc(text="""My service is worth 50 coins\n""", begin_txt='Old warrior')
+        self.parent.text.you(text="Here it is\n")
+        self.parent.text.npc(text="""Thank you and good luck\n""", begin_txt='Old warrior')
+        self.parent.zonemap['b1']['SOLVED'] = True
+
+    def quest_b2(self, response=None):
+        if not response:
+            self.parent.text.system(text=""" Close to a castle you meet a mage\n""")
+            self.parent.text.npc(text="""People and other creatures call me Gandalfux. I have power over white magic\n""", begin_txt='Gandalfux')
+            self.parent.text.you(text=f'Good day, I am {self.parent.myPlayer.name}?\n Can you learn me something new?\n')
+            self.parent.text.npc(text="""Ok, but I need 50 coins to do it. Are you ok with it?\n""", begin_txt='Gandalfux')
+        self.parent.text.system(
+            f"Choose answer\n 1. Yes (-50 coins)\n2. No\n",
+            txt_only=True)
+        response = input(" >  ")
+        response = str(response).lower()
+        if response in ('1', 'yes') and self.parent.myPlayer.cash >= 50:
+            self.parent.myPlayer.cash -= 50
+            self.parent.myPlayer.xp += 150
+            self.parent.text.you(text="Yes\n")
+            self.parent.text.npc(text=f"Thank you. Let go outside the town to the Gardens. I will teach you there\n", begin_txt='Gandalfux')
+            self.parent.text.system(text='Your give 50 coins\n')
+            self.parent.text.you(text="OK\n")
+            self.parent.text.system(text='....After several hours of training. You start to think that this might actually not wor to learn anything from him\n')
+            self.parent.text.system(
+                f"Choose to stop learning or trust the Gandalfux\n1. Trust\n2. Leave him\n",
+                txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.system(f"Finally after many struggles you learn a new spell!\n", txt_only=True)
+                self.parent.text.system(text='Your can now use Fire Ball special spell\n')
+                self.parent.myPlayer.spells.append(self.parent.FireBall)
+                self.parent.zonemap['b2']['SOLVED'] = True
+            elif response == '2':
+                self.parent.text.you(text="I need to go. There is no sense in trying this\n")
+                self.parent.text.npc(
+                    text=f"As you wish. Come back whenever you want\n", begin_txt='Gandalfux')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_b2(response)
+        elif response in ('2', 'no'):
+            self.parent.text.you(text="No, I don't think it is a good idea\n")
+            self.parent.text.npc(text=f"Bye\n", begin_txt='Gandalfux')
+        else:
+            self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
+            self.quest_b2(response)
