@@ -195,12 +195,13 @@ class Quests:
         elif answer == "2" and self.stablequest == False and self.minequest == True:
             self.parent.text.system(' You have already passed this quest, try to go to the stable')
         elif answer in ['1', '2'] and self.stablequest == True and self.minequest == True:
+            self.parent.zonemap['a5']['SOLVED'] = True
             self.parent.text.system(' You have already passed all quests, try to go to location')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_a5()
 
-    ### parts of b5
+    ### parts of b4
     def randome_rode(self):
         true_road = []
         moves = ['^', '<', '>']
@@ -290,7 +291,7 @@ class Quests:
                     self.parent.text.system(""" You tell the owner to go away as you have more urgent business on your mind""")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_b4(self)
+                self.quest_b4()
 
         #### Gorge quest b4
         elif answer == '2':
@@ -350,6 +351,7 @@ class Quests:
         response = input(" >  ")
         response = str(response).lower()
         if response == '1':
+
             # TAVERN
             self.parent.text.system(" You walk into a crowdy place full of warriors mages and drunkards\n")
             self.parent.text.npc(" Hey there!, what are you doing in tis town?\n", begin_txt='Little John')
@@ -368,7 +370,7 @@ class Quests:
             if response_2 == '1':
                 self.parent.text.you(" I will kill the monster\n")
                 self.parent.fight_dragon()
-                # self.parent.zonemap['c3']['SOLVED'] = True
+                self.parent.zonemap['c3']['SOLVED'] = True
                 self.parent.myPlayer.cash += 200
                 self.parent.myPlayer.xp += 250
                 self.parent.text.system('You received 200 coins\n')
@@ -407,6 +409,8 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_a1(response_3)
+        #elif response in ['1',' 2'] and quest1 == True and quest2 == True:
+            #self.parent.zonemap['c3']['SOLVED'] = True
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_a1(response)

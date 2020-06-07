@@ -142,17 +142,6 @@ class Game:
             else:
                 print("\nNiestety,", choice, "nie jest prawidłowym wyborem.")
 
-    def fight_dragon(self):
-        # setup dragon stats
-        self.myEnemy.name = 'Dragon'
-        self.myEnemy.job = 'legendary animal'
-        self.myEnemy.HP = 250
-        self.myEnemy.MP = 0
-        self.myEnemy.maxDEF = 0
-        self.myEnemy.STR = 55
-        self.text.danger("On your way to dark valley you see it.\n Huge wings, lots of fire and the appaling smell.\n Chances of survival are pretty much zero but you try to kill the dragon anyway...")
-        self.fight()
-
     def location_print(self):
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
         print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
@@ -313,6 +302,8 @@ def show_stats(action):
     game.list_of_spells()
 
 
+
+
 def show_enemy_stats():
     print("\n Enemy name: ", game.myEnemy.name)
     print(" Enemy class: ", game.myEnemy.job)
@@ -384,7 +375,7 @@ def prompt():
         game_help(action.lower())
 
 
-def player_examine(action):  # Доделать
+def player_examine(action):
     if game.zonemap[game.myPlayer.location][SOLVED]:
         print(" You have already exhausted this zone.")
     elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
@@ -401,15 +392,17 @@ def player_examine(action):  # Доделать
 
 ###### GAME FUNCTIONALITY ######
 
+
+
 def main_game_loop():
     while game.myPlayer.game_over is False:
+        #game.myPlayer.__pass_time()
         prompt()
 
 
 
-
 def shop():
-    print("\n - You`re in the shop -\n")
+    print("\n - Jou`re in the shop -\n")
     print(" Hello stranger !\n I greet you in the dwarf shop\n ")
     print(" Here you can buy things which will upgrade your stats ! ")
     print(" This is the only such place in whole Wellock")
@@ -471,7 +464,6 @@ def shop():
     else:
         print(" I'm sorry you don't have enough money")
         main_game_loop()
-
 
 def load_game():
     os.system('cls')
@@ -535,10 +527,11 @@ def setup_game():
         game.myPlayer.maxHP = 160
         game.myPlayer.HP = 160
         game.myPlayer.maxMP = 20
-        game.myPlayer.MP = 20
+        game.myPlayer.MP = 25
         game.myPlayer.STR = 45
         game.myPlayer.maxDEF = 15
         game.myPlayer.cash = 0
+        game.myPlayer.xp = 500
         game.myPlayer.spels = [game.FireSword, game.blizzard]
     if game.myPlayer.job == 'mage':
         game.myPlayer.STR = 15
@@ -549,6 +542,7 @@ def setup_game():
         game.myPlayer.maxDEF = 10
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
+        game.myPlayer.xp = 500
         game.myPlayer.spels = [game.fire, game.thunder, game.meteor, game.cure, game.cura, game.curaga]
     if game.myPlayer.job == 'ranger':
         game.myPlayer.STR = 70
@@ -558,6 +552,7 @@ def setup_game():
         game.myPlayer.MP = 60
         game.myPlayer.maxDEF = 6
         game.myPlayer.cash = 0
+        game.myPlayer.xp = 300
         game.myPlayer.spels = [game.bloodKing, game.DarkDaggerTechnique]
 
     #### INTRODUCTION
