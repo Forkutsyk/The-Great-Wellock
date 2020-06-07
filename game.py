@@ -81,6 +81,7 @@ class Game:
         self.myPlayer = Player(self)
         self.myEnemy = Enemy(self)
         self.quests = Quests(self)
+        self.zonemap = zonemap
 
     ### Create Black Magic
     fire = Spell("Fire", 25, 60, 0, "black")
@@ -142,10 +143,10 @@ class Game:
                 print("\nNiestety,", choice, "nie jest prawidłowym wyborem.")
 
     def location_print(self):
-        print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
-        print(" " + '# ' + zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
-        print('\n' + (" " + '#' * (4 + len(zonemap[self.myPlayer.location][ZONENAME]))))
-        print('\n' + (zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
+        print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
+        print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
+        print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
+        print('\n' + (game.zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
 
     def list_of_spells(self):
         if self.myPlayer.job == "warrior":
@@ -374,12 +375,12 @@ def prompt():
         game_help(action.lower())
 
 
-def player_examine(action):  # Доделать
-    if zonemap[game.myPlayer.location][SOLVED]:
+def player_examine(action):
+    if game.zonemap[game.myPlayer.location][SOLVED]:
         print(" You have already exhausted this zone.")
-    elif zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
+    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
         shop()
-    elif zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
+    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
         print(" I have nothing to do here , i have to go up ")
     else:
         try:
@@ -391,10 +392,12 @@ def player_examine(action):  # Доделать
 
 ###### GAME FUNCTIONALITY ######
 
+
+
 def main_game_loop():
     while game.myPlayer.game_over is False:
+        #game.myPlayer.__pass_time()
         prompt()
-
 
 
 
@@ -524,10 +527,11 @@ def setup_game():
         game.myPlayer.maxHP = 160
         game.myPlayer.HP = 160
         game.myPlayer.maxMP = 20
-        game.myPlayer.MP = 20
+        game.myPlayer.MP = 25
         game.myPlayer.STR = 45
         game.myPlayer.maxDEF = 15
         game.myPlayer.cash = 0
+        game.myPlayer.xp = 500
         game.myPlayer.spels = [game.FireSword, game.blizzard]
     if game.myPlayer.job == 'mage':
         game.myPlayer.STR = 15
@@ -538,6 +542,7 @@ def setup_game():
         game.myPlayer.maxDEF = 10
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
+        game.myPlayer.xp = 500
         game.myPlayer.spels = [game.fire, game.thunder, game.meteor, game.cure, game.cura, game.curaga]
     if game.myPlayer.job == 'ranger':
         game.myPlayer.STR = 70
@@ -547,6 +552,7 @@ def setup_game():
         game.myPlayer.MP = 60
         game.myPlayer.maxDEF = 6
         game.myPlayer.cash = 0
+        game.myPlayer.xp = 300
         game.myPlayer.spels = [game.bloodKing, game.DarkDaggerTechnique]
 
     #### INTRODUCTION
