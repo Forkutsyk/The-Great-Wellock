@@ -4,7 +4,6 @@ import sys
 roadswrongs = 1
 sproby = 0
 
-
 class Quests:
     def __init__(self, parent):
         self.parent = parent
@@ -207,7 +206,7 @@ class Quests:
                 self.parent.text.you(text="Maybe next time\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_a5()
+                conversation_loop(response)
         elif answer == "1" and self.quest1 is True and self.quest2 is False:
             self.parent.text.system(' You have already passed this quest, try to go to the mine')
         elif answer == "2" and self.quest1 is False and self.quest2 is True:
@@ -548,7 +547,7 @@ class Quests:
         def tasks():
             self.parent.text.npc(text="""First I want to check your stock of mana\n""", begin_txt='Gandalfux')
             self.parent.text.npc(text="""You have to use mana to stop these knives that I will throw at you\n""", begin_txt='Gandalfux')
-            self.mana_perfect = 0
+            mana_perfect = 0
 
             if 25 < parent.myPlayer.maxMP < 10:
                 self.parent.text.npc(text="""You have small stock of mana, if you fail next task I'll kick you out of here \n""", begin_txt='Gandalfux')
