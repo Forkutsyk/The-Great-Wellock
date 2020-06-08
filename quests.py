@@ -547,7 +547,7 @@ class Quests:
         def tasks():
             self.parent.text.npc(text="""First I want to check your stock of mana\n""", begin_txt='Gandalfux')
             self.parent.text.npc(text="""You have to use mana to stop these knives that I will throw at you\n""", begin_txt='Gandalfux')
-            self.mana_perfect = 0
+            mana_perfect = 0
 
             if 25 < parent.myPlayer.maxMP < 10:
                 self.parent.text.npc(text="""You have small stock of mana, if you fail next task I'll kick you out of here \n""", begin_txt='Gandalfux')
