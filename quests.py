@@ -206,7 +206,7 @@ class Quests:
                 self.parent.text.you(text="Maybe next time\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                conversation_loop(response)
+                self.quest_a5()
         elif answer == "1" and self.quest1 is True and self.quest2 is False:
             self.parent.text.system(' You have already passed this quest, try to go to the mine')
         elif answer == "2" and self.quest1 is False and self.quest2 is True:
@@ -549,16 +549,16 @@ class Quests:
             self.parent.text.npc(text="""You have to use mana to stop these knives that I will throw at you\n""", begin_txt='Gandalfux')
             mana_perfect = 0
 
-            if 25 < parent.myPlayer.maxMP < 10:
+            if 10 < self.parent.myPlayer.maxMP < 25:
                 self.parent.text.npc(text="""You have small stock of mana, if you fail next task I'll kick you out of here \n""", begin_txt='Gandalfux')
                 self.mana_perfect = 1
-            elif 80 < parent.myPlayer.maxMP < 25:
+            elif 25 < self.parent.myPlayer.maxMP < 80:
                 self.mana_perfect = 2
                 self.parent.text.npc(text="""You have midle stock of mana, hmm.... \n""", begin_txt='Gandalfux')
-            elif 200 < parent.myPlayer.maxMP < 80:
+            elif 80 < self.parent.myPlayer.maxMP < 200:
                 self.parent.text.npc(text="""You have large stock of mana, very good, сommendable ! \n""", begin_txt='Gandalfux')
                 self.mana_perfect = 3
-            elif parent.myPlayer.maxMP > 200:
+            elif self.parent.myPlayer.maxMP > 200:
                 self.mana_perfect = 4
                 self.parent.text.npc(text="""Whaaat, i cant see the end of your stock. You are a real genius\n""", begin_txt='Gandalfux')
             print(self.mana_perfect)
@@ -583,7 +583,7 @@ class Quests:
                 exit = input(" > ")
 
                 if exit == "exit":
-                    quest_b2()
+                    self.quest_b2()
                 if catch_chanse < 26:
                     y = random.randint(1, 4)
                     if y == 1:
