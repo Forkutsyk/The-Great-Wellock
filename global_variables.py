@@ -28,7 +28,7 @@ zonemap = {
     'a0': {
         ZONENAME: 'Docks',
         DESCRIPTION: " The initial location is the main port of the kingdom of Wellock. You mysteriously appeared at this location. The port is most of the infrastructure of the kingdom.",
-        'SOLVED': True,
+        'SOLVED': False,
         UP: "a3",
         DOWN: "0",
         LEFT: "1",
@@ -171,6 +171,4 @@ zonemap = {
         RIGHT: "3"
     }
 }
-stablequest = False
-minequest = False
-piligrimquest = False
+
