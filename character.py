@@ -10,7 +10,7 @@ class Player:
         self.maxHP = 0
         self.maxMP = 0
         self.maxDEF = 0
-        self.spels = []
+        self.spells = []
         self.location = 'a0'
         self.cash = 0
         self.xp = 0

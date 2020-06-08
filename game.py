@@ -34,7 +34,7 @@ class Text:
         if txt_only:
             val = cls.YOU + text + cls.END
         else:
-            val = cls.YOU + f"\n {begin_txt}: " + cls.END + text
+            val = cls.YOU + f" {begin_txt}: " + cls.END + text
         if print_text:
             cls.dialogs.dialog = val
             func = getattr(cls.dialogs, print_function)
@@ -102,6 +102,9 @@ class Game:
     DarkDaggerTechnique = Spell("Dark Dagger Technique", 20, 45, 0, "black")
     bloodKing = Spell("Blood King", 50, 70, 0, "bloody")
 
+    # special - can be learned with a quest
+    FireBall = Spell("Fire Ball", 20, 50, 0, "fire")
+
     cut_scene = dialogs()
 
     def fight(self):
@@ -149,20 +152,8 @@ class Game:
         print('\n' + (game.zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
 
     def list_of_spells(self):
-        if self.myPlayer.job == "warrior":
-            self.FireSword.show_details()
-            self.blizzard.show_details()
-
-        if self.myPlayer.job == "mage":
-            self.fire.show_details()
-            self.thunder.show_details()
-            self.meteor.show_details()
-            self.cure.show_details()
-            self.cura.show_details()
-            self.curaga.show_details()
-        if self.myPlayer.job == "ranger":
-            self.bloodKing.show_details()
-            self.DarkDaggerTechnique.show_details()
+        for spell in self.myPlayer.spells:
+            spell.show_details()
 
     def show_map(self):
         map_coordinates = [['1', '1', '1', '1', '1', '1',  '1'],
@@ -532,7 +523,7 @@ def setup_game():
         game.myPlayer.maxDEF = 15
         game.myPlayer.cash = 0
         game.myPlayer.xp = 500
-        game.myPlayer.spels = [game.FireSword, game.blizzard]
+        game.myPlayer.spells = [game.FireSword, game.blizzard]
     if game.myPlayer.job == 'mage':
         game.myPlayer.STR = 15
         game.myPlayer.maxHP = 70
@@ -543,7 +534,7 @@ def setup_game():
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
         game.myPlayer.xp = 500
-        game.myPlayer.spels = [game.fire, game.thunder, game.meteor, game.cure, game.cura, game.curaga]
+        game.myPlayer.spells = [game.fire, game.thunder, game.meteor, game.cure, game.cura, game.curaga]
     if game.myPlayer.job == 'ranger':
         game.myPlayer.STR = 70
         game.myPlayer.maxHP = 90
@@ -552,16 +543,17 @@ def setup_game():
         game.myPlayer.MP = 60
         game.myPlayer.maxDEF = 6
         game.myPlayer.cash = 0
-        game.myPlayer.xp = 300
-        game.myPlayer.spels = [game.bloodKing, game.DarkDaggerTechnique]
+        game.myPlayer.xp = 500
+        game.myPlayer.spells = [game.bloodKing, game.DarkDaggerTechnique]
 
     #### INTRODUCTION
 
     game.cut_scene.dialog = SYSTEM + "\n SYSTEM: " + END + "Welcome, " + player_name + " the " + player_class + "! " + "\n"
     game.cut_scene.dialog_print005()
-
     skip = input("\n\n\n To start playing press enter")
     if skip == 's':
+        os.system('cls')
+        game.myPlayer.cash += 100
         main_game_loop()
     os.system('cls')
     game.cut_scene.dialog = SYSTEM + """ 
