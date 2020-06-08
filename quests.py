@@ -551,17 +551,17 @@ class Quests:
 
             if 10 < self.parent.myPlayer.maxMP < 25:
                 self.parent.text.npc(text="""You have small stock of mana, if you fail next task I'll kick you out of here \n""", begin_txt='Gandalfux')
-                self.mana_perfect = 1
+                mana_perfect = 1
             elif 25 < self.parent.myPlayer.maxMP < 80:
-                self.mana_perfect = 2
+                mana_perfect = 2
                 self.parent.text.npc(text="""You have midle stock of mana, hmm.... \n""", begin_txt='Gandalfux')
             elif 80 < self.parent.myPlayer.maxMP < 200:
                 self.parent.text.npc(text="""You have large stock of mana, very good, сommendable ! \n""", begin_txt='Gandalfux')
-                self.mana_perfect = 3
+                mana_perfect = 3
             elif self.parent.myPlayer.maxMP > 200:
-                self.mana_perfect = 4
+                mana_perfect = 4
                 self.parent.text.npc(text="""Whaaat, i cant see the end of your stock. You are a real genius\n""", begin_txt='Gandalfux')
-            print(self.mana_perfect)
+            print(mana_perfect)
 
             i = 0
             thrown_knifes = random.randint(2, 5)
@@ -569,7 +569,7 @@ class Quests:
             print(thrown_knifes)
 
             self.parent.text.system(
-                """Press ENTER to catch the knife! Press as fast as you can , or you will couldn't catch a knife\n""")
+                """Press ENTER to catch the knife! Press as fast as you can , or you won't catch a knife\n""")
             while i != thrown_knifes:
                 print(" Catch")
                 if mana_perfect == 1:
@@ -578,7 +578,7 @@ class Quests:
                     catch_chanse = 50
                 elif mana_perfect == 3:
                     catch_chanse = 75
-                elif self.mana_perfect == 4:
+                elif mana_perfect == 4:
                     catch_chanse = 120
                 exit = input(" > ")
 
@@ -591,21 +591,21 @@ class Quests:
                         i += 1
                     else:
                         print("You didnt catch1")
-                elif 25 < catch_chanse < 50:
+                elif 25 < catch_chanse <= 50:
                     y = random.randint(1, 4)
                     if y in [1, 4]:
                         print(" You catch knife2")
                         i += 1
                     else:
                         print("You didnt catch2")
-                elif 50 < catch_chanse < 75:
+                elif 50 < catch_chanse <= 75:
                     y = random.randint(1, 4)
                     if y in [1, 2, 3]:
                         print(" You catch knife3")
                         i += 1
                     else:
                         print("You didnt catch3")
-                elif 75 < catch_chanse < 130:
+                elif 75 < catch_chanse <= 130:
                     print(" You catch knife4")
                     i += 1
 
@@ -648,3 +648,30 @@ class Quests:
         else:
             self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
             self.quest_b2(response)
+
+    def quest_b5(self, response=None):
+        if not response:
+            self.parent.text.system(text=""" When you walk to market in the morning you see on a wall a pinned leaflet\n""")
+            self.parent.text.system(text=""" It looks like local miller looks for an employee\n""")
+            self.parent.text.system(text=""" This could be an occasion for quick money\n""")
+        self.parent.text.system(
+            f" Choose option\n  1. Go to see the miller\n  2. Do not work\n", txt_only=True)
+        response = input(" >  ")
+        response = str(response).lower()
+        if response == '1':
+            self.parent.text.you(text=f"Hey, I am {self.parent.myPlayer.name}, I saw you job offer\n")
+            self.parent.text.npc(text=f"Hi there\n", begin_txt='Miller')
+            self.parent.text.npc(text=f"Great, how can I help you?\n", begin_txt='Gandalfux')
+            self.parent.text.system(
+                f" Choose option\n  1. Can you tell me more about the job?\n2. How long would I work?\n3. How much am I going to earn?\n", txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                pass
+
+            self.parent.text.npc(text=f"Oh great, I am looking for someone that could help me with carrying my flour to clients\n", begin_txt='Miller')
+            self.parent.text.npc(text=f"Oh great, I am looking for someone that could help me with carrying my flour to clients\n",
+                begin_txt='Miller')
+
+    def quest_c2(self, response=None):
+        pass
