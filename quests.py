@@ -649,29 +649,53 @@ class Quests:
             self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
             self.quest_b2(response)
 
-    def quest_b5(self, response=None):
-        if not response:
-            self.parent.text.system(text=""" When you walk to market in the morning you see on a wall a pinned leaflet\n""")
-            self.parent.text.system(text=""" It looks like local miller looks for an employee\n""")
-            self.parent.text.system(text=""" This could be an occasion for quick money\n""")
-        self.parent.text.system(
-            f" Choose option\n  1. Go to see the miller\n  2. Do not work\n", txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
+    def quest_b5(self, response=None, action=False):
+        if not action:
+            if not response:
+                self.parent.text.system(text=""" When you walk to market in the morning you see on a wall a pinned leaflet\n""")
+                self.parent.text.system(text=""" It looks like local miller looks for an employee\n""")
+                self.parent.text.system(text=""" This could be an occasion for quick money\n""")
+                self.parent.text.system(
+                    f" Choose option\n  1. Go to see the miller\n  2. Do not work\n", txt_only=True)
+                response = input(" >  ")
+                response = str(response).lower()
         if response == '1':
-            self.parent.text.you(text=f"Hey, I am {self.parent.myPlayer.name}, I saw you job offer\n")
-            self.parent.text.npc(text=f"Hi there\n", begin_txt='Miller')
-            self.parent.text.npc(text=f"Great, how can I help you?\n", begin_txt='Gandalfux')
+            if not action:
+                self.parent.text.you(text=f"Hey, I am {self.parent.myPlayer.name}, I saw you job offer\n")
+                self.parent.text.npc(text=f"Hi there\n", begin_txt='Miller')
+                self.parent.text.npc(text=f"Great, how can I help you?\n", begin_txt='Miller')
             self.parent.text.system(
-                f" Choose option\n  1. Can you tell me more about the job?\n2. How long would I work?\n3. How much am I going to earn?\n", txt_only=True)
+                f" Choose option\n1. Can you tell me more about the job?\n2. How long would I work?\n3. How much am I going to earn?\n4. OK, I want start working\n5. I have to go\n", txt_only=True)
             response = input(" >  ")
             response = str(response).lower()
             if response == '1':
-                pass
-
-            self.parent.text.npc(text=f"Oh great, I am looking for someone that could help me with carrying my flour to clients\n", begin_txt='Miller')
-            self.parent.text.npc(text=f"Oh great, I am looking for someone that could help me with carrying my flour to clients\n",
-                begin_txt='Miller')
+                self.parent.text.you(text=f"Can you tell me more about the job?\n")
+                self.parent.text.npc(text=f"I am looking for a man that can help me carrying my flour to my clients\n", begin_txt='Miller')
+                self.quest_b5(response, True)
+            elif response == '2':
+                self.parent.text.you(text=f"2. How long would I work?\n")
+                self.parent.text.npc(text=f"Only today. Until dawn\n", begin_txt='Miller')
+                # TODO: to check why it crashes here
+                self.quest_b5(response, True)
+            elif response == '3':
+                self.parent.text.you(text=f"How much am I going to earn?\n")
+                self.parent.text.npc(text=f"100 coins paid after job\n", begin_txt='Miller')
+                self.quest_b5(response, True)
+            elif response == '4':
+                self.parent.text.you(text=f"OK, I want start working?\n")
+                self.parent.text.npc(text=f"Wonderfull! We can start straight away!\n", begin_txt='Miller')
+                self.parent.text.system(text=""" After whole day of work you get paid by the miller. Also he lets you sleep in his mill so can recover a bit\n""")
+                self.parent.myPlayer.cash += 100
+                self.parent.myPlayer.HP += 25
+                if self.parent.myPlayer.HP > self.parent.myPlayer.maxMP:
+                    self.parent.myPlayer.HP = self.parent.myPlayer.maxMP
+                self.parent.zonemap['b5']['SOLVED'] = True
+            elif response == '5':
+                self.parent.text.you(text=f"I have to go\n")
+                self.parent.text.npc(text=f"Bye bye\n", begin_txt='Miller')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_b5(response)
 
     def quest_c2(self, response=None):
-        pass
+        raise NotImplementedError
