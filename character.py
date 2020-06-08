@@ -172,20 +172,21 @@ Spells:
     def show(self):
         print(self.name, " I have left:", self.HP, "hp. ", "\n")
 
-# do not work :(
-    def __pass_time(self):
-        self.MP += 1
-        if self.MP > self.maxMP:
-            self.MP = self.maxMP
-
     def heal(self):
         self.HP += random.randrange(15, 30)
-        if self.HP > self.maxHP:
+        if self.HP > self.maxHP and self.MP >= 5:
              self.HP = self.maxHP
+             self.MP -= 5
+        else:
+            print(" You have not enoght mana or you health is full")
 
     def die(self):
         print(" I'm dead. ~", self.name)
         # sys.exit()
+    def regenaration_mana(self):
+        if self.MP < self.maxMP:
+            regeneration = self.maxMP
+            self.MP = regeneration
 
     def move(self, dest=None):
         if not dest:
@@ -233,6 +234,7 @@ Spells:
                 self.movement_handler(destination)
 
     def movement_handler(self, destination):
+        self.regenaration_mana()
         self.parent.myEnemy.randomize_enemy()
         print("\n" + " You have moved to the " + destination + ".")
         self.location = destination
@@ -252,6 +254,9 @@ class Enemy(object):
         dmg = self.STR
         dmg -= enemy.maxDEF
         enemy.HP -= dmg
+        if enemy.HP < 0:
+            self.xp += 25
+            enemy.HP = 0
         print(self.name, "attack.\n")
         print(dmg)
 
@@ -302,7 +307,7 @@ class Enemy(object):
             print(" On the way you met an aggressive wolf")
             self.parent.fight()
 
-    def mini_boss(self):
+    def boss(self):
         self.name = 'Big buddy'
         self.job = 'animal'
         self.HP = 200

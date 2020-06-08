@@ -145,6 +145,17 @@ class Game:
             else:
                 print("\nNiestety,", choice, "nie jest prawidłowym wyborem.")
 
+    def fight_dragon(self):
+        # setup dragon stats
+        self.myEnemy.name = 'Dragon'
+        self.myEnemy.job = 'legendary animal'
+        self.myEnemy.HP = 250
+        self.myEnemy.MP = 0
+        self.myEnemy.maxDEF = 0
+        self.myEnemy.STR = 55
+        self.text.danger("On your way to dark valley you see it.\n Huge wings, lots of fire and the appaling smell.\n Chances of survival are pretty much zero but you try to kill the dragon anyway...\n")
+        self.fight()
+
     def location_print(self):
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
         print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
@@ -517,7 +528,7 @@ def setup_game():
     if game.myPlayer.job == 'warrior':
         game.myPlayer.maxHP = 160
         game.myPlayer.HP = 160
-        game.myPlayer.maxMP = 20
+        game.myPlayer.maxMP = 25
         game.myPlayer.MP = 25
         game.myPlayer.STR = 45
         game.myPlayer.maxDEF = 15
