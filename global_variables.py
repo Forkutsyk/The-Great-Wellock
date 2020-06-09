@@ -100,7 +100,7 @@ zonemap = {
     },
     'b3': {
         ZONENAME: 'Absol',
-        DESCRIPTION: "",
+        DESCRIPTION: "The city is built on ancient ruins. It is not known what was in place of the ruins before, but some ruins of an unknown building still stand.",
         'SOLVED': False,
         UP: "c3",
         DOWN: "a3",
@@ -135,7 +135,7 @@ zonemap = {
         RIGHT: "c2"
     },
     'c2': {
-        ZONENAME: 'Brickell Whyte',
+        ZONENAME: 'Brickellwhite',
         DESCRIPTION: "",
         'SOLVED': False,
         UP: "4",

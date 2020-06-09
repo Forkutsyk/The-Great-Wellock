@@ -156,6 +156,21 @@ class Game:
         self.text.danger("On your way to dark valley you see it.\n Huge wings, lots of fire and the appaling smell.\n Chances of survival are pretty much zero but you try to kill the dragon anyway...\n")
         self.fight()
 
+    def fight_soldiers(self):
+        three = 3
+        while three != 0:
+            self.myEnemy.name = 'Warevolfe'
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 70
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 45
+            self.text.danger("*growls aggressively*")
+            self.fight()
+            three -= 1
+
+
+
     def location_print(self):
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
         print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
@@ -380,7 +395,7 @@ def prompt():
 def player_examine(action):
     if game.zonemap[game.myPlayer.location][SOLVED]:
         print(" You have already exhausted this zone.")
-    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Dwarven Valley':
+    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Stronghold':
         shop()
     elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
         print(" I have nothing to do here , i have to go up ")
@@ -405,7 +420,7 @@ def main_game_loop():
 
 def shop():
     print("\n - Jou`re in the shop -\n")
-    print(" Hello stranger !\n I greet you in the dwarf shop\n ")
+    print(" Hello stranger !\n I greet you in the guild shop\n ")
     print(" Here you can buy things which will upgrade your stats ! ")
     print(" This is the only such place in whole Wellock")
     print(""" So, what would you like ?
@@ -453,7 +468,7 @@ def shop():
                 game.myPlayer.maxDEF += buff
                 print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "defense.")
         elif answer == "5":
-           print("""  Dwarf Shop:
+           print("""  Guild Shop:
         ~  If you choose weapon you will get random weapon which will add you strength
         ~  If you choose Armor you will get random armor which will add you defense
         ~  If you choose Magic stuff you will get random magic stuff which will add you mana points
@@ -574,7 +589,7 @@ def setup_game():
     print(game.cut_scene.dialog)
 
     game.cut_scene.dialog = NPC + " Old man: " + END + """Oh young man, you are in the kingdom of Wellock. 
-          It consists of a total of 16 quarters, we are now in the Blacklake quarter i. 
+          It consists of a total of 16 quarters, we are now in the Docks . 
           After the young princess is kidnapped by the great magician Elminster,
           the King is still looking for a brave hero who will save her from captivity
           Recently things are going very badly in this kingdom 
