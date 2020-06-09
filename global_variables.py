@@ -127,7 +127,7 @@ zonemap = {
     },
     'c1': {
         ZONENAME: 'Wyllowwood',
-        DESCRIPTION: "",
+        DESCRIPTION: " the city is surrounded by dense forest(a lot of elves )",
         'SOLVED': False,
         UP: "4",
         DOWN: "b1",
