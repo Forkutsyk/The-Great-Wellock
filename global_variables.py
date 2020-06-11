@@ -91,7 +91,7 @@ zonemap = {
     },
     'b2': {
         ZONENAME: 'Nezeris',
-        DESCRIPTION: " ",
+        DESCRIPTION: "The city is known for its powerful magicians ",
         'SOLVED': False,
         UP: "c2",
         DOWN: "a2",
@@ -100,7 +100,7 @@ zonemap = {
     },
     'b3': {
         ZONENAME: 'Absol',
-        DESCRIPTION: "",
+        DESCRIPTION: "The city is built on ancient ruins. It is not known what was in place of the ruins before, but some ruins of an unknown building still stand.",
         'SOLVED': False,
         UP: "c3",
         DOWN: "a3",
@@ -127,7 +127,7 @@ zonemap = {
     },
     'c1': {
         ZONENAME: 'Wyllowwood',
-        DESCRIPTION: "",
+        DESCRIPTION: " The city is surrounded by dense forest(a lot of elves )",
         'SOLVED': False,
         UP: "4",
         DOWN: "b1",
@@ -135,7 +135,7 @@ zonemap = {
         RIGHT: "c2"
     },
     'c2': {
-        ZONENAME: 'Brickell Whyte',
+        ZONENAME: 'Brickellwhite',
         DESCRIPTION: "",
         'SOLVED': False,
         UP: "4",
@@ -162,8 +162,9 @@ zonemap = {
         RIGHT: "c5"
     },
     'c5': {
-        ZONENAME: 'The final town',
-        DESCRIPTION: "",
+        ZONENAME: 'Homwards',
+        DESCRIPTION: """ Mountain fortress, which for several centuries housed one of the most famous magician schools Homwards.
+ Until Elminster captured the entire territory of the school, and now uses it for his evil affairs""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b5",
