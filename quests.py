@@ -1,6 +1,7 @@
 import random
 import sys
 import os
+import time
 
 roadswrongs = 1
 sproby = 0
@@ -11,6 +12,7 @@ class Quests:
         self.quest1 = False
         self.quest2 = False
         self.home = False
+        self.ancient_weapon = False
 
     def quest_a2(self, response=None):
         if not response:
@@ -259,18 +261,89 @@ class Quests:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_a5()
 
+### desert quest, snake_fight, master fight( dopisac sasha)
     def quest_b1(self):
         self.parent.text.system(text=""" In tavern you see an old man with long beard\n""")
-        self.parent.text.npc(text="""My name is Tetrex. I have been fighting all my life. Also if you pay me I can teach you some self defense technics that can help you survive in this world\n""", begin_txt='Old warrior')
-        self.parent.text.you(text=f'Hello, I am {self.parent.myPlayer.name}\n It would be an honor to learn something from you\n')
-        self.parent.text.npc(text="""Ok then, let us go to outside\n""", begin_txt='Old warrior')
-        self.parent.text.system(text=""" After almost whole day of training you finally make it to increase you maximum HP\n""")
-        self.parent.text.system(text=""" Your max HP increases by 30\n""")
-        self.parent.myPlayer.maxHP += 30
-        self.parent.text.npc(text="""My service is worth 50 coins\n""", begin_txt='Old warrior')
-        self.parent.text.you(text="Here it is\n")
-        self.parent.text.npc(text="""Thank you and good luck\n""", begin_txt='Old warrior')
-        self.parent.zonemap['b1']['SOLVED'] = True
+        self.parent.text.npc(text="""My name is Tetrex. What do you want ?\n""", begin_txt='Old warrior')
+        self.parent.text.you(text=f"Hello, I am {self.parent.myPlayer.name} I've met one guy he said that you can help me become stronger\n")
+        self.parent.text.npc(text=""" Hmm interesting...But first you have to prove to me that you are worthy of my time\n""", begin_txt='Old warrior')
+        self.parent.text.system(text=""" What will you answer the old warrior\n           1. I'm ready for anything to defeat Elminster\n           2. Quest? again ? Meeeh\n           3. Ignoring to drink the beer of the old master\n""")
+        player_choose1 = input(" > ")
+        if player_choose1 == "1":
+            self.parent.text.npc(text=""" Very good young man, You had to bring me the Abyssal sword...\n""", begin_txt='Old warrior')
+            self.parent.text.you(text="Okay, and where is he?\n")
+            self.parent.text.npc(text=""" I don`t know... try to search in the desert of despair\n""", begin_txt='Old warrior')
+            self.parent.text.system(text=""" So you will go to the desert of despair?\n           1. Yep\n           2. Nope, i will not go anywhere. I will not be completed this quest ...\n""")
+            player_choose2 = input(" > ")
+            if player_choose2 == "1":
+                desert_quest()
+            elif player_choose2 == "2":
+                self.parent.text.npc(text=""" Alright, alright I'm just kidding....It is known only two places where it can be\n""", begin_txt='Old warrior')
+                self.parent.text.system(text="""\n  1.Swamp of walking snakes\n  2.Waterfall of life and death \n""", txt_only=True)
+                player_choose3 = input(" > ")
+                if player_choose3 == "1":
+                    snakes_fight()
+                elif player_choose3 == "2":
+                    self.parent.text.system("""\n  - Waterfall of life and death  - \n""", txt_only=True)
+                    self.parent.text.system(text=""" Try to look out, maybe you find something interesting...(write look)\n""")
+                    input(" > ")
+                    self.parent.text.system(text=""" You noticed an unusual glow behind the waterfall. 
+          Most likely there is something behind the waterfall,
+          however ... It is a waterfall of life and death, if I will enter the water I can die. What should i do ?\n""")
+                self.parent.text.system(text="""\n  1. Just go through the waterfall, maybe I would be lucky\n  2. Cover yourself with your light cloak, and hope for the best\n  3. Stop and think more\n""", txt_only=True)
+                player_choose4 = input(" > ")
+                if player_choose4 == "1":
+                    chanse_to_die = random.randint(1, 2)
+                    if chanse_to_die == 1:
+                        self.parent.text.danger(' Luck is not on your side, you died just by going into the water\n', begin_txt='SYSTEM')
+                        self.quest_b1()
+                    else:
+                        self.parent.text.system(""" luck on your side, you went through the waterfall without consequences\n""", txt_only=True)
+                        sword_check()
+                elif player_choose4 == "2":
+                    self.parent.text.danger(' It was a terrible plan, you died just by going into the water\n', begin_txt='SYSTEM')
+                    self.quest_b1()
+                elif player_choose4 == "3":
+                    self.parent.text.system(text=""" After a long search you found nothing\n""")
+                    time.sleep(3)
+                    self.parent.text.system(text=""" You wanted to go back, but noticed a small gorge    
+          You decide to go in and see what's inside
+          Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n""")
+                    self.parent.text.you(" Which of them is the one I need, the old man almost did not describe it...\n")
+                    self.parent.text.system(text=""" Wich one you wanna take ?\n  1. Sword inlaid with gems\n  2. Incredibly light and sharp one-handed sword\n  3. Rusty iron sword\n""",txt_only=True)
+                    player_choose5 = input(" > ")
+                    if player_choose5 in ['1', '2']:
+                        self.parent.text.system(text=""" You have taken the knife and went to the master""")
+                        self.parent.text.npc(text=""" You are very inattentive, I will not help you and leave this trinket to yourself, it is a useless thing.\n""", begin_txt='Old warrior')
+                    elif player_choose5 == "3":
+                        self.parent.text.system(text=""" You have taken the knife and went to the master\n""")
+                        self.parent.text.npc(text=""" Very well, either you listened to me well, or you have a pure spirit.
+               Unfortunately, I can do little to help you. However, this sword will definitely help you.
+               Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
+               This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
+               I also will show you how to increse you endurance.
+                        \n""", begin_txt='Old warrior')
+                        self.parent.myPlayer.maxHP += 30
+                        self.parent.text.system(""" After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""", txt_only=True)
+                        self.parent.zonemap['b1']['SOLVED'] = True
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        self.quest_b1()
+                else:
+                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                    self.quest_b1()
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_b1()
+        elif player_choose1 == "2":
+            self.parent.text.npc(text=""" Well, it's your choice\n""", begin_txt='Old warrior')
+        elif player_choose1 == "3":
+            master_fight()
+            self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+            self.quest_b1()
+
+            # add else
+         # add else and choose 2,3
 
     def quest_b2(self, response=None):
         def tasks():
@@ -454,14 +527,79 @@ class Quests:
                     self.parent.text.npc(" Well, as you wish, thank you again for the rescuing\n", begin_txt='Tretogor')
             elif help_elf == "2":
                 self.parent.text.you(" Meeeh, this does not concern me\n")
-                self.parent.text.danger(" Hey, you what are you staring ?!")
-                self.text.danger(" Hey buddy do you know who we are?\n", begin_txt="Werewolve soldier")
-                self.parent.fight_soldiers()
+                self.parent.text.danger(" Hey, you what are you staring ?!", begin_txt="Werewolve soldier")
+                self.text.danger(" If you do not want problems pay 25 coins\n", begin_txt="Werewolve soldier")
+                self.parent.text.system(""" Choose what do you wanna say\n    1.Yes, off course, i`m sorry\n    2.Ignore\n    3. Who said that i do not wanna ?""")
+                player_answer = input(" > ")
+                if player_answer == '1':
+                    self.parent.myPlayer.cash -= 25
+                    self.text.danger(" Good boy, now run while you can!\n", begin_txt="Werewolve soldier")
+                elif player_answer in ['2', '3']:
+                    self.text.danger(" Hey buddy do you know who we are?\n", begin_txt="Werewolve soldier")
+                    self.parent.fight_soldiers()
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b3()
         else:
-            self.parent.text.system(""" You can rest here and train \n    1.rest\n    2.train\n""", txt_only=True)
+            self.parent.text.system("""  - Welcome to your home - """, txt_only=True)
+            self.parent.text.system(""" What do you wanna to do\n    1.Go to rest\n    2.train\n""", txt_only=True)
+            house_choise = input(" > ")
+            if house_choise == "1":
+                sleep_quality = ['great', 'so-so', 'bad']
+                mood = random.choice(sleep_quality)
+                if mood == 'great':
+                    self.parent.myPlayer.regenaration_mana()
+                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                    self.parent.text.system("""Congratulations, you slept well you completely recovered!\n""", txt_only=True)
+                elif mood == 'so-so':
+                    self.parent.myPlayer.regenaration_mana()
+                    self.parent.myPlayer.heal()
+                    self.parent.text.system("""You haven't slept well you recovered full mana, and some health points \n""", txt_only=True)
+                elif mood == 'bad':
+                    self.parent.myPlayer.regenaration_mana()
+                    self.parent.text.system("""You  slept bad but you recovered mana\n""", txt_only=True)
+                elif self.parent.myPlayer.HP == self.parent.myPlayer.maxHP and self.parent.myPlayer.MP == self.parent.myPlayer.maxMP:
+                    self.parent.text.system("""You rested well\n""", txt_only=True)
+            elif house_choise == "2":
+                self.parent.text.system(""" Which type of training do you wanna to do ?\n       1.practice punches   2.Train spells   3.Meditation""")
+                training_chanse = random.randint(1, 100)
+                training_choose = input(" > ")
+                if training_choose == "1":
+                    if training_chanse > 10:
+                        self.parent.myPlayer.maxHP += 2
+                        self.parent.text.system(""" Congratulations you have improved your health""", txt_only=True)
+                elif training_chanse == "2":
+                    self.parent.text.system(""" Repeat the spell to practice""", txt_only=True)
+                    spellbook = ['Parseltongue', 'Metamorphmagi', 'Seers', 'Legilimency', 'Apparition ',
+                                 'Occlumency ', 'Posteriori','Avada Kedavra', 'Crucio', 'Imperio', 'Inferius ',
+                                 'Horcrux', 'Portraits', ]
+                    train_mana = random.choice(spellbook)
+                    print(train_mana)
+                    player_spell = input(" > ")
+                    false_spell = 0
+                    i = 0
+                    while player_spell == spellbook and i != 7:
+                        if false_spell == 3:
+                            self.parent.text.system(""" You failed your training """)
+                            break
+                        elif i == 6:
+                            self.parent.myPlayer.maxHP += 5
+                            self.parent.text.system(""" Congratulations you successfully eded  your training and uped MP""")
+                            break
+                        elif i != 6 :
+                            self.parent.text.system(""" You have successfully cast a spell""")
+                            i += 1
+                    if player_spell != spellbook:
+                        self.parent.text.system(""" You`ve made mistake!""")
+                        false_spell += 1
+
+                elif training_choose == "3":
+                    if training_chanse > 10:
+                        self.parent.myPlayer.maxHP += 2
+                        self.parent.text.system(""" Congratulations you have improved your health""", txt_only=True)
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_b3()
 
     def quest_b4(self):
         self.parent.text.system("\n  - Welcome to Cardcaster -\n", txt_only=True)
@@ -676,11 +814,70 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b5(response)
 
+### dopisac sasha
     def quest_c1(self):
-        print(" to be continued")
-
-    def quest_c2(self, response=None):
-        raise NotImplementedError
+        print("")
+        self.parent.text.system("""\n  -  Wyllowwood - \n""", txt_only=True)
+        self.parent.text.system(""" You can go to:\n 1.Wyllowwood lake\n 2.Spellshop\n""")
+        player_choise1 = input(" > ")
+        if player_choise1 == "1":
+            self.parent.text.npc("Hello young man, maybe you want to take part in a fishing tournament?", begin_txt="Mr.Fishman")
+            self.parent.text.you("But what do I benefit from this?")
+            self.parent.text.npc("If you take prize place you will receive a cash prize, and taking 1st place you will get another special item", begin_txt="Mr.Fishman")
+            self.parent.text.system("""
+                                  ###########################################
+                                  ~~~~~~       Fishing tournament      ~~~~~~
+                                  ###########################################
+                                  |                                         |
+                                  | 1 place - 150 coins + mysterious object |
+                                  | 2 place - 100 coins                     |
+                                  | 3 place - 75 coins                      |
+                                  |                                         |
+                                  |                                         |
+                                  ###########################################
+                                  |     1.Accept      |      2.Decline      |
+                                  ###########################################
+            """, txt_only=True)
+            player_choise2 = input(" > ")
+            if player_choise2 == "1":
+                self.parent.text.npc(" Let the tournament starts", begin_txt="Mr.Fishman")
+                self.parent.text.system(""" Okay now you have 3 attempts to catch a fish, if you are sure that you have the biggest fish enter 'accept',
+      if you want to try again enter 'again'. After the third attempt, the tournament ends, and the results for the last fish caught will be counted.
+      To start fishing write 'catch'
+      
+      ! Attention when you type 'again' you release the previous caught fish, and catch a new one. 
+      ! You probably won't be able to return the fish you caught before.\n""")
+                some = input(" > ")
+                player_choise3 = some
+                i = 0
+                first_catch = False
+                fishname = ['name1','name2','name3']
+                age = ['age1','age2','age3']
+                final_fish = 0
+                final_fish_name = ''
+                while i != 3:
+                    your_fish = random.randint(100, 500)
+                    if player_choise3 == "catch" and first_catch is False:
+                        final_fish_name = random.choice(fishname)
+                        self.parent.text.system(f"Congratulations, you have caught {final_fish_name} in the size of {your_fish}, it maybe {age}")
+                        first_catch = True
+                        final_fish = your_fish
+                        i += 1
+                        self.parent.text.system(" You wanna try again ?")
+                        player_choise3 = input(" > ")
+                    elif player_choise3 == 'again':
+                        final_fish_name = random.choice(fishname)
+                        self.parent.text.system(f"Congratulations, you have caught {final_fish_name} in the size of {your_fish}, it maybe {age}")
+                        i += 1
+                        final_fish = your_fish
+                        if i != 3:
+                            self.parent.text.system(" You wanna try again ?")
+                            player_choise3 = input(" > ")
+                    elif player_choise3 == "accept":
+                        self.parent.text.system(f"Congratulations, your result {final_fish_name} in the size of{final_fish}")
+                        break
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
 
     def quest_c3(self, response=None):
         if not response:
@@ -832,4 +1029,31 @@ class Quests:
             self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
             self.quest_c4(response)
 
+## TODO: dopisac final quest
+    def quest_c5(self):
+        self.parent.text.you(text='I am finally here, and I will finally be able to free this region from this tyrant\n')
+        print(""" 
+        
+     .----------------. 
+    | .--------------. |
+    | |      _       | |
+    | |     | |      | |  Hero, be careful, if you are not confident in your abilities, 
+    | |     | |      | |  return to other locations and gain strength.
+    | |     | |      | |  Mage Elminster is a tough opponent. 
+    | |     |_|      | |  Take on this quest, only if you have collected all the things you need.
+    | |     (_)      | |
+    | '--------------' |
+     '-----------------' 
+     
+""")
+        self.parent.text.system(" Choose one of the below answers\n  1. Go straight to castle\n  2. Walk on the outer territory\n  3.Go to gain strength", txt_only=True)
+        final_bose = input(" > ")
+        if final_bose == "1":
+            print()
+        elif final_bose == "2":
+            if self.teritory_map is True:
+                self.parent.text.system("You approached to the drawbridge")
+                self.parent.text.system(" ")
 
+        elif final_bose == "3":
+            print(" Good choise! ")

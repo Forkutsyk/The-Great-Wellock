@@ -518,7 +518,7 @@ def setup_game():
     #### CLASS HANDLING
     game.cut_scene.dialog = "\n" + SYSTEM + " SYSTEM: " + END + "Hello, " + player_name + "! What`s class do you wanna to play?\n"
     game.cut_scene.dialog_print005()
-    game.cut_scene.dialog = "         (You can play as a warrior, mage or ranger)\n"
+    game.cut_scene.dialog = "         (You can play as a warrior, mage or ranger if you wanna show stats write help)\n"
     game.cut_scene.dialog_print005()
 
     player_class = input(" > ")
@@ -530,14 +530,17 @@ def setup_game():
         game.cut_scene.dialog_print03()
         print("\n You now a " + player_class + "!\n")
     while player_class.lower() not in valid_jobs:
-        print(" I don`t know such class....")
-        player_class = input(" > ")
-        if player_class.lower() in valid_jobs:
-            game.myPlayer.job = player_class
-            print(SYSTEM + " Initialization")
-            game.cut_scene.dialog = (" .............\n" + END)
-            game.cut_scene.dialog_print03()
-            print("\n You now a " + player_class + "\n")
+        if player_class.lower() == 'help':
+            game.cut_scene.print_classes()
+        else:
+            print(" I don`t know such class....")
+            player_class = input(" > ")
+            if player_class.lower() in valid_jobs:
+                game.myPlayer.job = player_class
+                print(SYSTEM + " Initialization")
+                game.cut_scene.dialog = (" .............\n" + END)
+                game.cut_scene.dialog_print03()
+                print("\n You now a " + player_class + "\n")
 
     ##### PLAYER STATS
     if game.myPlayer.job == 'warrior':
@@ -604,8 +607,7 @@ def setup_game():
     game.myPlayer.cash += 100
     print(SYSTEM + " ! You have found 10 coins" + END)
     game.cut_scene.dialog = (
-    DANGER + " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ",
-    game.myPlayer.name, ", the ", game.myPlayer.job, "!\n")
+    DANGER + " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ", game.myPlayer.name, ", the ", game.myPlayer.job, "!\n")
     game.cut_scene.dialog_print0025()
     game.cut_scene.dialog = (SYSTEM + " System: " + END,
                              "Good luck, I hope you enjoy the gameplay\n         If you don't die soon...\n         Hehehe.....\n")
@@ -615,7 +617,7 @@ def setup_game():
     os.system('cls')
     print("")
     print(SYSTEM + " ###################################")
-    print(" ####      Ley`s start now!     ####")
+    print(" ####      Let`s start now!     ####")
     print(" ###################################" + END)
     main_game_loop()
 
