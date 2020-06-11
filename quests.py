@@ -261,14 +261,107 @@ class Quests:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_a5()
 
-### desert quest, snake_fight, master fight( dopisac sasha)
     def quest_b1(self):
+        def desert_quest():
+            self.parent.text.system("""\n  - Desert of despair  - \n""", txt_only=True)
+            self.parent.text.system("""After a long journey, you decided to rest under a withered tree\n""")
+            self.parent.text.you("WHAT ?!\n")
+            self.parent.text.danger("""Suddenly, you begin falling into the sand\n""", begin_txt='SYSTEM')
+            self.parent.text.system("You must try to pull yourself to the tree with the help of magic\n")
+            self.parent.text.system(" Press enter till you do not pull out yourself\n", txt_only=True)
+            player_tryies = 0
+            awailble_pulls = random.randint(1, 10)
+            while player_tryies != awailble_pulls:
+                input(" > ")
+                player_tryies += 1
+            self.parent.text.you("Heh where did this old man send me?\n")
+            self.parent.text.you("There is literally nothing here...\n")
+            self.parent.text.you("I'd better go back to him and tell him everything I think about him\n")
+        def waterfall_quest():
+            self.parent.text.system("""\n  - Waterfall of life and death  - \n""", txt_only=True)
+            self.parent.text.system(text=""" Try to look out, maybe you find something interesting...(write look)\n""")
+            input(" > ")
+            self.parent.text.system(text=""" You noticed an unusual glow behind the waterfall. 
+            Most likely there is something behind the waterfall,
+            however ... It is a waterfall of life and death, if I will enter the water I can die. What should i do ?\n""")
+
+            self.parent.text.system(text="""\n  1. Just go through the waterfall, maybe I would be lucky\n  2. Cover yourself with your light cloak, and hope for the best\n  3. Stop and think more\n""",
+                txt_only=True)
+            player_choose4 = input(" > ")
+            if player_choose4 == "1":
+                chanse_to_die = random.randint(1, 2)
+                if chanse_to_die == 1:
+                    self.parent.text.danger(' Luck is not on your side, you died just by going into the water\n',begin_txt='SYSTEM')
+                    self.quest_b1()
+                else:
+                    self.parent.text.system(""" luck on your side, you went through the waterfall without consequences\n""",txt_only=True)
+                    self.parent.text.system("Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n")
+                    self.parent.text.system(
+                        text=""" Wich one you wanna take ?\n  1. Sword inlaid with gems\n  2. Incredibly light and sharp one-handed sword\n  3. Rusty iron sword\n""",
+                        txt_only=True)
+                    player_choose5 = input(" > ")
+                    if player_choose5 in ['1', '2']:
+                        self.parent.text.system(text=""" You have taken the knife and went to the master""")
+                        self.parent.text.npc(
+                            text=""" You are very inattentive, I will not help you and leave this trinket to yourself, it is a useless thing.\n""",
+                            begin_txt='Old warrior')
+                    elif player_choose5 == "3":
+                        self.parent.text.system(text=""" You have taken the knife and went to the master\n""")
+                        self.parent.text.npc(text=""" Very well, either you listened to me well, or you have a pure spirit.
+                        Unfortunately, I can do little to help you. However, this sword will definitely help you.
+                        Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
+                        This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
+                        I also will show you how to increse you endurance.\n""",
+                                             begin_txt='Old warrior')
+                        self.parent.myPlayer.maxHP += 30
+                        self.parent.myPlayer.xp += 50
+                        self.parent.text.system(
+                            """After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""",
+                            txt_only=True)
+                        self.parent.zonemap['b1']['SOLVED'] = True
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        self.quest_b1()
+            elif player_choose4 == "2":
+                self.parent.text.danger(' It was a terrible plan, you died just by going into the water\n',begin_txt='SYSTEM')
+                self.quest_b1()
+            elif player_choose4 == "3":
+                self.parent.text.system(text=""" After a long search you found nothing\n""")
+                time.sleep(3)
+                self.parent.text.system(text=""" You wanted to go back, but noticed a small gorge    
+                You decide to go in and see what's inside
+                Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n""")
+                self.parent.text.you(" Which of them is the one I need, the old man almost did not describe it...\n")
+                self.parent.text.system(text=""" Wich one you wanna take ?\n  1. Sword inlaid with gems\n  2. Incredibly light and sharp one-handed sword\n  3. Rusty iron sword\n""", txt_only=True)
+                player_choose5 = input(" > ")
+                if player_choose5 in ['1', '2']:
+                    self.parent.text.system(text=""" You have taken the knife and went to the master""")
+                    self.parent.text.npc(text=""" You are very inattentive, I will not help you and leave this trinket to yourself, it is a useless thing.\n""", begin_txt='Old warrior')
+                elif player_choose5 == "3":
+                    self.parent.text.system(text=""" You have taken the knife and went to the master\n""")
+                    self.parent.text.npc(text=""" Very well, either you listened to me well, or you have a pure spirit.
+                    Unfortunately, I can do little to help you. However, this sword will definitely help you.
+                    Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
+                    This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
+                    I also will show you how to increse you endurance.\n""", begin_txt='Old warrior')
+                    self.parent.myPlayer.maxHP += 30
+                    self.parent.myPlayer.xp += 50
+                    self.parent.text.system("""After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""", txt_only=True)
+                    self.parent.zonemap['b1']['SOLVED'] = True
+                else:
+                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                    self.quest_b1()
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_b1()
+
         self.parent.text.system(text=""" In tavern you see an old man with long beard\n""")
         self.parent.text.npc(text="""My name is Tetrex. What do you want ?\n""", begin_txt='Old warrior')
         self.parent.text.you(text=f"Hello, I am {self.parent.myPlayer.name} I've met one guy he said that you can help me become stronger\n")
         self.parent.text.npc(text=""" Hmm interesting...But first you have to prove to me that you are worthy of my time\n""", begin_txt='Old warrior')
         self.parent.text.system(text=""" What will you answer the old warrior\n           1. I'm ready for anything to defeat Elminster\n           2. Quest? again ? Meeeh\n           3. Ignoring to drink the beer of the old master\n""")
         player_choose1 = input(" > ")
+
         if player_choose1 == "1":
             self.parent.text.npc(text=""" Very good young man, You had to bring me the Abyssal sword...\n""", begin_txt='Old warrior')
             self.parent.text.you(text="Okay, and where is he?\n")
@@ -277,73 +370,40 @@ class Quests:
             player_choose2 = input(" > ")
             if player_choose2 == "1":
                 desert_quest()
+                self.parent.text.you("There is literally nothing there...only a lot of quicksands \n")
+                self.parent.text.npc(text=""" Hmm , in general there at least two more places where it is possible to find this sword\n""",
+                    begin_txt='Old warrior')
+                self.parent.text.system(
+                    text="""\n  1.Swamp of walking snakes\n  2.Waterfall of life and death \n""", txt_only=True)
+                bad_road = input(" > ")
+                if bad_road == "1":
+                    self.parent.snakes_fight()
+                    self.parent.text.you("Okay, there's only one place left\n")
+                    waterfall_quest()
+                elif bad_road == "2":
+                    waterfall_quest()
             elif player_choose2 == "2":
                 self.parent.text.npc(text=""" Alright, alright I'm just kidding....It is known only two places where it can be\n""", begin_txt='Old warrior')
                 self.parent.text.system(text="""\n  1.Swamp of walking snakes\n  2.Waterfall of life and death \n""", txt_only=True)
                 player_choose3 = input(" > ")
                 if player_choose3 == "1":
-                    snakes_fight()
+                    self.parent.snakes_fight()
+                    self.parent.text.you("Okay, there's only one place left\n")
+                    waterfall_quest()
                 elif player_choose3 == "2":
-                    self.parent.text.system("""\n  - Waterfall of life and death  - \n""", txt_only=True)
-                    self.parent.text.system(text=""" Try to look out, maybe you find something interesting...(write look)\n""")
-                    input(" > ")
-                    self.parent.text.system(text=""" You noticed an unusual glow behind the waterfall. 
-          Most likely there is something behind the waterfall,
-          however ... It is a waterfall of life and death, if I will enter the water I can die. What should i do ?\n""")
-                self.parent.text.system(text="""\n  1. Just go through the waterfall, maybe I would be lucky\n  2. Cover yourself with your light cloak, and hope for the best\n  3. Stop and think more\n""", txt_only=True)
-                player_choose4 = input(" > ")
-                if player_choose4 == "1":
-                    chanse_to_die = random.randint(1, 2)
-                    if chanse_to_die == 1:
-                        self.parent.text.danger(' Luck is not on your side, you died just by going into the water\n', begin_txt='SYSTEM')
-                        self.quest_b1()
-                    else:
-                        self.parent.text.system(""" luck on your side, you went through the waterfall without consequences\n""", txt_only=True)
-                        sword_check()
-                elif player_choose4 == "2":
-                    self.parent.text.danger(' It was a terrible plan, you died just by going into the water\n', begin_txt='SYSTEM')
-                    self.quest_b1()
-                elif player_choose4 == "3":
-                    self.parent.text.system(text=""" After a long search you found nothing\n""")
-                    time.sleep(3)
-                    self.parent.text.system(text=""" You wanted to go back, but noticed a small gorge    
-          You decide to go in and see what's inside
-          Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n""")
-                    self.parent.text.you(" Which of them is the one I need, the old man almost did not describe it...\n")
-                    self.parent.text.system(text=""" Wich one you wanna take ?\n  1. Sword inlaid with gems\n  2. Incredibly light and sharp one-handed sword\n  3. Rusty iron sword\n""",txt_only=True)
-                    player_choose5 = input(" > ")
-                    if player_choose5 in ['1', '2']:
-                        self.parent.text.system(text=""" You have taken the knife and went to the master""")
-                        self.parent.text.npc(text=""" You are very inattentive, I will not help you and leave this trinket to yourself, it is a useless thing.\n""", begin_txt='Old warrior')
-                    elif player_choose5 == "3":
-                        self.parent.text.system(text=""" You have taken the knife and went to the master\n""")
-                        self.parent.text.npc(text=""" Very well, either you listened to me well, or you have a pure spirit.
-               Unfortunately, I can do little to help you. However, this sword will definitely help you.
-               Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
-               This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
-               I also will show you how to increse you endurance.
-                        \n""", begin_txt='Old warrior')
-                        self.parent.myPlayer.maxHP += 30
-                        self.parent.text.system(""" After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""", txt_only=True)
-                        self.parent.zonemap['b1']['SOLVED'] = True
-                    else:
-                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                        self.quest_b1()
-                else:
-                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                    self.quest_b1()
+                    waterfall_quest()
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b1()
         elif player_choose1 == "2":
             self.parent.text.npc(text=""" Well, it's your choice\n""", begin_txt='Old warrior')
         elif player_choose1 == "3":
-            master_fight()
+            self.parent.master_fight()
             self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             self.quest_b1()
-
-            # add else
-         # add else and choose 2,3
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            self.quest_b1()
 
     def quest_b2(self, response=None):
         def tasks():
@@ -388,9 +448,9 @@ class Quests:
                 elif mana_perfect == 4:
                     catch_chanse = 120
                 exit = input(" > ")
-
                 if exit == "exit":
                     self.quest_b2()
+
                 if catch_chanse < 26:
                     y = random.randint(1, 4)
                     if y == 1:
@@ -488,7 +548,8 @@ class Quests:
                 bet = int(input(" > "))
                 self.parent.text.npc(f" I hear {bet}\n", begin_txt='Auction leader')
                 ### does not go further
-                if bet >= 500 and bet<= 999:
+                if 500 < bet <= 999:
+                    print(bet)
                     if bet > 999:
                         self.parent.text.npc(" Greetings you won", begin_txt='Auction leader')
                         self.home = True
@@ -814,70 +875,379 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b5(response)
 
-### dopisac sasha
     def quest_c1(self):
         print("")
         self.parent.text.system("""\n  -  Wyllowwood - \n""", txt_only=True)
         self.parent.text.system(""" You can go to:\n 1.Wyllowwood lake\n 2.Spellshop\n""")
         player_choise1 = input(" > ")
         if player_choise1 == "1":
-            self.parent.text.npc("Hello young man, maybe you want to take part in a fishing tournament?", begin_txt="Mr.Fishman")
-            self.parent.text.you("But what do I benefit from this?")
-            self.parent.text.npc("If you take prize place you will receive a cash prize, and taking 1st place you will get another special item", begin_txt="Mr.Fishman")
-            self.parent.text.system("""
-                                  ###########################################
-                                  ~~~~~~       Fishing tournament      ~~~~~~
-                                  ###########################################
-                                  |                                         |
-                                  | 1 place - 150 coins + mysterious object |
-                                  | 2 place - 100 coins                     |
-                                  | 3 place - 75 coins                      |
-                                  |                                         |
-                                  |                                         |
-                                  ###########################################
-                                  |     1.Accept      |      2.Decline      |
-                                  ###########################################
-            """, txt_only=True)
+            self.parent.text.npc("Hello young man, maybe you want to take part in a fishing tournament?\n", begin_txt="Mr.Fishman")
+            self.parent.text.you("But what do I benefit from this?\n")
+            self.parent.text.npc("If you take prize place you will receive a cash prize, and taking 1st place you will get another special item\n", begin_txt="Mr.Fishman")
+            print("""
+                    ###########################################
+                    ~~~~~~       Fishing tournament      ~~~~~~
+                    ###########################################
+                    |                                         |
+                    | 1 place - 150 coins + mysterious object |
+                    | 2 place - 100 coins                     |
+                    | 3 place - 75 coins                      |
+                    |                                         |
+                    |                                         |
+                    ###########################################
+                    |     1.Accept      |      2.Decline      |
+                    ###########################################\n
+            """)
             player_choise2 = input(" > ")
             if player_choise2 == "1":
-                self.parent.text.npc(" Let the tournament starts", begin_txt="Mr.Fishman")
+                self.parent.text.npc(" Let the tournament starts\n", begin_txt="Mr.Fishman")
                 self.parent.text.system(""" Okay now you have 3 attempts to catch a fish, if you are sure that you have the biggest fish enter 'accept',
-      if you want to try again enter 'again'. After the third attempt, the tournament ends, and the results for the last fish caught will be counted.
-      To start fishing write 'catch'
+          if you want to try again enter 'again'. After the third attempt, the tournament ends, and the results for the last fish caught will be counted.
+          To start fishing write 'catch'
       
-      ! Attention when you type 'again' you release the previous caught fish, and catch a new one. 
-      ! You probably won't be able to return the fish you caught before.\n""")
+          ! Attention when you type 'again' you release the previous caught fish, and catch a new one. 
+          ! You probably won't be able to return the fish you caught before.\n""")
                 some = input(" > ")
                 player_choise3 = some
                 i = 0
                 first_catch = False
-                fishname = ['name1','name2','name3']
-                age = ['age1','age2','age3']
+                fishname = ['Magikarp', 'Golden Habus', 'Shadow Needle', 'Silver tench', 'Crystal sturgeon']
                 final_fish = 0
+                age = ''
                 final_fish_name = ''
                 while i != 3:
                     your_fish = random.randint(100, 500)
                     if player_choise3 == "catch" and first_catch is False:
                         final_fish_name = random.choice(fishname)
-                        self.parent.text.system(f"Congratulations, you have caught {final_fish_name} in the size of {your_fish}, it maybe {age}")
+                        if your_fish < 250:
+                            age = " Hmm it's maybe only baby fish"
+                        elif 250 < your_fish <= 480:
+                            age = " Hmm it's maybe only teen fish"
+                        elif 480 < your_fish <= 500:
+                            age = " Oh, great fish, I think you can take 1st place with her"
+                        print("""
+
+                                                                                        @@@@@@@@@@@.    
+                                          #@@                             &@@@@@%    @@@@@@@@@#         
+                                           &@@                        @@@@@@@@@@@@@@@@@@@@@@            
+                                            @@@                     @@(     (@@@@@@@@@@@@@@             
+                                            @@@                                  (@@@@@@@@@             
+                                            &@@                                    &@@@@@@@             
+                                            @@@                                     @@@@@@@             
+                                           *@@                                      @@@@@@@             
+                                          .@@                                       @@@@@@@             
+                                         @@@                                       @@@@@@@@             
+                                       .@@@                                        @@@@@@@@             
+                                      @@@                                        (@@@@@@@@@             
+                                    @@@                                         @@@@@@@@@@@             
+                                   @@@                       @@               @@@@@@@@@@@@              
+                                 @@@                       @@@@            @@@@@@@@@@@@@@@              
+                               @@@*                      &@@@@@       @@@@@@@@@@@@@@@@@@@               
+                              @@@                       *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@               
+                             @@@                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                
+                            @@@                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 
+                            @@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   
+                            @@@             @@@@@@   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                    
+                            ,@@           @@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                
+                             @@@        @@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              
+                              @@@     @@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@         .@              
+                               @@@*  @@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@                            
+                                 @@@@@@@@@@@@    @@@@@@@@@@ @@@@@@@@@@@@@                               
+                                   &@@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@                                  
+                                      *@@@@@@@@@@@@@@@@@@@@  @@@@                                       
+                                           (@@@@@@@@@@@@@@@                                             
+
+                                                """)
+                        self.parent.text.system(f"Congratulations, you have caught {final_fish_name} in the size of {your_fish}, {age}\n")
                         first_catch = True
                         final_fish = your_fish
                         i += 1
-                        self.parent.text.system(" You wanna try again ?")
+                        self.parent.text.system(" You wanna try again?\n")
                         player_choise3 = input(" > ")
                     elif player_choise3 == 'again':
                         final_fish_name = random.choice(fishname)
-                        self.parent.text.system(f"Congratulations, you have caught {final_fish_name} in the size of {your_fish}, it maybe {age}")
+                        if your_fish < 250:
+                            age = " Hmm it's maybe only baby fish"
+                        elif 250 < your_fish <= 480:
+                            age = " Hmm it's maybe only teen fish"
+                        elif 480 < your_fish <= 500:
+                            age = " Oh, great fish, I think you can take 1st place with her"
+                        print("""
+                                                                                            
+                                                                @@@@@@@@@@@.    
+                  #@@                             &@@@@@%    @@@@@@@@@#         
+                   &@@                        @@@@@@@@@@@@@@@@@@@@@@            
+                    @@@                     @@(     (@@@@@@@@@@@@@@             
+                    @@@                                  (@@@@@@@@@             
+                    &@@                                    &@@@@@@@             
+                    @@@                                     @@@@@@@             
+                   *@@                                      @@@@@@@             
+                  .@@                                       @@@@@@@             
+                 @@@                                       @@@@@@@@             
+               .@@@                                        @@@@@@@@             
+              @@@                                        (@@@@@@@@@             
+            @@@                                         @@@@@@@@@@@             
+           @@@                       @@               @@@@@@@@@@@@              
+         @@@                       @@@@            @@@@@@@@@@@@@@@              
+       @@@*                      &@@@@@       @@@@@@@@@@@@@@@@@@@               
+      @@@                       *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@               
+     @@@                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                
+    @@@                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 
+    @@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   
+    @@@             @@@@@@   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                    
+    ,@@           @@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                
+     @@@        @@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              
+      @@@     @@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@         .@              
+       @@@*  @@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@                            
+         @@@@@@@@@@@@    @@@@@@@@@@ @@@@@@@@@@@@@                               
+           &@@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@                                  
+              *@@@@@@@@@@@@@@@@@@@@  @@@@                                       
+                   (@@@@@@@@@@@@@@@                                             
+                                     
+                        """)
+                        self.parent.text.system(f"Congratulations, you have caught {final_fish_name} in the size of {your_fish}, {age}\n")
                         i += 1
                         final_fish = your_fish
                         if i != 3:
-                            self.parent.text.system(" You wanna try again ?")
+                            self.parent.text.system(" You wanna try again ?\n")
                             player_choise3 = input(" > ")
                     elif player_choise3 == "accept":
-                        self.parent.text.system(f"Congratulations, your result {final_fish_name} in the size of{final_fish}")
+                        print("""
+
+                                                                                        @@@@@@@@@@@.    
+                                          #@@                             &@@@@@%    @@@@@@@@@#         
+                                           &@@                        @@@@@@@@@@@@@@@@@@@@@@            
+                                            @@@                     @@(     (@@@@@@@@@@@@@@             
+                                            @@@                                  (@@@@@@@@@             
+                                            &@@                                    &@@@@@@@             
+                                            @@@                                     @@@@@@@             
+                                           *@@                                      @@@@@@@             
+                                          .@@                                       @@@@@@@             
+                                         @@@                                       @@@@@@@@             
+                                       .@@@                                        @@@@@@@@             
+                                      @@@                                        (@@@@@@@@@             
+                                    @@@                                         @@@@@@@@@@@             
+                                   @@@                       @@               @@@@@@@@@@@@              
+                                 @@@                       @@@@            @@@@@@@@@@@@@@@              
+                               @@@*                      &@@@@@       @@@@@@@@@@@@@@@@@@@               
+                              @@@                       *@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@               
+                             @@@                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                
+                            @@@                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                 
+                            @@@                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                   
+                            @@@             @@@@@@   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                    
+                            ,@@           @@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@                
+                             @@@        @@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@              
+                              @@@     @@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@@@@@         .@              
+                               @@@*  @@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@@@@@@@@                            
+                                 @@@@@@@@@@@@    @@@@@@@@@@ @@@@@@@@@@@@@                               
+                                   &@@@@@@@@@@@@@@@@@@@@@@@  @@@@@@@@@                                  
+                                      *@@@@@@@@@@@@@@@@@@@@  @@@@                                       
+                                           (@@@@@@@@@@@@@@@                                             
+
+                                                """)
+                        self.parent.text.system(f"Congratulations, your result {final_fish_name} in the size of {final_fish}\n")
                         break
                     else:
                         self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+
+                places = 3
+                fisherman1 = random.randint(200, 480)
+                fisherman2 = random.randint(200, 480)
+                fisherman3 = random.randint(200, 480)
+                print(fisherman1)
+                print(fisherman2)
+                print(fisherman3)
+
+                while places != 0:
+                    if fisherman1 > fisherman2 and fisherman1 > fisherman3 and fisherman1 > final_fish:
+                        self.parent.text.system(f"Best result is: {fisherman1}\n")
+                        places -= 1
+                        if fisherman2 > fisherman3 and fisherman2 > final_fish:
+                            self.parent.text.system(f"Second place is: {fisherman2}\n")
+                            places -= 1
+                            if fisherman3 > final_fish:
+                                self.parent.text.system(f"Third place is: {fisherman3}\n")
+                                places -= 1
+                                self.parent.text.npc("Sorry you didn't get into the top 3, come again, maybe next time you'll be luckier\n", begin_txt="Mr.Fishman")
+                            elif final_fish > fisherman3:
+                                self.parent.text.system(f"Third place is: {final_fish}\n")
+                                self.parent.text.npc(
+                                    "Not bad young man, here is your 75 coins for the 3 place\n",
+                                    begin_txt="Mr.Fishman")
+                                places -= 1
+                                self.parent.myPlayer.cash += 75
+                                self.parent.myPlayer.xp += 150
+                        elif fisherman3 > fisherman2 and fisherman3 > final_fish:
+                            self.parent.text.system(f"Second result is: {fisherman3}\n")
+                            places -= 1
+                            if fisherman2 > final_fish:
+                                self.parent.text.system(f"Third place is: {fisherman2}\n")
+                                places -= 1
+                                self.parent.text.npc("Sorry you didn't get into the top 3, come again, maybe next time you'll be luckier\n", begin_txt="Mr.Fishman")
+                            elif final_fish > fisherman3:
+                                self.parent.text.system(f"Third place is: {final_fish}\n")
+                                self.parent.text.npc(
+                                    "Not bad young man, here is your 75 coins for the 3 place\n",
+                                    begin_txt="Mr.Fishman")
+                                places -= 1
+                                self.parent.myPlayer.cash += 75
+                                self.parent.myPlayer.xp += 75
+                        elif final_fish > fisherman2 and final_fish > fisherman3:
+                            self.parent.text.system(f"Second place is: {final_fish}\n")
+                            self.parent.text.npc(
+                                "Not bad young man, here is your 100 coins for the 2 place\n",
+                                begin_txt="Mr.Fishman")
+                            self.parent.myPlayer.cash += 100
+                            self.parent.myPlayer.xp += 100
+                            places -= 1
+                            if fisherman3 > fisherman2:
+                                self.parent.text.system(f"Third place is: {fisherman3}\n")
+                                places -= 1
+                            elif fisherman2 > fisherman3:
+                                self.parent.text.system(f"Third place is: {fisherman2}\n")
+                                places -= 1
+                    elif fisherman2 > fisherman1 and fisherman2 > fisherman3 and fisherman2 > final_fish:
+                        self.parent.text.system(f"Best result is: {fisherman2}\n")
+                        places -= 1
+                        if fisherman1 > fisherman3 and fisherman1 > final_fish:
+                            self.parent.text.system(f"Second place is: {fisherman1}\n")
+                            places -= 1
+                            if fisherman3 > final_fish:
+                                self.parent.text.system(f"Third place is: {fisherman3}\n")
+                                places -= 1
+                                self.parent.text.npc(
+                                    "Sorry you didn't get into the top 3, come again, maybe next time you'll be luckier\n",
+                                    begin_txt="Mr.Fishman")
+                            elif final_fish > fisherman3:
+                                self.parent.text.system(f"Third place is: {final_fish}\n")
+                                self.parent.text.npc(
+                                    "Not bad young man, here is your 75 coins for the 3 place\n",
+                                    begin_txt="Mr.Fishman")
+                                places -= 1
+                                self.parent.myPlayer.cash += 75
+                                self.parent.myPlayer.xp += 150
+                        elif fisherman3 > fisherman1 and fisherman3 > final_fish:
+                            self.parent.text.system(f"Second result is: {fisherman3}\n")
+                            places -= 1
+                            if fisherman2 > final_fish:
+                                self.parent.text.system(f"Third place is: {fisherman2}\n")
+                                places -= 1
+                                self.parent.text.npc(
+                                    "Sorry you didn't get into the top 3, come again, maybe next time you'll be luckier\n",
+                                    begin_txt="Mr.Fishman")
+                            elif final_fish > fisherman2:
+                                self.parent.text.system(f"Third place is: {final_fish}\n")
+                                self.parent.text.npc(
+                                    "Not bad young man, here is your 75 coins for the 3 place\n",
+                                    begin_txt="Mr.Fishman")
+                                places -= 1
+                                self.parent.myPlayer.cash += 75
+                                self.parent.myPlayer.xp += 75
+                        elif final_fish > fisherman2 and final_fish > fisherman3:
+                            self.parent.text.system(f"Second place is: {final_fish}\n")
+                            self.parent.text.npc(
+                                "Not bad young man, here is your 100 coins for the 2 place\n",
+                                begin_txt="Mr.Fishman")
+                            self.parent.myPlayer.cash += 100
+                            self.parent.myPlayer.xp += 100
+                            places -= 1
+                            if fisherman1 > fisherman3:
+                                self.parent.text.system(f"Third place is: {fisherman1}\n")
+                                places -= 1
+                            elif fisherman3 > fisherman1:
+                                self.parent.text.system(f"Third place is: {fisherman3}\n")
+                                places -= 1
+                    elif fisherman3 > fisherman1 and fisherman3 > fisherman2 and fisherman3 > final_fish:
+                        self.parent.text.system(f"Best result is: {fisherman3}\n")
+                        places -= 1
+                        if fisherman2 > fisherman1 and fisherman2 > final_fish:
+                            self.parent.text.system(f"Second place is: {fisherman2}\n")
+                            places -= 1
+                            if fisherman1 > final_fish:
+                                self.parent.text.system(f"Third place is: {fisherman1}\n")
+                                places -= 1
+                                self.parent.text.npc(
+                                    "Sorry you didn't get into the top 3, come again, maybe next time you'll be luckier\n",
+                                    begin_txt="Mr.Fishman")
+                            elif final_fish > fisherman1:
+                                self.parent.text.system(f"Third place is: {final_fish}\n")
+                                self.parent.text.npc(
+                                    "Not bad young man, here is your 75 coins for the 3 place\n",
+                                    begin_txt="Mr.Fishman")
+                                places -= 1
+                                self.parent.myPlayer.cash += 75
+                                self.parent.myPlayer.xp += 150
+                        elif fisherman1 > fisherman2 and fisherman1 > final_fish:
+                            self.parent.text.system(f"Second result is: {fisherman1}\n")
+                            places -= 1
+                            if fisherman2 > final_fish:
+                                self.parent.text.system(f"Third place is: {fisherman2}\n")
+                                places -= 1
+                                self.parent.text.npc(
+                                    "Sorry you didn't get into the top 3, come again, maybe next time you'll be luckier\n",
+                                    begin_txt="Mr.Fishman")
+                            elif final_fish > fisherman2:
+                                self.parent.text.system(f"Third place is: {final_fish}\n")
+                                self.parent.text.npc(
+                                    "Not bad young man, here is your 75 coins for the 3 place\n",
+                                    begin_txt="Mr.Fishman")
+                                places -= 1
+                                self.parent.myPlayer.cash += 75
+                                self.parent.myPlayer.xp += 75
+                        elif final_fish > fisherman2 and final_fish > fisherman3:
+                            self.parent.text.system(f"Second place is: {final_fish}\n")
+                            self.parent.text.npc(
+                                "Not bad young man, here is your 100 coins for the 2 place\n",
+                                begin_txt="Mr.Fishman")
+                            self.parent.myPlayer.cash += 100
+                            self.parent.myPlayer.xp += 100
+                            places -= 1
+                            if fisherman1 > fisherman2:
+                                self.parent.text.system(f"Third place is: {fisherman1}\n")
+                                places -= 1
+                            elif fisherman2 > fisherman1:
+                                self.parent.text.system(f"Third place is: {fisherman2}\n")
+                                places -= 1
+                    elif final_fish > fisherman1 and final_fish > fisherman2 and final_fish > fisherman3:
+                        self.parent.text.system(f"Best result is: {final_fish}\n")
+                        self.parent.text.npc(
+                            "My sincere congratulations, you won this tournament, here are the promised 150 coins and the item I was talking about.\n",
+                            begin_txt="Mr.Fishman")
+                        self.parent.myPlayer.cash += 150
+                        self.parent.myPlayer.xp += 150
+
+                        places -= 1
+                        if fisherman1 > fisherman2 and fisherman1 > fisherman3:
+                            self.parent.text.system(f"Second place is: {fisherman1}\n")
+                            places -= 1
+                            if fisherman2 > fisherman3:
+                                self.parent.text.system(f"Third place is: {fisherman2}\n")
+                                places -= 1
+                            elif fisherman3 > fisherman2:
+                                self.parent.text.system(f"Third place is: {fisherman3}\n")
+                                places -= 1
+                        elif fisherman2 > fisherman1 and fisherman2 > fisherman3:
+                            self.parent.text.system(f"Second result is: {fisherman2}\n")
+                            places -= 1
+                            if fisherman1 > fisherman3:
+                                self.parent.text.system(f"Third place is: {fisherman1}\n")
+                                places -= 1
+                            elif fisherman3 > fisherman1:
+                                self.parent.text.system(f"Third place is: {fisherman3}\n")
+                                places -= 1
+                        elif fisherman3 > fisherman1 and fisherman3 > fisherman2:
+                            self.parent.text.system(f"Second place is: {fisherman3}\n")
+                            places -= 1
+                            if fisherman1 > fisherman2:
+                                self.parent.text.system(f"Third place is: {fisherman1}\n")
+                                places -= 1
+                            elif fisherman2 > fisherman1:
+                                self.parent.text.system(f"Third place is: {fisherman2}\n")
+                                places -= 1
+
+    def quest_c2(self):
+
+
 
     def quest_c3(self, response=None):
         if not response:

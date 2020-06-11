@@ -12,7 +12,6 @@ import random
 from global_variables import *
 from quests import Quests
 
-
 #### COLORED TEXT IN PROMPT
 YOU = '\x1b[1;34;40m'
 SYSTEM = "\x1b[1;32;40m"
@@ -63,7 +62,8 @@ class Text:
             func()
 
     @classmethod
-    def danger(cls, text, begin_txt='Strange noise', txt_only=False, print_text=True, print_function='dialog_print0025'):
+    def danger(cls, text, begin_txt='Strange noise', txt_only=False, print_text=True,
+               print_function='dialog_print0025'):
         if txt_only:
             val = cls.DANGER + text + cls.END
         else:
@@ -153,7 +153,8 @@ class Game:
         self.myEnemy.MP = 0
         self.myEnemy.maxDEF = 0
         self.myEnemy.STR = 55
-        self.text.danger("On your way to dark valley you see it.\n Huge wings, lots of fire and the appaling smell.\n Chances of survival are pretty much zero but you try to kill the dragon anyway...\n")
+        self.text.danger(
+            "On your way to dark valley you see it.\n Huge wings, lots of fire and the appaling smell.\n Chances of survival are pretty much zero but you try to kill the dragon anyway...\n")
         self.fight()
 
     def fight_soldiers(self):
@@ -169,7 +170,36 @@ class Game:
             self.fight()
             three -= 1
 
+    def master_fight(self):
+        self.myEnemy.name = 'Tetrex'
+        self.myEnemy.job = 'Old master'
+        self.myEnemy.HP = 300
+        self.myEnemy.MP = 0
+        self.myEnemy.maxDEF = 150
+        self.myEnemy.STR = 60
+        self.text.danger("You're too selfconfident young man.I will teach you a lesson for free")
+        self.fight()
 
+
+    def snakes_fight(self):
+        self.text.system("""\n  - Swamp of walking snakes  - \n""", txt_only=True)
+        self.text.system(text=""" Try to look out, maybe you find something interesting...(write look)\n""")
+        input(" > ")
+        self.text.danger("Shhhh\n")
+        self.text.you("Strange, what is it the sound ?\n")
+        self.text.you("Ahh, reaaaally they??\n")
+        randomizer = random.randint(3, 12)
+        number_enemies = randomizer
+        while number_enemies != 0:
+            self.myEnemy.name = 'Walking snake'
+            self.myEnemy.job = 'animal'
+            self.myEnemy.HP = 20
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 20
+            self.myEnemy.STR = 15
+            self.text.danger("Shhhhh\n")
+            self.fight()
+            number_enemies -= 1
 
     def location_print(self):
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
@@ -182,12 +212,12 @@ class Game:
             spell.show_details()
 
     def show_map(self):
-        map_coordinates = [['1', '1', '1', '1', '1', '1',  '1'],
+        map_coordinates = [['1', '1', '1', '1', '1', '1', '1'],
                            ['1', 'c1', 'c2', 'c3', 'c4', 'c5', '1', 'd3'],
                            ['1', 'b1', 'b2', 'b3', 'b4', 'b5', '1', 'd2'],
                            ['1', 'a1', 'a2', 'a3', 'a4', 'a5', '1', 'd1'],
-                           ['1', '1', '1', 'a0', '1', '1',   '1'],
-                           ['1', '1', '1',  '1', '1', '1', '1']]
+                           ['1', '1', '1', 'a0', '1', '1', '1'],
+                           ['1', '1', '1', '1', '1', '1', '1']]
         for r_idx, row in enumerate(map_coordinates):
             for l_idx, loc in enumerate(row):
                 if loc == self.myPlayer.location:
@@ -319,8 +349,6 @@ def show_stats(action):
     game.list_of_spells()
 
 
-
-
 def show_enemy_stats():
     print("\n Enemy name: ", game.myEnemy.name)
     print(" Enemy class: ", game.myEnemy.job)
@@ -339,7 +367,8 @@ def prompt():
     print(" What would you like to do?")
     print(" ! print 'help' to see abilities\n")
     action = input(" > ")
-    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse", "heal"]
+    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse",
+                          "heal"]
     while action.lower() not in acceptable_actions:
         print(" Unknown action, try again.\n")
         action = input(" > ")
@@ -349,9 +378,10 @@ def prompt():
         if ask.lower() == "y":
             saveGame = open('save_game.txt', 'wb')
             saveValues = (
-            game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
-            game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp, game.myPlayer.cash,
-            game.myPlayer.HP, game.myPlayer.MP)
+                game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
+                game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
+                game.myPlayer.cash,
+                game.myPlayer.HP, game.myPlayer.MP)
             pickle.dump(saveValues, saveGame)
             saveGame.close()
             sys.exit()
@@ -410,12 +440,10 @@ def player_examine(action):
 ###### GAME FUNCTIONALITY ######
 
 
-
 def main_game_loop():
     while game.myPlayer.game_over is False:
-        #game.myPlayer.__pass_time()
+        # game.myPlayer.__pass_time()
         prompt()
-
 
 
 def shop():
@@ -434,7 +462,8 @@ def shop():
     answer = input(" > ")
     if game.myPlayer.cash >= 25:
         if answer == "1":
-            weapons = ['Wooden sword', 'Iron sword of a knight', 'Stylish lightweight sword', 'The sword of the former general']
+            weapons = ['Wooden sword', 'Iron sword of a knight', 'Stylish lightweight sword',
+                       'The sword of the former general']
             game.myPlayer.cash -= 25
             buff = random.randrange(5, 20)
             game.myPlayer.STR += buff
@@ -446,7 +475,8 @@ def shop():
             game.myPlayer.maxDEF += buff
             print(" You've got: ", random.choice(armor), "; And it will add you, ", buff, "defense.")
         elif answer == "3":
-            magic = ['The mana ring of the beast', "Midnight Demon's Bone Necklaces", ' ????????? ', 'The ring of the fallen general']
+            magic = ['The mana ring of the beast', "Midnight Demon's Bone Necklaces", ' ????????? ',
+                     'The ring of the fallen general']
             game.myPlayer.cash -= 25
             buff = random.randrange(5, 40)
             game.myPlayer.maxMP += buff
@@ -468,19 +498,20 @@ def shop():
                 game.myPlayer.maxDEF += buff
                 print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "defense.")
         elif answer == "5":
-           print("""  Guild Shop:
+            print("""  Guild Shop:
         ~  If you choose weapon you will get random weapon which will add you strength
         ~  If you choose Armor you will get random armor which will add you defense
         ~  If you choose Magic stuff you will get random magic stuff which will add you mana points
         ~  If you choose Artifact you will get random Artifact which will add points to your one random characteristic(It could be health also)
             """)
-           shop()
+            shop()
         elif answer == "6":
             print(" Come when you want, stranger! ")
             main_game_loop()
     else:
         print(" I'm sorry you don't have enough money")
         main_game_loop()
+
 
 def load_game():
     os.system('cls')
@@ -601,13 +632,14 @@ def setup_game():
     game.cut_scene.dialog_print0025()
     input(" You > ")
     game.cut_scene.dialog = (
-                "\n" + NPC + " Old man: " + END + "And remember, on the way between the quarters you can meet a lot of monsters or robbers.\n" + "\n")
+            "\n" + NPC + " Old man: " + END + "And remember, on the way between the quarters you can meet a lot of monsters or robbers.\n" + "\n")
     game.cut_scene.dialog_print0025()
     print(" ### The old man just disappeared ###\n")
     game.myPlayer.cash += 100
     print(SYSTEM + " ! You have found 10 coins" + END)
     game.cut_scene.dialog = (
-    DANGER + " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ", game.myPlayer.name, ", the ", game.myPlayer.job, "!\n")
+        DANGER + " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ",
+        game.myPlayer.name, ", the ", game.myPlayer.job, "!\n")
     game.cut_scene.dialog_print0025()
     game.cut_scene.dialog = (SYSTEM + " System: " + END,
                              "Good luck, I hope you enjoy the gameplay\n         If you don't die soon...\n         Hehehe.....\n")
