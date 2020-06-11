@@ -16,32 +16,37 @@ class Quests:
 
     def quest_a2(self, response=None):
         if not response:
-            self.parent.text.system(text=""" A stranger offers you to buy a lottery ticket.\nIf you win you will receive 25 coins. Are you interested?\nThe ticket costs 4 coins\n""")
-        self.parent.text.system("Choose one of the below answers\n1. Yes\n2. No\n", txt_only=True)
+            self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
+            self.parent.text.system(""" You can go to:\n 1.\n 2.Spellshop\n""")
         response = input(" >  ")
         response = str(response).lower()
-        if response in ('yes', '1'):
-            self.parent.text.you(text="I always win! Now, take my money and give me the lottery ticket\n")
-            if self.parent.myPlayer.cash >= 4:
-                self.parent.myPlayer.cash -= 4
-                self.parent.myPlayer.xp += 5
-                result = random.randint(1, 6)
-                if result == 5:
-                    self.parent.text.system(' YOU WON!!!\n')
-                    self.parent.text.system(' YOU GOT 25 COINS PRIZE!!!\n')
-                    self.parent.myPlayer.cash += 25
-                    self.parent.myPlayer.xp += 100
-                    self.parent.zonemap['a2']['SOLVED'] = True
+        if response == '1':
+            self.parent.text.system(text=""" A stranger offers you to buy a lottery ticket.\nIf you win you will receive 25 coins. Are you interested?\nThe ticket costs 4 coins\n""")
+            self.parent.text.system("Choose one of the below answers\n1. Yes\n2. No\n", txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response in ('yes', '1'):
+                self.parent.text.you(text="I always win! Now, take my money and give me the lottery ticket\n")
+                if self.parent.myPlayer.cash >= 4:
+                    self.parent.myPlayer.cash -= 4
+                    self.parent.myPlayer.xp += 5
+                    result = random.randint(1, 6)
+                    if result == 5:
+                        self.parent.text.system(' YOU WON!!!\n')
+                        self.parent.text.system(' YOU GOT 25 COINS PRIZE!!!\n')
+                        self.parent.myPlayer.cash += 25
+                        self.parent.myPlayer.xp += 100
+                        self.parent.zonemap['a2']['SOLVED'] = True
+                    else:
+                        self.parent.text.system(f' YOUR NUMBER: {result}\n')
+                        self.parent.text.danger(' YOU LOST!!!\n', begin_txt='SYSTEM')
                 else:
-                    self.parent.text.system(f' YOUR NUMBER: {result}\n')
-                    self.parent.text.danger(' YOU LOST!!!\n', begin_txt='SYSTEM')
+                    self.parent.text.system(" You don't have enough money\n")
+            elif response in ('no', '2'):
+                self.parent.text.you(text="Maybe next time\n")
             else:
-                self.parent.text.system(" You don't have enough money\n")
-        elif response in ('no', '2'):
-            self.parent.text.you(text="Maybe next time\n")
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_a2(response)
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_a2(response)
 
     def quest_a3(self, response=None):
         if not response:
@@ -529,6 +534,7 @@ class Quests:
             self.parent.text.system(f"Finally after many struggles you learn a new spell!\n", txt_only=True)
             self.parent.text.system(text='Your can now use Fire Ball special spell\n')
             self.parent.myPlayer.spells.append(self.parent.FireBall)
+            print(self.parent.myPlayer.spells)
             self.parent.zonemap['b2']['SOLVED'] = True
         elif response in ('2', 'no'):
             self.parent.text.you(text="No, I don't think it is a good idea\n")
@@ -542,22 +548,26 @@ class Quests:
             self.parent.text.system("""\n  - On the auction - \n""", txt_only=True)
             self.parent.text.npc(" Ladies and gentlemen, and the current lot, is a house located on the edge of town\n", begin_txt='Auction leader')
             self.parent.text.npc(" The initial bet is 500 coins\n", begin_txt='Auction leader')
+            auction_lasts = False
             ### first bet
-            while True:
+            while auction_lasts is False:
                 self.parent.text.system("Write your bet using only nums\n", txt_only=True)
                 bet = int(input(" > "))
-                self.parent.text.npc(f" I hear {bet}\n", begin_txt='Auction leader')
-                ### does not go further
-                if 500 < bet <= 999:
-                    print(bet)
-                    if bet > 999:
-                        self.parent.text.npc(" Greetings you won", begin_txt='Auction leader')
+                self.parent.text.npc(f" I hear {bet}\n\n", begin_txt='Auction leader')
+
+                if 500 < bet <= 1000:
+
+                    if bet > 990:
+                        self.parent.text.npc(" Greetings you won\n", begin_txt='Auction leader')
                         self.home = True
                         break
-                    elif 500 < bet <= 999:
+
+                    elif 500 < bet <= 990:
                         enemy_bet = random.randint(25, 100)
                         enemy_bet += bet
-                        self.parent.text.npc(enemy_bet, begin_txt='Tretegors enemy')
+                        if enemy_bet > 1000:
+                            enemy_bet = 990
+                        self.parent.text.npc(f"{enemy_bet}\n", begin_txt='Tretegors enemy')
                         self.parent.text.npc(f" I hear {enemy_bet}\n", begin_txt='Auction leader')
                 else:
                     self.parent.text.system("""\n Write nums beetween 500 and 1000\n""", txt_only=True)
@@ -602,7 +612,7 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b3()
         else:
-            self.parent.text.system("""  - Welcome to your home - """, txt_only=True)
+            self.parent.text.system("""\n  - Welcome to your home - \n""", txt_only=True)
             self.parent.text.system(""" What do you wanna to do\n    1.Go to rest\n    2.train\n""", txt_only=True)
             house_choise = input(" > ")
             if house_choise == "1":
@@ -612,25 +622,29 @@ class Quests:
                     self.parent.myPlayer.regenaration_mana()
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
                     self.parent.text.system("""Congratulations, you slept well you completely recovered!\n""", txt_only=True)
+                    self.quest_b3()
                 elif mood == 'so-so':
                     self.parent.myPlayer.regenaration_mana()
                     self.parent.myPlayer.heal()
                     self.parent.text.system("""You haven't slept well you recovered full mana, and some health points \n""", txt_only=True)
+                    self.quest_b3()
                 elif mood == 'bad':
                     self.parent.myPlayer.regenaration_mana()
                     self.parent.text.system("""You  slept bad but you recovered mana\n""", txt_only=True)
+                    self.quest_b3()
                 elif self.parent.myPlayer.HP == self.parent.myPlayer.maxHP and self.parent.myPlayer.MP == self.parent.myPlayer.maxMP:
                     self.parent.text.system("""You rested well\n""", txt_only=True)
+                    self.quest_b3()
             elif house_choise == "2":
-                self.parent.text.system(""" Which type of training do you wanna to do ?\n       1.practice punches   2.Train spells   3.Meditation""")
+                self.parent.text.system(""" Which type of training do you wanna to do ?\n       1.practice punches   2.Train spells   3.Meditation\n""")
                 training_chanse = random.randint(1, 100)
                 training_choose = input(" > ")
-                if training_choose == "1":
+                if training_choose == "3":
                     if training_chanse > 10:
                         self.parent.myPlayer.maxHP += 2
-                        self.parent.text.system(""" Congratulations you have improved your health""", txt_only=True)
+                        self.parent.text.system(""" Congratulations you have improved your health\n""", txt_only=True)
                 elif training_chanse == "2":
-                    self.parent.text.system(""" Repeat the spell to practice""", txt_only=True)
+                    self.parent.text.system(""" Repeat the spell to practice\n""", txt_only=True)
                     spellbook = ['Parseltongue', 'Metamorphmagi', 'Seers', 'Legilimency', 'Apparition ',
                                  'Occlumency ', 'Posteriori','Avada Kedavra', 'Crucio', 'Imperio', 'Inferius ',
                                  'Horcrux', 'Portraits', ]
@@ -641,23 +655,23 @@ class Quests:
                     i = 0
                     while player_spell == spellbook and i != 7:
                         if false_spell == 3:
-                            self.parent.text.system(""" You failed your training """)
+                            self.parent.text.system(""" You failed your training\n """)
                             break
                         elif i == 6:
                             self.parent.myPlayer.maxHP += 5
-                            self.parent.text.system(""" Congratulations you successfully eded  your training and uped MP""")
+                            self.parent.text.system(""" Congratulations you successfully eded  your training and uped MP\n""")
                             break
                         elif i != 6 :
-                            self.parent.text.system(""" You have successfully cast a spell""")
+                            self.parent.text.system(""" You have successfully cast a spell\n""")
                             i += 1
                     if player_spell != spellbook:
-                        self.parent.text.system(""" You`ve made mistake!""")
+                        self.parent.text.system(""" You`ve made mistake!\n""")
                         false_spell += 1
 
-                elif training_choose == "3":
+                elif training_choose == "1":
                     if training_chanse > 10:
                         self.parent.myPlayer.maxHP += 2
-                        self.parent.text.system(""" Congratulations you have improved your health""", txt_only=True)
+                        self.parent.text.system(""" Congratulations you have improved your health\n""", txt_only=True)
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b3()
@@ -688,12 +702,14 @@ class Quests:
                         self.parent.text.you(" And what does the owner look like, and is it possible to know where he is now \n")
                         self.parent.text.npc('it`s an ungle old man. And if you wanna i can tell you were is he hiding. \n', begin_txt='The owner of the tavern')
                         self.parent.text.system(' Few moments later...\n')
-                        self.parent.text.you(" You have foud that man \n       It was a long 3 hours .... for him\n")
+                        self.parent.text.you(
+                            " You have foud that man \n       It was a long 3 hours .... for him\n       I also find out that Elminster's possession is a former school of magic\n       And that old Howards school map can be found in the vicinity of Bricklewhite\n")
                         self.parent.myPlayer.maxHP += 20
                         self.parent.myPlayer.cash += 100
                         self.parent.myPlayer.xp += 150
                         self.parent.text.system(' Congratulations you have received 100 coins and a potion that increases health\n')
                         self.quest1 = True
+
                         if self.quest2 is True:
                             self.parent.zonemap['b4']['SOLVED'] = True
                             self.parent.text.system("You`ve solved this location")
@@ -1246,8 +1262,17 @@ class Quests:
                                 places -= 1
 
     def quest_c2(self):
+        def chicken_find():
+            print()
+        self.parent.text.npc("""Hey hey buddy, did you know that the wizard Elminster has a real dragon?
+        and that this dragon often flies into the valley of dragons for fun or to eat something """)
+        self.parent.text.you("So what?\n")
+        self.parent.text.npc("Have you ever wondered how they fly?\n")
+        if "13_Dragon_heart" in self.parent.myPlayer.inventory:
+            self.parent.text.you("No, I don't know, but the dragon you're talking about i has already killed him \n")
 
-
+        elif "13_Dragon_heart" not in self.parent.myPlayer.inventory:
+            self.parent.text.you("No, I'm not very interested in dragons\n")
 
     def quest_c3(self, response=None):
         if not response:
@@ -1276,10 +1301,10 @@ class Quests:
             if response_2 == '1':
                 self.parent.text.you(" I will kill the monster\n")
                 self.parent.fight_dragon()
-                #self.parent.zonemap['c3']['SOLVED'] = True
                 self.parent.myPlayer.cash += 200
                 self.parent.myPlayer.xp += 250
-                self.parent.text.system('You received 200 coins\n')
+                self.parent.myPlayer.inventory.insert(12, '13_Dragon_heart')
+                self.parent.text.system('You received 200 coins, and dragon heart\n')
             elif response_2 == '2':
                 self.parent.text.you(" I do not hurt animals. Even dangerous ones\n")
             else:

@@ -563,6 +563,13 @@ def setup_game():
     while player_class.lower() not in valid_jobs:
         if player_class.lower() == 'help':
             game.cut_scene.print_classes()
+            player_class = input(" > ")
+            if player_class.lower() in valid_jobs:
+                game.myPlayer.job = player_class
+                print(SYSTEM + " Initialization")
+                game.cut_scene.dialog = (" .............\n" + END)
+                game.cut_scene.dialog_print03()
+                print("\n You now a " + player_class + "\n")
         else:
             print(" I don`t know such class....")
             player_class = input(" > ")
