@@ -6,18 +6,19 @@ import time
 roadswrongs = 1
 sproby = 0
 
+
 class Quests:
     def __init__(self, parent):
         self.parent = parent
         self.quest1 = False
         self.quest2 = False
         self.home = False
-        self.ancient_weapon = False
 
+    ### TODO: edit this quest part2(sasha: how to add a assistant ?)
     def quest_a2(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
-            self.parent.text.system(""" You can go to:\n 1.\n 2.Spellshop\n""")
+            self.parent.text.system(""" You can go to:\n        1.Old Sharandar Ruins\n        2. The Farthest Forest \n""")
         response = input(" >  ")
         response = str(response).lower()
         if response == '1':
@@ -47,6 +48,121 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_a2(response)
+        if response == '2':
+            if '2_incredible_medicine' not in self.parent.myPlayer.inventory:
+                print("""                                                                                           
+                                                                              ,///**///                                                                
+                                                                       ./.     .,,....,,**//                                                          
+                                                                    .*      ..........,.,,,,*//                                                       
+                                                        ./,,.,,.,****     .........,.,,,,,,,,,,*(                                                     
+                                                     /      ..,......,,**..........,,,,,,,,,.........,,****/((                                        
+                                                   /      ........,,,,,,, .          .,,**/     .,..........,,**/(                                    
+                                                  ..     .........,,,,                 ...,,,,**...........,,,,,,,*//(                                 
+                                        .(((((*   ,     ...,  ....,,           ... .......,,,,,,,*,,,,,,,,,,,,,,,,,*///(                               
+                                   (    .......,*,....,,,,***,,,,            .*##....,,,,,,,,,,*,*/***,,,,,,,,,,,,,////#                              
+                                 (    ....,,,,             ...,,.        ...,,##,,,..,,,,..,,,,*,,*/*******,,,,,,,,/////#                             
+                                *,. ..,,***.              ....,*..... ..,****##            .,,**  ...*///****,,,,,/(//(/(                             
+                                ,,,,***///.           ........,       ,*****%(            ...,,,(//,,,,////****,//(((((/(                             
+                                 (**/((((*,.    .........,,,         ,*,,,/%/         .......,,,,/((*,((*///*/(((((#((//#                             
+                                   (*/((#***,,.,,,,,,,,,,,.        ,**,,,#%*,   ........,,,,,,,,,,(/((((((#(####(###(//#                              
+                                       //**/***,,,,,,,,,,*.. ..,,**,**,%%****,.,,,,,,,,,,,,,,,,,/(//(#############(///                               
+                                           **/*//(///******//********,,*##/**///*,,,,,,,,,,,,,,,*/(((#######%%%###(//(                                 
+                                           ,*///////((((((//(///,,,**,#(///((/////***,,,,**///(((/##%%%%%%%####//#                                    
+                                              /////(((((((((((***,,,*((((#%&&&&%%#(((((((((((((##(((###(////#,                                        
+                                               .(   ,(###(* ******,*,**,,,**,,,#####%%%%%%%%%#//#                                                     
+                                             #.    *      ,///**********,,,*.#    ,#(////(#(.(                                                        
+                                          /#     .      ,///////////******.#              ((     ,                                                    
+                                        #             /*/////*****/////*,#.    .       ,#     .                                                       
+                                     *#            /.          .//////,#.    .       ##     (                                                         
+                                                    ,/          .  /////*(,   *       *#     .                                                            
+                                              (,          *   ////*(,   *       #(                                                                    
+                                           /(          /    ,****(*  (       .#                                                                       
+                                         #/                ****// ,(                                                                                  
+                                      (#                  ,*,/# #                                                                                     
+                                   #/                   ,,*#,/                                                                                       
+                                (#                  ,,*##                                                                                          
+                              #.                   ,*%                                                                                             
+                                                 ,%                                                                                               
+                                             .                    """)
+                self.parent.text.system("""Suddenly an incredible storm began.From an unexpected storm, 
+                you decided to hide under the roots of a giant elven tree.
+                - Hmm what is it?
+                You smelled roasted pork. After a short search, you noticed a small hut
+                """)
+                self.parent.text.system(
+                    """ What do you think what should you do\n      1. Wait till storm is ended in the forest.\n         2. Ask the owner of the hut, wait for the storm in him. \n""")
+                player_choose1 = input(" > ")
+                if player_choose1 == '1':
+                    self.parent.text.system("You sat under the root all day only in the evening the storm subsided, you had to sleep in the woods ...and then continued their journey")
+                elif player_choose1 == '2':
+                    self.parent.text.system("""
+                    You knocked on the door of the hut, and a nice sweet lady opened it for you.
+                    You asked to wait for a thunderstorm in their hut. You have been invited to the table.
+                    You spent a lot of time talking with a young ladyAnd you find out that she lives with her sick father.
+                    They moved to this forest to find at least some medicine for her father, because he has unknown disease.
+                    In search of medicine for her father, she spent 3 years in this forest.
+                    She told you that she had found effective herbs against her father's illness, but she needed to 
+                    get to the spellshop in Wyllowwood. She invited you to stay the night. 
+                    And in the morning to continue my journey. In the morning she asked you for a favor: """, txt_only= True)
+                    print("""
+                                        #######################################################
+                                        ~~~~~~   !   Bring him back from that world      ~~~~~~
+                                        #######################################################
+                                        |                                                     |
+                                        | Take the herbs to the spellstore in Wyllowwod       |
+                                        | to be processed into an effective medicine          |
+                                        | for her father                                      |  
+                                        |                                                     |
+                                        |  Reward:  100 coins + Assistant-healer              |
+                                        |                                                     |
+                                        #######################################################
+                                        |     1.Accept             |           2.Decline      |
+                                        #######################################################\n
+                                """)
+                    player_choose2 = input(" > ")
+                    if player_choose2 == '1':
+                        self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.", begin_txt="Young lady")
+                        self.parent.myPlayer.inventory.insert(2, '2_Elven_herbs')
+                        self.parent.text.system("You have successfully come out of the woods")
+                    if player_choose2 == '2':
+                        self.parent.text.npc("Well, no problem, I'll go myself...", begin_txt="Young lady")
+                        self.parent.text.system("You have one last chance to prove yourself as a man(1 or 2)")
+                        player_choose3 = input(" > ")
+                        if player_choose3 == "1":
+                            self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.",
+                                                 begin_txt="Young lady")
+                            self.parent.myPlayer.inventory.insert(2, '2_Elven_herbs')
+                        if player_choose3 == "2":
+                            self.parent.text.system("You have successfully come out of the woods!")
+                        else:
+                            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                            self.quest_c3(response)
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        self.quest_c3(response)
+                else:
+                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                    self.quest_c3(response)
+            elif '2_incredible_medicine' in self.parent.myPlayer.inventory:
+                self.parent.text.system("""
+                As you approached the hut you noticed that a young lady was watering flowers near the hut
+                Seeing you, the girl immediately ran up to you """)
+                self.parent.text.npc("Did you bring medicine ?!", begin_txt="Young lady")
+                self.parent.text.you(" Yes, of course")
+                print("""
+                             #######################################################
+                             ~~~~~~   !   Bring him back from that world      ~~~~~~
+                             #######################################################
+                             |                                                     |
+                             | You brought the young lady the medicine she         |
+                             |  had asked for her father. He now start recovering. |
+                             |  You did a great job.                               |
+                             |                                                     |
+                             |              In reward you have got:                |
+                             #######################################################
+                             |      100 coins         +       Assistant-healer     |
+                             #######################################################\n
+                                               """)
 
     def quest_a3(self, response=None):
         if not response:
@@ -891,6 +1007,7 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b5(response)
 
+    ## TODO: edit spellshop
     def quest_c1(self):
         print("")
         self.parent.text.system("""\n  -  Wyllowwood - \n""", txt_only=True)
@@ -1260,7 +1377,17 @@ class Quests:
                             elif fisherman2 > fisherman1:
                                 self.parent.text.system(f"Third place is: {fisherman2}\n")
                                 places -= 1
+        elif player_choise1 == "2":
+            if '2_Elven_herbs' in self.parent.myPlayer.inventory:
+                self.parent.text.npc("What do you need a hero?")
+                self.parent.text.you("I have these herbs, I heard that you can help me, turn them into medicine.")
+                self.parent.text.npc("Let`s see what can i do...")
+                self.parent.myPlayer.inventory.pop(2)
+                self.parent.myPlayer.inventory.insert(2, "2_incredible_medicine")
+                self.parent.text.npc("Here you are, the best what can i do")
+                self.parent.text.you("Thanks!")
 
+    # TODO: edit this quest(sasha)
     def quest_c2(self):
         def chicken_find():
             print()
@@ -1269,10 +1396,55 @@ class Quests:
         self.parent.text.you("So what?\n")
         self.parent.text.npc("Have you ever wondered how they fly?\n")
         if "13_Dragon_heart" in self.parent.myPlayer.inventory:
-            self.parent.text.you("No, I don't know, but the dragon you're talking about i has already killed him \n")
-
+            self.parent.text.you("""No, I don't know, but the dragon you're talking about i has already killed him 
+            І`m busy a little, i had info that i can find a map that i need here 
+            """)
+            self.parent.text.npc("Whaaat ?! No waaay....If so, you would have the dragon's heart with you\n")
+            self.parent.text.you("Yep have one\n")
+            self.parent.text.npc("*The sound of a drooping jaw*\n")
+            self.parent.text.npc("What map do you say you need ?\n")
+            self.parent.text.you("Old map of the former school of magicians Howard\n")
+            self.parent.text.npc("Do you wanna trade? I'll get you a card and you'll give me dragon heart.\n")
+            self.parent.text.system("Do you wanna trade with him ?\n      1.Yes\n       2.Nope")
+            heart_trade = input(" > ")
+            if heart_trade == "1":
+                self.parent.text.you("Alright !\n")
+                self.parent.myPlayer.inventory.pop(12)
+                self.parent.myPlayer.inventory.insert(11, "Ancient map of Howard")
+                self.parent.text.npc("It's nice to deal with you!")
         elif "13_Dragon_heart" not in self.parent.myPlayer.inventory:
-            self.parent.text.you("No, I'm not very interested in dragons\n")
+            self.parent.text.you("""No, I'm not very interested in dragons
+            І`m busy a little, i had info that i can find a map that i need here """)
+            self.parent.text.npc("What map do you say you need ?\n")
+            self.parent.text.you("Old map of the former school of magicians Howard\n")
+            self.parent.text.npc("I can get it for you, if you'll done my request\n")
+            print("""
+                                    #######################################################
+                                    ~~~~~~          !  Flight like a bird?           ~~~~~~
+                                    ~~~~~~~~~~~~       No, like a DRAGON !!    ~~~~~~~~~~~~
+                                    #######################################################
+                                    |                                                     |
+                                    | Frank wants to learn to fly, but not like a bird,   |
+                                    | like a DRAGON!                                      |
+                                    | Help him make a costume for flights                 |
+                                    |                                                     |  
+                                    |     I found everything needed for the costume,      |
+                                    |     but i do not have yet 100 feathers              |
+                                    |                                                     |
+                                    |  Reward:  35 coins   +  Ancient map of Howard       |
+                                    |                                                     |
+                                    #######################################################
+                                    |     1.Accept             |           2.Decline      |
+                                    #######################################################\n
+                            """)
+            player_choose2 = input(" > ")
+            if player_choose2 == "1":
+                chicken_find()
+            elif player_choose2 == "2":
+                print("As you wish!")
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_c3(response)
 
     def quest_c3(self, response=None):
         if not response:
@@ -1424,7 +1596,7 @@ class Quests:
             self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
             self.quest_c4(response)
 
-## TODO: dopisac final quest
+###### TODO: dopisac final quest
     def quest_c5(self):
         self.parent.text.you(text='I am finally here, and I will finally be able to free this region from this tyrant\n')
         print(""" 

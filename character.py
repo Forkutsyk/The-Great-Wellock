@@ -10,6 +10,7 @@ class Player:
         self.maxHP = 0
         self.maxMP = 0
         self.maxDEF = 0
+        ### TODO:check if it works correctly
         self.spells = []
         self.inventory = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
         self.location = 'a0'
@@ -21,7 +22,9 @@ class Player:
         self.MP = 0
     @property
     def level(self):
+    ### TODO: With level up increasing the characters per 1
         return (self.xp // 100) + 1
+
 
     def fight(self, enemy, player):
         print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
