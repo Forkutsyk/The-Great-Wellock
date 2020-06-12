@@ -82,7 +82,7 @@ zonemap = {
     },
     'b1': {
         ZONENAME: 'Blacklake',
-        DESCRIPTION: "",
+        DESCRIPTION: "The city, a former battle fortress. Only the richest live behind the walls.",
         'SOLVED': False,
         UP: "c1",
         DOWN: "a1",
@@ -118,7 +118,7 @@ zonemap = {
     },
     'b5': {
         ZONENAME: 'Arahead',
-        DESCRIPTION: "",
+        DESCRIPTION: "A trading city, where something is bought and sold all the time. One of the most frequent places visited is the bulletin board",
         'SOLVED': False,
         UP: "c5",
         DOWN: "a5",
@@ -127,7 +127,7 @@ zonemap = {
     },
     'c1': {
         ZONENAME: 'Wyllowwood',
-        DESCRIPTION: " The city is surrounded by dense forest(a lot of elves )",
+        DESCRIPTION: " The city is surrounded by dense forest ",
         'SOLVED': False,
         UP: "4",
         DOWN: "b1",
@@ -136,7 +136,9 @@ zonemap = {
     },
     'c2': {
         ZONENAME: 'Brickellwhite',
-        DESCRIPTION: "",
+        DESCRIPTION: """An ancient aristocratic family rules this city. 
+        They are rarely seen during the day outside the estate, and those who see pay attention to their beautiful, but overly pale faces. 
+        The family seems to be almost obsessed with the well-being of their subjects, although recently people began to disappear.""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b2",
@@ -145,7 +147,7 @@ zonemap = {
     },
     'c3': {
         ZONENAME: 'The Well of Dragons ',
-        DESCRIPTION: "",
+        DESCRIPTION: "This valley was once a nest of dragons",
         'SOLVED': False,
         UP: "4",
         DOWN: "b3",
@@ -154,7 +156,8 @@ zonemap = {
     },
     'c4': {
         ZONENAME: 'The Yarlford',
-        DESCRIPTION: "",
+        DESCRIPTION: """According to rumors, this valley is the last of the famous places 
+        where once every 50 years a fiery flower blooms with amazing healing properties.""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b4",

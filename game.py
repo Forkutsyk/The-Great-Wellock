@@ -165,10 +165,55 @@ class Game:
             self.myEnemy.HP = 70
             self.myEnemy.MP = 0
             self.myEnemy.maxDEF = 0
-            self.myEnemy.STR = 45
+            self.myEnemy.STR = 20
             self.text.danger("*growls aggressively*")
             self.fight()
             three -= 1
+
+    def storage_fight(self):
+        six = 6
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire']
+        while six != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 45
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 20
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            six -= 1
+
+    def training_fight(self):
+        four = 4
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire']
+        while four != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 70
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 30
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            four -= 1
+
+    def port_fight(self):
+        five = 5
+        monsters = ['Scarletia', 'Barbegazi', 'Frightener', 'Megalodon']
+        while five != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 55
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 15
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            five -= 1
 
     def master_fight(self):
         self.myEnemy.name = 'Tetrex'
@@ -177,7 +222,7 @@ class Game:
         self.myEnemy.MP = 0
         self.myEnemy.maxDEF = 150
         self.myEnemy.STR = 60
-        self.text.danger("You're too selfconfident young man.I will teach you a lesson for free")
+        self.text.danger("You're too selfconfident young man. I will teach you a lesson for free")
         self.fight()
 
 
@@ -384,6 +429,13 @@ def prompt():
                 game.myPlayer.HP, game.myPlayer.MP)
             pickle.dump(saveValues, saveGame)
             saveGame.close()
+            saveGame_map = open('save_game_map.txt', 'wb')
+            saveValuesMap = (
+                game.zonemap['a1']['SOLVED'], game.zonemap['a2']['SOLVED'], game.zonemap['a3']['SOLVED'],
+                game.zonemap['a4']['SOLVED'], game.zonemap['a5']['SOLVED']
+                )
+            pickle.dump(saveValuesMap, saveGame_map)
+            saveGame_map.close()
             sys.exit()
         elif ask.lower() == "n":
             print(" Okay, maybe next time!")
@@ -529,6 +581,14 @@ def load_game():
     game.myPlayer.cash = load_values[9]
     game.myPlayer.HP = load_values[10]
     game.myPlayer.MP = load_values[11]
+
+    #with open('save_game_map.txt', 'rb') as game_save_map:
+    #    load_values = pickle.load(game_save_map)
+    #game.zonemap['a1']['SOLVED'] = load_values[0]
+    #game.zonemap['a2']['SOLVED'] = load_values[1]
+    #game.zonemap['a3']['SOLVED'] = load_values[2]
+    #game.zonemap['a4']['SOLVED'] = load_values[3]
+    #game.zonemap['a5']['SOLVED'] = load_values[4]
     main_game_loop()
 
 
