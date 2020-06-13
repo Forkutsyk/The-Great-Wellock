@@ -166,7 +166,7 @@ class Game:
             self.myEnemy.MP = 0
             self.myEnemy.maxDEF = 0
             self.myEnemy.STR = 20
-            self.text.danger("*growls aggressively*")
+            self.text.danger("*growls aggressively*", begin_txt="Soldier")
             self.fight()
             three -= 1
 
@@ -215,6 +215,36 @@ class Game:
             self.fight()
             five -= 1
 
+    def fight_boss_soldiers(self):
+        five = 5
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire','Scarletia', 'Barbegazi', 'Megalodon']
+        while five != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 45
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 15
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            five -= 1
+
+    def boss_soldiers_harder(self):
+        five = random.randint(9, 15)
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire','Scarletia', 'Barbegazi', 'Megalodon']
+        while five != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 45
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 15
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            five -= 1
+
     def master_fight(self):
         self.myEnemy.name = 'Tetrex'
         self.myEnemy.job = 'Old master'
@@ -224,7 +254,6 @@ class Game:
         self.myEnemy.STR = 60
         self.text.danger("You're too selfconfident young man. I will teach you a lesson for free")
         self.fight()
-
 
     def snakes_fight(self):
         self.text.system("""\n  - Swamp of walking snakes  - \n""", txt_only=True)
@@ -279,6 +308,9 @@ class Game:
                     map_coordinates[r_idx][l_idx] = ' '
         for i in map_coordinates:
             print(i)
+
+    def final_titles(self):
+        print("- Final -")
 
 
 game = Game()
@@ -426,7 +458,7 @@ def prompt():
                 game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
                 game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
                 game.myPlayer.cash,
-                game.myPlayer.HP, game.myPlayer.MP)
+                game.myPlayer.HP, game.myPlayer.MP, game.myPlayer.inventory)
             pickle.dump(saveValues, saveGame)
             saveGame.close()
             saveGame_map = open('save_game_map.txt', 'wb')
@@ -581,6 +613,7 @@ def load_game():
     game.myPlayer.cash = load_values[9]
     game.myPlayer.HP = load_values[10]
     game.myPlayer.MP = load_values[11]
+    game.myPlayer.inventory = load_values[12]
 
     #with open('save_game_map.txt', 'rb') as game_save_map:
     #    load_values = pickle.load(game_save_map)

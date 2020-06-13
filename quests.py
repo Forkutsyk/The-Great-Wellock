@@ -514,6 +514,7 @@ class Quests:
                     Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
                     This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
                     I also will show you how to increse you endurance.\n""", begin_txt='Old warrior')
+                    self.parent.myPlayer.inventory.insert(5, "Abyssal sword")
                     self.parent.myPlayer.maxHP += 30
                     self.parent.myPlayer.xp += 50
                     self.parent.text.system("""After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""", txt_only=True)
@@ -1126,8 +1127,7 @@ class Quests:
                     |                                         |
                     ###########################################
                     |     1.Accept      |      2.Decline      |
-                    ###########################################\n
-            """)
+                    ###########################################\n""")
             player_choise2 = input(" > ")
             if player_choise2 == "1":
                 self.parent.text.npc(" Let the tournament starts\n", begin_txt="Mr.Fishman")
@@ -1481,7 +1481,7 @@ class Quests:
         #######################################################
         |              What do you wanna to do ?              |
         |   1. Refactor something                             |
-        |   2. Buy a spell                                    |
+        |   2. Do a spell                                    |
         |                                                     |
         #######################################################
         #######################################################\n""")
@@ -1995,9 +1995,521 @@ class Quests:
 
 ###### TODO: dopisac final quest
     def quest_c5(self):
+        def boss_fight_harder():
+            print(" ")
+            self.parent.text.you(
+                text='I am finally here, and I will finally be able to free this region from this tyrant\n')
+            self.parent.text.system(" You have opened the hall door\n")
+            self.parent.text.danger(
+        """Interesting, interesting .... Another pig came to play !\n       Well, show our guest what hospitality is\n""",begin_txt="Elminster")
+            if "Abyssal sword" in self.parent.myPlayer.inventory:
+                self.parent.text.danger("Whaat ?!? Abyssal sword ??",begin_txt="Elminster")
+                self.parent.text.system("You have kiled every sodsier")
+            if "Abyssal sword" not in self.parent.myPlayer.inventory:
+                self.parent.boss_soldiers_harder()
+            self.parent.text.danger(
+                """You not only dare to appear on my territory, but also killed my warriors.
+            Well, nothing, I'll take care of you, and then call other soldiers and destroy Wellock.\n""",
+                begin_txt="Elminster")
+            print("""
+                                ###########################################
+                                ~~~~~~        Final boss fight       ~~~~~~
+                                ###########################################
+                                |                                         |
+                                | Defeat the Elmister, and return         |
+                                | the princes to the kingdom              |
+                                |                                         |
+                                |     The fate of the whole kingdom       |
+                                |              lies on you                |
+                                |                                         |
+                                ###########################################
+                                ###########################################\n""")
+            defeated = False
+            Boss_hp = 500
+            while defeated is not True:
+                if Boss_hp != 0:
+                    boss_atempt = 2
+                    while boss_atempt != 0:
+                        boss_atack = random.randint(1, 3)
+                        if boss_atack == 1:
+                            self.parent.text.system("He cast a spell on you, try to dodge!(write 'dodge')\n")
+                            player_dodge_choose = input(" > ")
+                            if player_dodge_choose == "dodge":
+                                player_dodge = random.randint(1, 5)
+                                if player_dodge in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully dodged!\n")
+                                    boss_atempt -= 1
+                                elif player_dodge == 4:
+                                    self.parent.text.system("You dodged badly and received part of the damage\n")
+                                    self.parent.myPlayer.HP -= 10
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_dodge == 5:
+                                    self.parent.text.system("You failed with dodging and received whole damage\n")
+                                    self.parent.myPlayer.HP -= 25
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system("You failed with dodging and received whole damage\n")
+                                self.parent.myPlayer.HP -= 25
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 2:
+                            self.parent.text.system("He begins to cast spells, interrupt him until he not finished(write 'broke')\n")
+                            player_interupt_choose = input(" > ")
+                            if player_interupt_choose == "broke":
+                                player_interupt = random.randint(1, 5)
+                                if player_interupt in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully broke his caste\n")
+                                    boss_atempt -= 1
+                                elif player_interupt == 4:
+                                    self.parent.text.system("You did not manage to stop him, but you jumped in a moment and therefore get only part of the damage\n")
+                                    self.parent.myPlayer.HP -= 18
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_interupt == 5:
+                                    self.parent.text.system("You failed to stop him and received a spell right in the face\n")
+                                    self.parent.myPlayer.HP -= 30
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system(
+                                    "You failed to stop him and received a spell right in the face\n")
+                                self.parent.myPlayer.HP -= 30
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 3:
+                            self.parent.text.system("He summoned 5 soldiers, but they look weak\n")
+                            self.parent.fight_boss_soldiers()
+                            boss_atempt -= 1
+                    boss_atempt = 2
+                    self.parent.text.you("Haha apparently he needs time to recover mana, this is my chance!\n")
+                    player_choise = False
+                    while player_choise is False:
+                        self.parent.text.system(" How do you want to attack?\n   1. Beat\n   2. Spell\n   3. Use an item\n   4. Heal\n", txt_only=True)
+                        player_atempt = input(" > ")
+                        if player_atempt == "1":
+                            damage = self.parent.myPlayer.STR
+                            Boss_hp -= damage
+                            if Boss_hp < 0:
+                                Boss_hp = 0
+                            print(Boss_hp)
+                            player_choise = True
+                        elif player_atempt == "2":
+                            if self.parent.myPlayer.job == "mage":
+                                print(""" Spells:
+                                1. Fire - MP:25  DMG:60
+                                2. Thunder - MP:25  DMG:60
+                                3. Meteor - MP:80  DMG:120
+                                4. Cure - MP:25  DMG:62
+                                5. Cura - MP:32  DMG:70
+                                6. Curaga - MP:50  DMG:120
+                                """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+                             Spells:
+                                1. Fire - MP:25  DMG:60
+                                2. Thunder - MP:25  DMG:60
+                                3. Meteor - MP:80  DMG:120
+                                4. Cure - MP:25  DMG:62
+                                5. Cura - MP:32  DMG:70
+                                6. Curaga - MP:50  DMG:120
+                                """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "3":
+                                    if self.parent.myPlayer.MP >= 80:
+                                        self.parent.myPlayer.MP -= 80
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "4":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 62
+                                        Boss_hp -= damage
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "5":
+                                    if self.parent.myPlayer.MP >= 32:
+                                        self.parent.myPlayer.MP -= 32
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "6":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            ### warrior spels
+                            elif self.parent.myPlayer.job == 'warrior':
+                                print(""" Spells:
+                                1. Fire Sword - MP:20  DMG:35
+                                2. Blizard - MP:25  DMG:50
+                                               """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+                             Spells:
+                                1. Fire Sword - MP:20  DMG:35
+                                2. Blizard - MP:25  DMG:50
+                                               """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 35
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 50
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            #### ranger spels
+                            elif self.parent.myPlayer.job == 'ranger':
+                                print(""" Spells:
+                                1. Blood King - MP:50  DMG:70
+                                2. Dark Dagger Technique - MP:20  DMG:45
+                                                    """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+                            Spells:
+                                1. Blood King - MP:50  DMG:70
+                                2. Dark Dagger Technique - MP:20  DMG:45
+                                                          """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 45
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                        elif player_atempt == "3":
+                            self.parent.text.system("Which element do you want to use?\n")
+                            if elements in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" ~ element\n", txt_only=True)
+                                player_choise = True
+                            else:
+                                self.parent.text.system("You have no items you can use\n")
+                        elif player_atempt == "4":
+                            self.parent.myPlayer.heal()
+                            self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                        elif player_atempt == "exit":
+                            self.quest_c5()
+                if Boss_hp == 0:
+                    defeated = True
+                    self.parent.final_titles()
+
         def boss_fight():
-            print()
-        self.parent.text.you(text='I am finally here, and I will finally be able to free this region from this tyrant\n')
+            print(" ")
+            self.parent.text.you(
+                text='I am finally here, and I will finally be able to free this region from this tyrant\n')
+            self.parent.text.system(" You have opened the hall door\n")
+            self.parent.text.danger(
+        """Interesting, interesting .... Another pig came to play !\n       Well, show our guest what hospitality is\n""",begin_txt="Elminster")
+            self.parent.text.you("They wont come to help you\n")
+            self.parent.text.danger(
+                """You not only dare to appear on my territory, but also killed my warriors.
+            Well, nothing, I'll take care of you, and then call other soldiers and destroy Wellock.\n""",
+                begin_txt="Elminster")
+            print("""
+                                ###########################################
+                                ~~~~~~        Final boss fight       ~~~~~~
+                                ###########################################
+                                |                                         |
+                                | Defeat the Elmister, and return         |
+                                | the princes to the kingdom              |
+                                |                                         |
+                                |     The fate of the whole kingdom       |
+                                |              lies on you                |
+                                |                                         |
+                                ###########################################
+                                ###########################################\n""")
+            defeated = False
+            Boss_hp = 500
+            while defeated is not True:
+                if Boss_hp != 0:
+                    boss_atempt = 2
+                    while boss_atempt != 0:
+                        boss_atack = random.randint(1, 3)
+                        if boss_atack == 1:
+                            self.parent.text.system("He cast a spell on you, try to dodge!(write 'dodge')\n")
+                            player_dodge_choose = input(" > ")
+                            if player_dodge_choose == "dodge":
+                                player_dodge = random.randint(1, 5)
+                                if player_dodge in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully dodged!\n")
+                                    boss_atempt -= 1
+                                elif player_dodge == 4:
+                                    self.parent.text.system("You dodged badly and received part of the damage\n")
+                                    self.parent.myPlayer.HP -= 10
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_dodge == 5:
+                                    self.parent.text.system("You failed with dodging and received whole damage\n")
+                                    self.parent.myPlayer.HP -= 25
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system("You failed with dodging and received whole damage\n")
+                                self.parent.myPlayer.HP -= 25
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 2:
+                            self.parent.text.system("He begins to cast spells, interrupt him until he not finished(write 'broke')\n")
+                            player_interupt_choose = input(" > ")
+                            if player_interupt_choose == "broke":
+                                player_interupt = random.randint(1, 5)
+                                if player_interupt in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully broke his caste\n")
+                                    boss_atempt -= 1
+                                elif player_interupt == 4:
+                                    self.parent.text.system("You did not manage to stop him, but you jumped in a moment and therefore get only part of the damage\n")
+                                    self.parent.myPlayer.HP -= 18
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_interupt == 5:
+                                    self.parent.text.system("You failed to stop him and received a spell right in the face\n")
+                                    self.parent.myPlayer.HP -= 30
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system(
+                                    "You failed to stop him and received a spell right in the face\n")
+                                self.parent.myPlayer.HP -= 30
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 3:
+                            self.parent.text.system("He summoned 5 soldiers, but they look weak\n")
+                            self.parent.fight_boss_soldiers()
+                            boss_atempt -= 1
+                    boss_atempt = 2
+                    self.parent.text.you("Haha apparently he needs time to recover mana, this is my chance!\n")
+                    player_choise = False
+                    while player_choise is False:
+                        self.parent.text.system(" How do you want to attack?\n   1. Beat\n   2. Spell\n   3. Use an item\n   4. Heal\n", txt_only=True)
+                        player_atempt = input(" > ")
+                        if player_atempt == "1":
+                            damage = self.parent.myPlayer.STR
+                            Boss_hp -= damage
+                            if Boss_hp < 0:
+                                Boss_hp = 0
+                            print(Boss_hp)
+                            player_choise = True
+                        elif player_atempt == "2":
+                            if self.parent.myPlayer.job == "mage":
+                                print(""" 
+    Spells:
+        1. Fire - MP:25  DMG:60
+        2. Thunder - MP:25  DMG:60
+        3. Meteor - MP:80  DMG:120
+        4. Cure - MP:25  DMG:62
+        5. Cura - MP:32  DMG:70
+        6. Curaga - MP:50  DMG:120
+                                """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+    Spells:
+        1. Fire - MP:25  DMG:60
+        2. Thunder - MP:25  DMG:60
+        3. Meteor - MP:80  DMG:120
+        4. Cure - MP:25  DMG:62
+        5. Cura - MP:32  DMG:70
+        6. Curaga - MP:50  DMG:120
+                                """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "3":
+                                    if self.parent.myPlayer.MP >= 80:
+                                        self.parent.myPlayer.MP -= 80
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "4":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 62
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "5":
+                                    if self.parent.myPlayer.MP >= 32:
+                                        self.parent.myPlayer.MP -= 32
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "6":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            ### warrior spels
+                            elif self.parent.myPlayer.job == 'warrior':
+                                print(""" 
+    Spells:
+        1. Fire Sword - MP:20  DMG:35
+        2. Blizard - MP:25  DMG:50
+                                               """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+    Spells:
+        1. Fire Sword - MP:20  DMG:35
+        2. Blizard - MP:25  DMG:50
+                                               """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 35
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 50
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            #### ranger spels
+                            elif self.parent.myPlayer.job == 'ranger':
+                                print(""" 
+    Spells:
+        1. Blood King - MP:50  DMG:70
+        2. Dark Dagger Technique - MP:20  DMG:45
+                                                    """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+    Spells:
+        1. Blood King - MP:50  DMG:70
+        2. Dark Dagger Technique - MP:20  DMG:45
+                                                          """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 45
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                        elif player_atempt == "3":
+                            self.parent.text.system("Which element do you want to use?\n")
+                            if elements in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" ~ element\n", txt_only=True)
+                                player_choise = True
+                            else:
+                                self.parent.text.system("You have no items you can use\n")
+                        elif player_atempt == "4":
+                            self.parent.heal()
+                        elif player_atempt == "exit":
+                            self.quest_c5()
+                if Boss_hp == 0:
+                    defeated = True
+                    self.parent.final_titles()
+
         print(""" 
         
      .----------------. 
@@ -2009,38 +2521,59 @@ class Quests:
     | |     |_|      | |  Take on this quest, only if you have collected all the things you need.
     | |     (_)      | |
     | '--------------' |
-     '-----------------' 
-     
-""")
-        self.parent.text.system(" Choose one of the below answers\n  1. Go straight to castle\n  2. Walk on the outer territory\n  3.Go to gain strength", txt_only=True)
+     '-----------------' \n""")
+        self.parent.text.system(" Choose one of the below answers\n  1. Go straight to castle\n  2. Walk on the outer territory\n  3. Go to gain strength\n", txt_only=True)
         final_bose = input(" > ")
         if final_bose == "1":
-            print()
+            boss_fight_harder()
         elif final_bose == "2":
             if "Ancient map of Howard" in self.parent.myPlayer.inventory:
                 self.parent.text.system(
-                    "You approached to the drawbridge. You had no choice but to walk across the bridge")
-                self.parent.text.danger("You were noticed by 3 guards")
+                    "You approached to the drawbridge. You had no choice but to walk across the bridge\n")
+                self.parent.text.danger("You were noticed by 3 guards\n", begin_txt="SYSTEM")
                 self.parent.fight_soldiers()
-                self.parent.text.system("You have successfully cleared the bridge")
-                self.parent.text.system(
-                    """ Where are you going to go now?       
-  1. Storage
-  2. Training hall
-  3. Port
-  4. Main hall(probably Elminster here)\n""", begin_txt=True)
-                conversation_loop = input(" > ")
-                if conversation_loop == "1":
-                    self.parent.storage_fight()
-                elif conversation_loop == "2":
-                    self.parent.training_fight()
-                elif conversation_loop == "3":
-                    self.parent.port_fight()
-                elif conversation_loop == "4":
-                    boss_fight()
-                else:
-                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                    self.quest_c5()
+                self.parent.text.system("You have successfully cleared the bridge\n")
+                self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                storage_fight_done = False
+                training_fight_done = False
+                port_fight_done = False
+                boss_fight_done = False
+                while storage_fight_done is not True or training_fight_done is not True or port_fight_done is not True or boss_fight_done is not True:
+                    self.parent.text.system(
+                        """ Where are you going to go now?       
+      1. Storage
+      2. Training hall
+      3. Port
+      4. Main hall (probably Elminster here)\n""", begin_txt=True)
+                    conversation_loop = input(" > ")
+                    if conversation_loop == "1":
+                        if storage_fight_done is False:
+                            self.parent.storage_fight()
+                            storage_fight_done = True
+                        elif storage_fight_done is not False:
+                            self.parent.text.system("You`ve cleared this part\n")
+                    elif conversation_loop == "2":
+                        if training_fight_done is False:
+                            self.parent.training_fight()
+                            training_fight_done = True
+                        elif storage_fight_done is not False:
+                            self.parent.text.system("You`ve cleared this part\n")
+                    elif conversation_loop == "3":
+                        if port_fight_done is False:
+                            self.parent.port_fight()
+                            port_fight_done = True
+                        elif storage_fight_done is not False:
+                            self.parent.text.system("You`ve cleared this part\n")
+                    elif conversation_loop == "4":
+                        if storage_fight_done is not True or training_fight_done is not True or port_fight_done is not True:
+                            boss_fight_harder()
+                            break
+                        elif storage_fight_done is True and training_fight_done is True and port_fight_done is True:
+                            boss_fight()
+                            break
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        self.quest_c5()
             elif "Ancient map of Howard" not in self.parent.myPlayer.inventory:
                 i = 0
                 while i < 78:
@@ -2049,19 +2582,47 @@ class Quests:
                     self.parent.text.danger("You have lost !\n      -write 'look' to find way\n     -write 'give up' if you do not whant to fight\n")
                     destiny = input(" > ")
                     if destiny == "look":
-                        self.parent.text.system("You continued to search")
+                        self.parent.text.system("You continued to search\n")
                     elif destiny == "give up":
-                        self.parent.text.system("You have accepted your destiny")
+                        self.parent.text.system("You have accepted your destiny\n")
                         sys.exit()
-                self.parent.text.system("You are lucky to cross the magic barrier")
+                self.parent.text.system("You are lucky to cross the magic barrier\n")
                 random_road = random.randint(1, 4)
                 if random_road == 1:
+                    self.parent.text.you(" Finally i get out, what is that -____-\n")
+                    self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                    self.parent.text.npc("Hey, what are you doing here ???\n", begin_txt="soldier")
+                    self.parent.text.npc("It doesn't matter if he die anyway\n", begin_txt="soldier")
                     self.parent.storage_fight()
-                elif random_road == 2:
+                    self.parent.text.you("Huh, I did it, let's move on to the next building\n")
                     self.parent.training_fight()
+                    self.parent.text.you("Huh, I did it, there is one more and finally to the main dish of the day\n")
+                    self.parent.port_fight()
+                    boss_fight()
+                elif random_road == 2:
+                    self.parent.text.you(" Finally i get out, what is that -____-\n")
+                    self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                    self.parent.text.npc("Hey, what are you doing here ???\n", begin_txt="soldier")
+                    self.parent.text.npc("It doesn't matter if he die anyway\n", begin_txt="soldier")
+                    self.parent.training_fight()
+                    self.parent.text.you("Huh, I did it, let's move on to the next building\n")
+                    self.parent.port_fight()
+                    self.parent.text.you("Huh, I did it, there is one more and finally to the main dish of the day\n")
+                    self.parent.storage_fight()
+                    boss_fight()
                 elif random_road == 3:
                     self.parent.port_fight()
+                    self.parent.text.you(" Finally i get out, what is that -____-\n")
+                    self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                    self.parent.text.npc("Hey, what are you doing here ???\n", begin_txt="soldier")
+                    self.parent.text.npc("It doesn't matter if he die anyway\n", begin_txt="soldier")
+                    self.parent.port_fight()
+                    self.parent.text.you("Huh, I did it, let's move on to the next building\n")
+                    self.parent.storage_fight()
+                    self.parent.text.you("Huh, I did it, there is one more and finally to the main dish of the day\n")
+                    self.parent.training_fight()
+                    boss_fight()
                 elif random_road == 4:
                     boss_fight()
         elif final_bose == "3":
-            print(" Good choise! ")
+            print(" Good choise!\n")
