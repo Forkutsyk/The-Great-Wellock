@@ -11,17 +11,39 @@ class Player:
         self.maxMP = 0
         self.maxDEF = 0
         self.spells = []
-        self.inventory = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+        self.inventory = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
         self.location = 'a0'
         self.cash = 0
-        self.xp = 0
+        self._xp = 0
         self.game_over = False
         self.STR = 0
         self.HP = 0
         self.MP = 0
+
     @property
     def level(self):
         return (self.xp // 100) + 1
+
+    @property
+    def xp(self):
+        return self._xp
+
+    @xp.setter
+    def xp(self, value):
+        self.parent.text.system(f"You gained {value} EXP points!\n")
+        old_lvl = self.level
+        self._xp += value
+        new_lvl = self.level
+        if new_lvl > old_lvl:
+            self.parent.text.system(f"New level! {new_lvl}!\n")
+            bonus_multiplier = new_lvl - old_lvl
+            self.maxHP += 1 * bonus_multiplier
+            self.maxMP += 1 * bonus_multiplier
+            self.maxDEF += 1 * bonus_multiplier
+            self.cash += 1 * bonus_multiplier
+            self.STR += 1 * bonus_multiplier
+            self.HP += 1 * bonus_multiplier
+            self.MP += 1 * bonus_multiplier
 
     def fight(self, enemy, player):
         print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
@@ -263,8 +285,9 @@ class Enemy(object):
     def show(self):
         print(self.name," I have left:", self.HP, "hp.\n")
 
-    def die(self):
+    def die(self, enemy):
         print("I'm dead. ~", self.name)
+        enemy.xp += 20
 
     def randomize_enemy(self):
         i = int(random.randrange(1, 5))
@@ -306,7 +329,6 @@ class Enemy(object):
             self.STR = 55
             print(" On the way you met an aggressive wolf")
             self.parent.fight()
-            self.xp += 20
 
     def boss(self):
         self.name = 'Big buddy'

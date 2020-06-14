@@ -6,65 +6,292 @@ import time
 roadswrongs = 1
 sproby = 0
 
+
 class Quests:
     def __init__(self, parent):
         self.parent = parent
         self.quest1 = False
         self.quest2 = False
         self.home = False
-        self.ancient_weapon = False
 
+    ### asistant-healer , realize
     def quest_a2(self, response=None):
         if not response:
-            self.parent.text.system(text=""" A stranger offers you to buy a lottery ticket.\nIf you win you will receive 25 coins. Are you interested?\nThe ticket costs 4 coins\n""")
-        self.parent.text.system("Choose one of the below answers\n1. Yes\n2. No\n", txt_only=True)
+            self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
+            self.parent.text.system(""" You can go to:\n        1. Old Sharandar Ruins\n        2. The Farthest Forest \n""")
         response = input(" >  ")
         response = str(response).lower()
-        if response in ('yes', '1'):
-            self.parent.text.you(text="I always win! Now, take my money and give me the lottery ticket\n")
-            if self.parent.myPlayer.cash >= 4:
-                self.parent.myPlayer.cash -= 4
-                self.parent.myPlayer.xp += 5
-                result = random.randint(1, 6)
-                if result == 5:
-                    self.parent.text.system(' YOU WON!!!\n')
-                    self.parent.text.system(' YOU GOT 25 COINS PRIZE!!!\n')
-                    self.parent.myPlayer.cash += 25
-                    self.parent.myPlayer.xp += 100
-                    self.parent.zonemap['a2']['SOLVED'] = True
+        if response == '1' and self.parent.zonemap['a2']['SOLVED1'] is False:
+            self.parent.text.system(text=""" A stranger offers you to buy a lottery ticket.\nIf you win you will receive 25 coins. Are you interested?\nThe ticket costs 4 coins\n""")
+            self.parent.text.system("Choose one of the below answers\n1. Yes\n2. No\n", txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response in ('yes', '1'):
+                self.parent.text.you(text="I always win! Now, take my money and give me the lottery ticket\n")
+                if self.parent.myPlayer.cash >= 4:
+                    self.parent.myPlayer.cash -= 4
+                    self.parent.myPlayer.xp += 5
+                    result = random.randint(1, 6)
+                    if result == 5:
+                        self.parent.text.system(' YOU WON!!!\n')
+                        self.parent.text.system(' YOU GOT 25 COINS PRIZE!!!\n')
+                        self.parent.myPlayer.cash += 25
+                        self.parent.myPlayer.xp += 100
+                        self.parent.zonemap['a2']['SOLVED1'] = True
+                        if self.parent.zonemap['a2']['SOLVED2'] is True:
+                            self.parent.zonemap['a2']['SOLVED'] = True
+                    else:
+                        self.parent.text.system(f' YOUR NUMBER: {result}\n')
+                        self.parent.text.danger(' YOU LOST!!!\n', begin_txt='SYSTEM')
                 else:
-                    self.parent.text.system(f' YOUR NUMBER: {result}\n')
-                    self.parent.text.danger(' YOU LOST!!!\n', begin_txt='SYSTEM')
+                    self.parent.text.system(" You don't have enough money\n")
+            elif response in ('no', '2'):
+                self.parent.text.you(text="Maybe next time\n")
             else:
-                self.parent.text.system(" You don't have enough money\n")
-        elif response in ('no', '2'):
-            self.parent.text.you(text="Maybe next time\n")
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_a2(response)
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_a2(response)
+        elif response == '1' and self.parent.zonemap['a2']['SOLVED1'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to the Forest')
+        elif response == '2' and self.parent.zonemap['a2']['SOLVED2'] is False:
+            if 'Incredible medicine' not in self.parent.myPlayer.inventory:
+                print("""                                                                                           
+                                                                              ,///**///                                                                
+                                                                       ./.     .,,....,,**//                                                          
+                                                                    .*      ..........,.,,,,*//                                                       
+                                                        ./,,.,,.,****     .........,.,,,,,,,,,,*(                                                     
+                                                     /      ..,......,,**..........,,,,,,,,,.........,,****/((                                        
+                                                   /      ........,,,,,,, .          .,,**/     .,..........,,**/(                                    
+                                                  ..     .........,,,,                 ...,,,,**...........,,,,,,,*//(                                 
+                                        .(((((*   ,     ...,  ....,,           ... .......,,,,,,,*,,,,,,,,,,,,,,,,,*///(                               
+                                   (    .......,*,....,,,,***,,,,            .*##....,,,,,,,,,,*,*/***,,,,,,,,,,,,,////#                              
+                                 (    ....,,,,             ...,,.        ...,,##,,,..,,,,..,,,,*,,*/*******,,,,,,,,/////#                             
+                                *,. ..,,***.              ....,*..... ..,****##            .,,**  ...*///****,,,,,/(//(/(                             
+                                ,,,,***///.           ........,       ,*****%(            ...,,,(//,,,,////****,//(((((/(                             
+                                 (**/((((*,.    .........,,,         ,*,,,/%/         .......,,,,/((*,((*///*/(((((#((//#                             
+                                   (*/((#***,,.,,,,,,,,,,,.        ,**,,,#%*,   ........,,,,,,,,,,(/((((((#(####(###(//#                              
+                                       //**/***,,,,,,,,,,*.. ..,,**,**,%%****,.,,,,,,,,,,,,,,,,,/(//(#############(///                               
+                                           **/*//(///******//********,,*##/**///*,,,,,,,,,,,,,,,*/(((#######%%%###(//(                                 
+                                           ,*///////((((((//(///,,,**,#(///((/////***,,,,**///(((/##%%%%%%%####//#                                    
+                                              /////(((((((((((***,,,*((((#%&&&&%%#(((((((((((((##(((###(////#,                                        
+                                               .(   ,(###(* ******,*,**,,,**,,,#####%%%%%%%%%#//#                                                     
+                                             #.    *      ,///**********,,,*.#    ,#(////(#(.(                                                        
+                                          /#     .      ,///////////******.#              ((     ,                                                    
+                                        #             /*/////*****/////*,#.    .       ,#     .                                                       
+                                     *#            /.          .//////,#.    .       ##     (                                                         
+                                                    ,/          .  /////*(,   *       *#     .                                                            
+                                              (,          *   ////*(,   *       #(                                                                    
+                                           /(          /    ,****(*  (       .#                                                                       
+                                         #/                ****// ,(                                                                                  
+                                      (#                  ,*,/# #                                                                                     
+                                   #/                   ,,*#,/                                                                                       
+                                (#                  ,,*##                                                                                          
+                              #.                   ,*%                                                                                             
+                                                 ,%                                                                                               
+                                             .                    """)
+                self.parent.text.system("""Suddenly an incredible storm began.From an unexpected storm, 
+         you decided to hide under the roots of a giant elven tree.
+         - Hmm what is it?
+         You smelled roasted pork. After a short search, you noticed a small hut\n""")
+                self.parent.text.system(
+                    """ What do you think what should you do\n      1. Wait till storm is ended in the forest.\n      2. Ask the owner of the hut, wait for the storm in him. \n""")
+                player_choose1 = input(" > ")
+                if player_choose1 == '1':
+                    self.parent.text.system("You sat under the root all day only in the evening the storm subsided, you had to sleep in the woods ...and then continued their journey\n")
+                elif player_choose1 == '2':
+                    self.parent.text.system("""
+        You knocked on the door of the hut, and a nice sweet lady opened it for you.
+        You asked to wait for a thunderstorm in their hut. You have been invited to the table.
+        You spent a lot of time talking with a young ladyAnd you find out that she lives with her sick father.
+        They moved to this forest to find at least some medicine for her father, because he has unknown disease.
+        In search of medicine for her father, she spent 3 years in this forest.
+        She told you that she had found effective herbs against her father's illness, but she needed to 
+        get to the spellshop in Wyllowwood. She invited you to stay the night. 
+        And in the morning to continue my journey. In the morning she asked you for a favor: \n""", txt_only= True)
+                    print("""
+                                        #######################################################
+                                        ~~~~~~   !   Bring him back from that world      ~~~~~~
+                                        #######################################################
+                                        |                                                     |
+                                        | Take the herbs to the spellstore in Wyllowwod       |
+                                        | to be processed into an effective medicine          |
+                                        | for her father                                      |  
+                                        |                                                     |
+                                        |  Reward:  60 coins + Assistant-healer              |
+                                        |                                                     |
+                                        #######################################################
+                                        |     1.Accept             |           2.Decline      |
+                                        #######################################################\n""")
+                    player_choose2 = input(" > ")
+                    if player_choose2 == '1':
+                        self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.\n", begin_txt="Young lady")
+                        self.parent.myPlayer.inventory.insert(1, 'Elven herbs')
+                        self.parent.myPlayer.inventory.pop(16)
+                        self.parent.text.system("You have successfully come out of the woods\n")
+                    elif player_choose2 == '2':
+                        self.parent.text.npc("Well, no problem, I'll go myself...\n", begin_txt="Young lady")
+                        self.parent.text.system("You have one last chance to prove yourself as a man(1 or 2)\n")
+                        player_choose3 = input(" > ")
+                        if player_choose3 == "1":
+                            self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.\n",
+                                                 begin_txt="Young lady")
+                            self.parent.myPlayer.inventory.insert(1, 'Elven herbs')
+                            self.parent.myPlayer.inventory.pop(16)
+                        elif player_choose3 == "2":
+                            self.parent.text.system("You have successfully come out of the woods!\n")
+                        else:
+                            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                            self.quest_a2()
+                    else:
+                        print(" here problem")
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        self.quest_a2()
+                else:
+                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                    self.quest_a2()
+            elif 'Incredible medicine' in self.parent.myPlayer.inventory:
+                self.parent.text.system("""
+                As you approached the hut you noticed that a young lady was watering flowers near the hut
+                Seeing you, the girl immediately ran up to you """)
+                self.parent.text.npc("Did you bring medicine ?!", begin_txt="Young lady")
+                self.parent.text.you(" Yes, of course")
+                print("""
+                             #######################################################
+                             ~~~~~~   !   Bring him back from that world      ~~~~~~
+                             #######################################################
+                             |                                                     |
+                             | You brought the young lady the medicine she         |
+                             |  had asked for her father. He now start recovering. |
+                             |  You did a great job.                               |
+                             |                                                     |
+                             |              In reward you have got:                |
+                             #######################################################
+                             |      60 coins         +       Assistant-healer     |
+                             #######################################################\n
+                                               """)
+                self.parent.myPlayer.cash += 60
+                self.parent.zonemap['a2']['SOLVED2'] = True
+                if self.parent.zonemap['a2']['SOLVED1'] is True:
+                    self.parent.zonemap['a2']['SOLVED'] = True
+        elif response == '2' and self.parent.zonemap['a2']['SOLVED2'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to the Ruins')
 
+    #part 2 works ? asistant-warrior realize
     def quest_a3(self, response=None):
         if not response:
-            self.parent.text.system(text=""" A pilgrim stops you in the street. He asks if you'll be travelling east anytime soon.\n          Also, he offers 10 coins for taking him with you\n""")
-        self.parent.text.system(" Choose one of the below answers\n  1. Yes, I will take you there\n  2. No\n", txt_only=True)
+            self.parent.text.system("""\n  -  House of a Thousand Faces - \n""", txt_only=True)
+            self.parent.text.system(
+                """ You can go to:\n        1. Bilie Jo Tavern\n        2. Local informant\n""")
         response = input(" >  ")
         response = str(response).lower()
-        if response in ('yes', '1'):
-            self.parent.text.you(text="OK, let's go\n")
-            self.parent.myPlayer.move('right')
-            self.parent.myPlayer.cash += 10
-            self.parent.myPlayer.xp += 50
-            self.parent.text.npc(text=""" Here, take it! I suppose you will make good use of it!\n""", begin_txt='Pilgrim')
-            self.parent.text.system(text=""" The pilgrim gives you the promissed 10 coins!\n""")
-            self.parent.zonemap['a3']['SOLVED'] = True
-        elif response in ('no', '2'):
-            self.parent.text.you(text='Go away! I have more urgent business on my mind...\n')
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_a3(response)
+        if response == '1':
+            self.parent.text.system(text=""" A pilgrim stops you in the street. He asks if you'll be travelling east anytime soon.\n          Also, he offers 10 coins for taking him with you\n""")
+            print("""
+                                                #######################################################
+                                                ~~~~~~          !  Journey to the east           ~~~~~~
+                                                #######################################################
+                                                |                                                     |
+                                                |    The pilgrim asked you to accompany him to east   |
+                                                |                                                     |  
+                                                |                                                     |
+                                                |  Reward:  10 coins                                  |
+                                                |                                                     |
+                                                #######################################################
+                                                |     1.Accept             |         2.Decline        |
+                                                #######################################################\n
+                                        """)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response in ('yes', '1'):
+                self.parent.text.you(text="OK, let's go\n")
+                self.parent.myPlayer.move('right')
+                self.parent.myPlayer.cash += 10
+                self.parent.myPlayer.xp += 50
+                self.parent.text.npc(text=""" Here, take it! I suppose you will make good use of it!\n""", begin_txt='Pilgrim')
+                print("""
+                                                            #######################################################
+                                                            ~~~~~~          !  Journey to the east           ~~~~~~
+                                                            #######################################################
+                                                            |                       DONE                          |
+                                                            |    The pilgrim asked you to accompany him to east   |
+                                                            |                                                     |  
+                                                            |                                                     |
+                                                            #######################################################
+                                                            |                    +10 coins                        |
+                                                            #######################################################\n
+                                                    """)
+                self.parent.text.system(text=""" The pilgrim gives you the promissed 10 coins!\n""")
+                self.parent.zonemap['a3']['SOLVED'] = True
+            elif response in ('no', '2'):
+                self.parent.text.you(text='Go away! I have more urgent business on my mind...\n')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_a3(response)
+        elif response == '2' and "Warrior medicine" not in self.parent.myPlayer.inventory:
+            self.parent.text.npc("Khe khe...")
+            self.parent.text.system("You noticed a man lying on the ground")
+            self.parent.text.system("Chose what do you wanna to do:\n    1.Come to help get up\n    2.Go past")
+            help_stranger = input(" > ")
+            if help_stranger == '1':
+                self.parent.text.system("You help him get up and ask if something happened")
+                self.parent.text.npc(
+"""Oh no no, I'm sorry I used to be the same warrior as you,
+        only in the recent battle I was very seriously wounded.
+         colleagues threw me at will. And now I'm bleeding in these streets ... And I'm getting ready to die""")
+                print("""
+        #######################################################
+        ~~~~~~    !   Give a hero a second chanse        ~~~~~~
+        #######################################################
+        |                                                     |
+        | You met a warrior with a serious injury.            |
+        | If you cure him he will be grateful to you          |
+        | for the rest of his life                            |
+        |                                                     |
+        |  Reward: + Assistant-warrior                        |
+        |                                                     |
+        #######################################################
+        |     1.Accept             |           2.Decline      |
+        #######################################################\n""")
+                save_a_hero = input(" > ")
+                if save_a_hero == "1":
+                    self.parent.text.you("We need to hurry until his condition not get worse")
+                elif save_a_hero == "2":
+                    self.parent.text.you("")
+        elif response == '2' and "Warrior medicine" in self.parent.myPlayer.inventory:
+            self.parent.text.you("Thank God he is still alive")
+            self.parent.text.system("You gave the warrior medicine, and they instantly healed his wounds")
+            self.parent.myPlayer.inventory.pop(13)
+            self.parent.myPlayer.inventory.insert(13, '-')
+            self.parent.myPlayer.inventory.pop(16)
+            self.parent.text.npc("I offer my life for my salvation.")
+            print("""
+        #######################################################
+        ~~~~~~    !   Give a hero a second chanse        ~~~~~~
+        #######################################################
+        |                                                     |
+        | You met a warrior with a serious injury.            |
+        | If you cure him he will be grateful to you          |
+        | for the rest of his life                            |
+        |                                                     |
+        |  For his rescuing he ofers you his life.            |
+        |  He would helps you in battles                      |
+        |                                                     |
+        #######################################################
+        |                +  Assistant-warrior                 |
+        #######################################################\n""")
 
-    def quest_a4(self, response=None):
+    def quest_a4(self):
         def tavern():
+            self.parent.text.system(
+                """ You are very hungry, look into the tavern, so as not to die from starving\n          1. Go to tabern\n          2. Continue the journey\n""")
+            starv_danger = input(" > ")
+            if starv_danger == "1":
+                tavern()
+            elif starv_danger == "2":
+                self.parent.text.danger(""" - You've died from starvation -  \n""", begin_txt="SYSTEM")
+                self.parent.text.system(" Reloading from the last ceckpoint\n")
+                self.parent.text.system(" .................................\n", txt_only=True)
+                os.system('cls')
+                self.quest_a4()
             self.parent.text.system(
                 text=""" In a local tavern you spot a man wearing black cloak sitting in shady corner.\n          You approach him\n""")
             self.parent.text.npc(f" Hello {self.parent.myPlayer.name}\n", begin_txt='The Gamer')
@@ -95,7 +322,9 @@ class Quests:
                         self.parent.text.npc("Wow! You won!. Take your money and come back again\n", begin_txt='The Gamer')
                         self.parent.myPlayer.cash += 100
                         self.parent.myPlayer.xp += 100
-                        self.parent.zonemap['a1']['SOLVED'] = True
+                        self.parent.zonemap['a4']['SOLVED2'] = True
+                        if self.parent.zonemap['a4']['SOLVED1'] is True:
+                            self.parent.zonemap['a4']['SOLVED'] = True
                         self.parent.text.npc(
                             "And if you really want to defeat Elminster and save the princess, you need to increase the fighting force\n",
                             begin_txt='The Gamer')
@@ -123,73 +352,82 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 tavern()
-        if not response:
+        if self.parent.zonemap['a4']['SOLVED1'] is False:
             print("")
             self.parent.text.system(text=""" While having a walk through the little town you find on ground a unique and strange golden ring.\n You think that someone had to lose it here\n What do you want to do with it?\n""")
-        self.parent.text.system(" Choose one of the below answers\n  1. Go to mayor's mansion to leave it there\n  2. Leave it on the ground\n  3. Take it with you\n", txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
-        if response == '1':
-            self.parent.text.system(" You turn to a broad street leading to Mayor Habakuk's mansion\n")
-            self.parent.text.npc(" Welcome traveller, what brings you to my town?\n", begin_txt='Habakuk')
-            self.parent.text.you(" Good afternoon Sir! I found this ring nearby. I thought that you might know who is the owner of it\n")
-            self.parent.text.npc(" Oh! Thank you very much. This belongs to my beloved daughter!\n", begin_txt='Habakuk')
-            self.parent.text.npc(" Take this small gift as a 'thank you' from me.\n", begin_txt='Habakuk')
-            self.parent.text.you(" Thank you\n")
-            self.parent.text.system(" You receive 100 coins\n")
-            self.parent.myPlayer.cash += 100
-            self.parent.myPlayer.xp += 150
-            self.parent.text.system(""" You are very hungry, look into the tavern, so as not to die from starving\n          1. Go to tabern\n          2. Continue the journey\n""")
-            starv_danger = input(" > ")
-            if starv_danger == "1":
+            self.parent.text.system(" Choose one of the below answers\n  1. Go to mayor's mansion to leave it there\n  2. Leave it on the ground\n  3. Take it with you\n", txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.system(" You turn to a broad street leading to Mayor Habakuk's mansion\n")
+                self.parent.text.npc(" Welcome traveller, what brings you to my town?\n", begin_txt='Habakuk')
+                self.parent.text.you(" Good afternoon Sir! I found this ring nearby. I thought that you might know who is the owner of it\n")
+                self.parent.text.npc(" Oh! Thank you very much. This belongs to my beloved daughter!\n", begin_txt='Habakuk')
+                self.parent.text.npc(" Take this small gift as a 'thank you' from me.\n", begin_txt='Habakuk')
+                self.parent.text.you(" Thank you\n")
+                self.parent.text.system(" You receive 100 coins\n")
+                self.parent.myPlayer.cash += 100
+                self.parent.myPlayer.xp += 150
+                self.parent.text.system(""" You are very hungry, look into the tavern, so as not to die from starving\n          1. Go to tabern\n          2. Continue the journey\n""")
+                starv_danger = input(" > ")
+                if starv_danger == "1":
+                    tavern()
+                elif starv_danger == "2":
+                    self.parent.text.danger(""" - You've died from starvation -  """, begin_txt="SYSTEM")
+                    self.parent.text.system(" Reloading from the last ceckpoint\n")
+                    self.parent.text.system(" .................................\n", txt_only=True)
+                    os.system('cls')
+                    self.quest_a4()
+            elif response == '2':
+                self.parent.text.you(" Hmmm, I better leave it where it is so the one who lost it can find it\n")
+                self.parent.myPlayer.xp += 30
+                self.parent.text.system(""" You are very hungry, look into the tavern, so as not to die from starving\n          1. Go to tabern\n          2. Continue the journey\n""")
+                starv_danger = input(" > ")
+                if starv_danger == "1":
+                    tavern()
+                elif starv_danger == "2":
+                    self.parent.text.danger(""" - You've died from starvation -  """, begin_txt="SYSTEM")
+                    self.parent.text.system(" Reloading from the last ceckpoint\n")
+                    self.parent.text.system(" .................................\n", txt_only=True)
+                    os.system('cls')
+                    self.quest_a4()
+            elif response == '3':
+                self.parent.text.you(" What a lucky day! GOLD!\n")
+                self.parent.text.system(" You receive 150 coins\n")
+                self.parent.myPlayer.cash += 150
+                self.parent.myPlayer.xp += 10
                 tavern()
-            elif starv_danger == "2":
-                self.parent.text.danger(""" - You've died from starvation -  """, begin_txt="SYSTEM")
-                self.parent.text.system(" Reloading from the last ceckpoint\n")
-                self.parent.text.system(" .................................\n", txt_only=True)
-                os.system('cls')
-                self.quest_a4()
-        elif response == '2':
-            self.parent.text.you(" Hmmm, I better leave it where it is so the one who lost it can find it\n")
-            self.parent.myPlayer.xp += 30
-            self.parent.text.system(""" You are very hungry, look into the tavern, so as not to die from starving\n          1. Go to tabern\n          2. Continue the journey\n""")
-            starv_danger = input(" > ")
-            if starv_danger == "1":
-                tavern()
-            elif starv_danger == "2":
-                self.parent.text.danger(""" - You've died from starvation -  """, begin_txt="SYSTEM")
-                self.parent.text.system(" Reloading from the last ceckpoint\n")
-                self.parent.text.system(" .................................\n", txt_only=True)
-                os.system('cls')
-                self.quest_a4()
-        elif response == '3':
-            self.parent.text.you(" What a lucky day! GOLD!\n")
-            self.parent.text.system(" You receive 150 coins\n")
-            self.parent.myPlayer.cash += 150
-            self.parent.myPlayer.xp += 10
-            self.parent.text.system(""" You are very hungry, look into the tavern, so as not to die from starving\n          1. Go to tabern\n          2. Continue the journey\n""")
-            starv_danger = input(" > ")
-            if starv_danger == "1":
-                tavern()
-            elif starv_danger == "2":
-                self.parent.text.danger(""" - You've died from starvation -  \n""", begin_txt="SYSTEM")
-                self.parent.text.system(" Reloading from the last ceckpoint\n")
-                self.parent.text.system(" .................................\n", txt_only=True)
-                os.system('cls')
-                self.quest_a4()
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_a1(response)
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_a1(response)
+        elif self.parent.zonemap['a4']['SOLVED1'] is True:
+            tavern()
 
     def quest_a5(self):
+        print(' ')
+        self.parent.text.system(
+            text=""" - Welcome to Icespire Peak -\n""")
         self.parent.text.system(""" You can go to:\n 1.Stable\n 2.Black ice mines\n""")
         answer = input(" > ")
         print(" ")
 
         #### Stable quest
-        if answer == '1' and self.quest1 is False:
+        if answer == '1' and self.parent.zonemap['a5']['SOLVED1'] is False:
             self.parent.text.npc(""" An owner of the stable says: he's heard strange singing in the night in his stable, but whenever he goes out to look, he doesn't find anyone.\n         If that wasn't strange enough, one morning he found scarecrows which was in a drawn circle on the porch""", begin_txt='Owner')
-            response = input(""" Could you help him understand what's going on?\n 1. Yes, I will take you there\n 2. No\n""")
+            print("""
+            #######################################################
+            ~~~~~~       !  The mystery of the stable        ~~~~~~
+            #######################################################
+            |                                                     |
+            | Help owner find out what's going on in the stable   |
+            |                                                     |  
+            |                                                     |
+            |  Reward:  ????????                                  |
+            |                                                     |
+            #######################################################
+            |     1.Accept             |         2.Decline        |
+            #######################################################\n""")
+            response = input(" > ")
             response = str(response).lower()
             if response in ('yes', '1'):
                 self.parent.text.you(" * going to the stable * \n")
@@ -208,15 +446,24 @@ class Quests:
                     self.parent.text.danger('You`ve failed !\n', begin_txt='SYSTEM')
                 if choise == "3":
                     self.parent.text.npc(" Did you find it in the stable?!?! I will immediately notify the royal guards.\n Thank you very much hero\n Here is your reward\n", begin_txt='Owner')
+                    print("""
+                      #######################################################
+                      ~~~~~~       !  The mystery of the stable        ~~~~~~
+                      #######################################################
+                      |                      DONE                           |
+                      | Most likely, the dark cult uses its territory       |
+                      | as a gathering place. You did a great job!          |  
+                      |                                                     |
+                      |                                                     |
+                      #######################################################
+                      |                    +20 coins                        |
+                      #######################################################\n""")
                     self.parent.text.system(' Greeting you have got 50 xp, 20 coins\n')
                     self.parent.myPlayer.cash += 20
                     self.parent.myPlayer.xp += 50
-                    self.quest1 = True
-                    if self.quest2 is True:
+                    self.parent.zonemap['a5']['SOLVED1'] = True
+                    if self.parent.zonemap['a5']['SOLVED2'] is True:
                         self.parent.zonemap['a5']['SOLVED'] = True
-                        self.parent.text.system("You`ve solved this location")
-                        self.quest1 = False
-                        self.quest2 = False
 
                 elif response in ('no', '2'):
                     self.parent.text.system(""" You tell the owner to go away as you have more urgent business on your mind""")
@@ -225,7 +472,7 @@ class Quests:
                     self.quest_a5()
 
         ### Mine quest
-        elif answer == "2" and self.quest2 is False:
+        elif answer == "2" and self.parent.zonemap['a5']['SOLVED2'] is False:
             self.parent.text.system(" You met a dwarf!\n")
             self.parent.text.npc(" The dwarf said he had a job for you\n         You look strong, could you help me with this mechanism? \n         You just need to hold on to this lever.But hold on tight, if you drop it, I will have to look for someone stronger.\n ", begin_txt='Dwarf')
             response = input(""" Could you help him ?\n   1. Yes, I will take you there\n   2. No\n""")
@@ -239,12 +486,9 @@ class Quests:
                     self.parent.text.system(' Greeting you have got 100 xp, 25 coins\n')
                     self.parent.myPlayer.cash += 25
                     self.parent.myPlayer.xp += 100
-                    self.quest2 = True
-                    if self.quest1 is True:
+                    self.parent.zonemap['a5']['SOLVED2'] = True
+                    if self.parent.zonemap['a5']['SOLVED1'] is True:
                         self.parent.zonemap['a5']['SOLVED'] = True
-                        self.parent.text.system("You`ve solved this location")
-                        self.quest1 = False
-                        self.quest2 = False
                 else:
                     self.parent.text.danger(' You`ve failed!\n', begin_txt='SYSTEM')
                     self.parent.text.system(" Try again later...")
@@ -252,10 +496,10 @@ class Quests:
                 self.parent.text.you(text="Maybe next time\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                conversation_loop(response)
-        elif answer == "1" and self.quest1 is True and self.quest2 is False:
+                self.quest_a5()
+        elif answer == "1" and self.parent.zonemap['a5']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the mine')
-        elif answer == "2" and self.quest1 is False and self.quest2 is True:
+        elif answer == "2" and self.parent.zonemap['a5']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the stable')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
@@ -344,6 +588,8 @@ class Quests:
                     Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
                     This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
                     I also will show you how to increse you endurance.\n""", begin_txt='Old warrior')
+                    self.parent.myPlayer.inventory.insert(5, "Abyssal sword")
+                    self.parent.myPlayer.inventory.pop(16)
                     self.parent.myPlayer.maxHP += 30
                     self.parent.myPlayer.xp += 50
                     self.parent.text.system("""After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""", txt_only=True)
@@ -428,7 +674,6 @@ class Quests:
                 mana_perfect = 4
                 self.parent.text.npc(text="""Whaaat, i cant see the end of your stock. You are a real genius\n""",
                                      begin_txt='Gandalfux')
-            print(mana_perfect)
 
             i = 0
             thrown_knifes = random.randint(2, 5)
@@ -554,7 +799,19 @@ class Quests:
 
                     if bet > 990:
                         self.parent.text.npc(" Greetings you won\n", begin_txt='Auction leader')
-                        self.home = True
+                        print("""
+            #######################################################
+            ~~~~~~       !  The elf has a job for you        ~~~~~~
+            #######################################################
+            |                     DONE                            |
+            | The elf wants to thank you for salvation,           |   
+            | and offers you a job.                               |
+            |                                                     |  
+            |                                                     |
+            #######################################################
+            |  + Your own home where you can relax or exercise    |
+            #######################################################\n""")
+                        self.parent.zonemap['b3']['HOME'] = True
                         break
 
                     elif 500 < bet <= 990:
@@ -566,7 +823,7 @@ class Quests:
                         self.parent.text.npc(f" I hear {enemy_bet}\n", begin_txt='Auction leader')
                 else:
                     self.parent.text.system("""\n Write nums beetween 500 and 1000\n""", txt_only=True)
-        if self.home == False:
+        if self.parent.zonemap['b3']['HOME'] is False:
             self.parent.text.system("\n  - Welcome to Absol -\n", txt_only=True)
             self.parent.text.system(""" You saw three soldiers werewolves attacking an elf\n""")
             self.parent.text.system(""" Do you wanna to help him\n    1.Yes\n    2.No\n""", txt_only=True)
@@ -576,10 +833,23 @@ class Quests:
                 self.parent.fight_soldiers()
                 self.parent.text.npc(" Oh thank you a brave hero, let me introduce myself my name is Tretogor\n", begin_txt='Tretogor')
                 self.parent.text.you(f" Nice to meet Tratigor, my name is {self.parent.myPlayer.name}, now be more careful, see you\n")
-                self.parent.text.npc(f" Plese, wait a minute {self.parent.myPlayer.name}! What would you like as a reward for my salvation?!\n",begin_txt='Tretogor')
+                self.parent.text.npc(f" Please, wait a minute {self.parent.myPlayer.name}! What would you like as a reward for my salvation?!\n", begin_txt='Tretogor')
                 self.parent.text.you(" Thanks but I don't need anything, I'm in a hurry\n")
                 self.parent.text.npc(" In that case, I have a little job for you. If you don't mind \n", begin_txt='Tretogor')
                 self.parent.text.system(""" Do you wanna take the job\n    1.Yes\n    2.No\n""", txt_only=True)
+                print("""
+                           #######################################################
+                           ~~~~~~       !  The elf has a job for you        ~~~~~~
+                           #######################################################
+                           |                                                     |
+                           | The elf wants to thank you for salvation,           |   
+                           | and offers you a job.                               |
+                           |                                                     |  
+                           |  Reward:  ????????                                  |
+                           |                                                     |
+                           #######################################################
+                           |        1.Accept          |         2.Decline        |
+                           #######################################################\n""")
                 elf_work = input(" > ")
                 if elf_work == "1":
                     self.parent.text.npc(""" I have one sworn enemy who always bothers me, and even now he had sent Elminster’s soldiers to kill me.
@@ -635,7 +905,7 @@ class Quests:
                 training_chanse = random.randint(1, 100)
                 training_choose = input(" > ")
                 if training_choose == "3":
-                    if training_chanse > 10:
+                    if training_chanse < 10:
                         self.parent.myPlayer.maxHP += 2
                         self.parent.text.system(""" Congratulations you have improved your health\n""", txt_only=True)
                 elif training_chanse == "2":
@@ -664,7 +934,7 @@ class Quests:
                         false_spell += 1
 
                 elif training_choose == "1":
-                    if training_chanse > 10:
+                    if training_chanse < 10:
                         self.parent.myPlayer.maxHP += 2
                         self.parent.text.system(""" Congratulations you have improved your health\n""", txt_only=True)
             else:
@@ -703,13 +973,10 @@ class Quests:
                         self.parent.myPlayer.cash += 100
                         self.parent.myPlayer.xp += 150
                         self.parent.text.system(' Congratulations you have received 100 coins and a potion that increases health\n')
-                        self.quest1 = True
+                        self.parent.zonemap['b4']['SOLVED1'] = True
 
-                        if self.quest2 is True:
+                        if self.parent.zonemap['b4']['SOLVED2'] is True:
                             self.parent.zonemap['b4']['SOLVED'] = True
-                            self.parent.text.system("You`ve solved this location")
-                            self.quest1 = False
-                            self.quest2 = False
 
                 elif chanse_of_GO in [1, 2, 3, 4, 6]:
                     self.parent.text.system("You didn't succeed, try again\n")
@@ -768,7 +1035,7 @@ class Quests:
             return true_road
 
         #### Forge quest b4
-        if answer == '1' and self.quest1 is False:
+        if answer == '1' and self.parent.zonemap['b4']['SOLVED1'] is False:
             self.parent.text.npc(""" Within is my granddaughter, could you save her?\n """, begin_txt='OWNER')
             self.parent.text.system( """        Choose one of the below answers\n          1. Yes, I will save her\n          2. No, I'm sorry\n""", txt_only=True)
             response = input(" > ")
@@ -791,7 +1058,7 @@ class Quests:
                 self.quest_b4()
 
         #### Gorge quest b4
-        elif answer == '2' and self.quest2 is False:
+        elif answer == '2' and self.parent.zonemap['b4']['SOLVED2'] is False:
             self.parent.text.system("""You went into a dark cave, the inhabitants say that a secret treasure is hidden here. 
          But no one don't want to say why no one has taken the treasure yet.
          Maybe it's a trap?!
@@ -809,12 +1076,10 @@ class Quests:
                     self.parent.myPlayer.cash += 150
                     self.parent.myPlayer.xp += 150
                     self.parent.text.system(" Congratulations you have found a tresure 150 coins and a potion that increases strenghth\n ")
-                    self.quest2 = True
-                    if self.quest1 is True:
+                    self.parent.zonemap['b4']['SOLVED2'] = True
+
+                    if self.parent.zonemap['b4']['SOLVED1'] is True:
                         self.parent.zonemap['b4']['SOLVED'] = True
-                        self.parent.text.system("You`ve solved this location")
-                        self.quest1 = False
-                        self.quest2 = False
                 else:
                     print(" Unfortunately you have made too many mistakes, the correct way is:  ", last)
             elif response == '2':
@@ -830,9 +1095,9 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b4()
 
-        elif answer == "1" and self.quest1 is True and self.quest2 is False:
+        elif answer == "1" and self.parent.zonemap['b4']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the gorge')
-        elif answer == "2" and self.quest1 is False and self.quest2 is True:
+        elif answer == "2" and self.parent.zonemap['b4']['SOLVED2'] is False:
             self.parent.text.system(' You have already passed this quest, try to go to the forge')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
@@ -846,6 +1111,19 @@ class Quests:
                 self.parent.text.system(text=""" This could be an occasion for quick money\n""")
                 self.parent.text.system(
                     f" Choose option\n  1. Go to see the miller\n  2. Do not work\n", txt_only=True)
+                print("""
+                #######################################################
+                ~~~~~~~~       !   Work for the day            ~~~~~~~~
+                #######################################################
+                |                                                     |
+                |  You have found booklet about a job                 |  
+                |  Do you want to take on this job?                   |
+                |                                                     |
+                |  Reward:  ????????????????                          |
+                |                                                     |
+                #######################################################
+                |     1.Accept             |           2.Decline      |
+                #######################################################\n""")
                 response = input(" >  ")
                 response = str(response).lower()
         if response == '1':
@@ -878,6 +1156,18 @@ class Quests:
                 self.parent.myPlayer.HP += 25
                 if self.parent.myPlayer.HP > self.parent.myPlayer.maxMP:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxMP
+                    print("""
+            #######################################################
+            ~~~~~~~~       !   Work for the day            ~~~~~~~~
+            #######################################################
+            |                     DONE                            |
+            |  You have found booklet about a job                 |  
+            |                                                     |
+            |   You have worked hard and earned a reward          |
+            |                                                     |
+            #######################################################
+            |                   + 100 coins                       |
+            #######################################################\n""")
                 self.parent.zonemap['b5']['SOLVED'] = True
             elif response == '5':
                 self.parent.text.you(text=f"I have to go\n")
@@ -886,12 +1176,14 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b5(response)
 
+    # spellshop
     def quest_c1(self):
         print("")
         self.parent.text.system("""\n  -  Wyllowwood - \n""", txt_only=True)
         self.parent.text.system(""" You can go to:\n 1.Wyllowwood lake\n 2.Spellshop\n""")
         player_choise1 = input(" > ")
-        if player_choise1 == "1":
+        if player_choise1 == "1" and self.parent.zonemap['c1']['SOLVED1'] is False:
+
             self.parent.text.npc("Hello young man, maybe you want to take part in a fishing tournament?\n", begin_txt="Mr.Fishman")
             self.parent.text.you("But what do I benefit from this?\n")
             self.parent.text.npc("If you take prize place you will receive a cash prize, and taking 1st place you will get another special item\n", begin_txt="Mr.Fishman")
@@ -907,8 +1199,7 @@ class Quests:
                     |                                         |
                     ###########################################
                     |     1.Accept      |      2.Decline      |
-                    ###########################################\n
-            """)
+                    ###########################################\n""")
             player_choise2 = input(" > ")
             if player_choise2 == "1":
                 self.parent.text.npc(" Let the tournament starts\n", begin_txt="Mr.Fishman")
@@ -1226,6 +1517,7 @@ class Quests:
                             begin_txt="Mr.Fishman")
                         self.parent.myPlayer.cash += 150
                         self.parent.myPlayer.xp += 150
+                        self.parent.zonemap['c1']['SOLVED1'] = True
 
                         places -= 1
                         if fisherman1 > fisherman2 and fisherman1 > fisherman3:
@@ -1255,27 +1547,369 @@ class Quests:
                             elif fisherman2 > fisherman1:
                                 self.parent.text.system(f"Third place is: {fisherman2}\n")
                                 places -= 1
+        elif player_choise1 == "2":
+            print("""
+        #######################################################
+        ~~~~~~~~             SPELL SHOP                ~~~~~~~~
+        #######################################################
+        |              What do you wanna to do ?              |
+        |   1. Refactor something                             |
+        |   2. Do a spell                                    |
+        |                                                     |
+        #######################################################
+        #######################################################\n""")
+            player_conversation = input(" > ")
+            if player_conversation == "1":
+                if 'Elven herbs' in self.parent.myPlayer.inventory:
+                    self.parent.text.npc("What do you need a hero?")
+                    self.parent.text.you("I have these herbs, I heard that you can help me, turn them into medicine.")
+                    self.parent.text.npc("Let`s see what can i do...")
+                    self.parent.myPlayer.inventory.pop(1)
+                    self.parent.myPlayer.inventory.insert(1, "Incredible medicine")
+                    self.parent.myPlayer.inventory.pop(16)
+                    self.parent.text.npc("Here you are, the best what can i do")
+                    self.parent.text.you("Thanks!")
+                if 'Fiery flower' in self.parent.myPlayer.inventory:
+                    self.parent.text.npc("What do you need a hero?")
+                    self.parent.text.you("I have these flower, i heard that you can help me, turn them into medicine.")
+                    self.parent.text.npc("Let`s see what can i do...")
+                    self.parent.myPlayer.inventory.pop(13)
+                    self.parent.myPlayer.inventory.insert(13, "Warrior medicine")
+                    self.parent.myPlayer.inventory.pop(16)
+                    self.parent.text.npc("Here you are, the best what can i do")
+                    self.parent.text.you("Thanks!")
+            elif player_conversation == "2":
+                self.parent.text.system(" You have not enought honor")
 
     def quest_c2(self):
-        self.parent.text.npc("""Hey hey buddy, did you know that the wizard Elminster has a real dragon?
-        and that this dragon often flies into the valley of dragons for fun or to eat something """)
-        self.parent.text.you("So what?\n")
-        self.parent.text.npc("Have you ever wondered how they fly?\n")
-        if "13_Dragon_heart" in self.parent.myPlayer.inventory:
-            self.parent.text.you("No, I'm not very interested in dragons\n")
-        if "13_Dragon_heart" not in self.parent.myPlayer.inventory:
-            self.parent.text.you("No, I'm not very interested in dragons\n")
+        def chicken_find():
+            fear_count = 0
+            while fear_count != 100:
+                random_chicken = random.randint(1, 3)
+                if random_chicken == 1:
+                    print(' ')
+                    print("""                                
+                                                                   @@   @@      
+                                                                    @@@@@@@@@   
+               @@@@                                             @@@@@@@@@@@@    
+           #@@@@@@@@@                                        @@@@@@@@   @@@@@@   
+    @@@@@@@@@@@@@@@@@@*                                     @@@@@@@@@@@@@@@@@@@@@)
+ @@@@@@@@@@@@@@@@@@@@@@@                                   @@@@@@@@@@@@@@@@@.   
+  @@@@@@@@@@@@@@@@@@@@@@@@/                               @@@@@@@@@@@@@@@@      
+      .@@@@@@@@@@@@@@@@@@@@@@.                          *@@@@@@@@@@@@@@@@@@     
+      @@@@@@@@@@@@@@@@@@@@@@@@@@@                      @@@@@@@@@@@@@@@@@@@@@    
+        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@                @@@@@@@@@@@@@@@@@@@@@@@@   
+             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#,,(@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+               @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
+                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      
+                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#       
+                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
+                        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,             
+                          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                   
+                               @@@@@@@@@@@@@@@@@@@@@@@@@@@*                     
+                                       @@@@@@@@@@@@@@@@@@                       
+                                          @@@@@@@@@@@@@                         
+                                           #@@@@@@@                             
+                                             @@@@@@                             
+                                             *@@@@@                             
+                                        .@@@@@@@@@@@@@@@                        
+                                      @@@@@@@@@@@@*@@@@@@@@@@                   
+                                            @@@&                         \n""")
+                    self.parent.text.you("Haha, find one. I hope she has no owner\n")
+                    finded_chicken = random.randint(3, 11)
+                    self.parent.text.you(
+                        f"Okay even if you have an owner I won't take a lot of feathers, Only {finded_chicken}\n")
+                    fear_count += finded_chicken
+                    if fear_count > 100:
+                        fear_count = 100
+                    if fear_count != 100:
+                        self.parent.text.you(f"Okay, і already have {fear_count}, i need to find the next one\n")
+                        input(" > ")
+                elif random_chicken == 2:
+                    print(' ')
+                    self.parent.text.you("Okay maybe this gentleman will help me\n")
+                    self.parent.text.system("What do you wanna tell him?\n   1.Greetings, can i ask you about help\n   2.Do you have a chicken\n",txt_only=True)
+                    player_conversation1 = input(" > ")
+                    if player_conversation1 == "1":
+                        self.parent.text.you("Greetings, can i ask you about help\n")
+                        self.parent.text.npc("I think so, but what can I do to help a young warrior\n",begin_txt="Peasant")
+                        self.parent.text.you("I only need a couple of feathers if you have a chicken\n")
+                        self.parent.text.npc("So of course I can help you\n", begin_txt="Peasant")
+                        print("""                                
+                                                                                          @@   @@      
+                                                                                           @@@@@@@@@   
+                                      @@@@                                             @@@@@@@@@@@@    
+                                  #@@@@@@@@@                                        @@@@@@@@   @@@@@@   
+                           @@@@@@@@@@@@@@@@@@*                                     @@@@@@@@@@@@@@@@@@@@@)
+                        @@@@@@@@@@@@@@@@@@@@@@@                                   @@@@@@@@@@@@@@@@@.   
+                         @@@@@@@@@@@@@@@@@@@@@@@@/                               @@@@@@@@@@@@@@@@      
+                             .@@@@@@@@@@@@@@@@@@@@@@.                          *@@@@@@@@@@@@@@@@@@     
+                             @@@@@@@@@@@@@@@@@@@@@@@@@@@                      @@@@@@@@@@@@@@@@@@@@@    
+                               @@@@@@@@@@@@@@@@@@@@@@@@@@@@@                @@@@@@@@@@@@@@@@@@@@@@@@   
+                                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#,,(@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                                         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                                          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
+                                            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      
+                                            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#       
+                                              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
+                                               @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,             
+                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                   
+                                                      @@@@@@@@@@@@@@@@@@@@@@@@@@@*                     
+                                                              @@@@@@@@@@@@@@@@@@                       
+                                                                 @@@@@@@@@@@@@                         
+                                                                  #@@@@@@@                             
+                                                                    @@@@@@                             
+                                                                    *@@@@@                             
+                                                               .@@@@@@@@@@@@@@@                        
+                                                             @@@@@@@@@@@@*@@@@@@@@@@                   
+                                                                   @@@&                         """)
+                        finded_chicken = random.randint(8, 17)
+                        self.parent.text.npc(
+                            f"I hope this amount will help you somehow, give you {finded_chicken} feathers\n", begin_txt="Peasant")
+                        fear_count += finded_chicken
+                        if fear_count > 100:
+                            fear_count = 100
+                        self.parent.text.you(f"Okay, і already have {fear_count}, i need to find the next one\n")
+                        input(" > ")
+                    elif player_conversation1 == "2":
+                        self.parent.text.you("Do you have a chicken?\n")
+                        self.parent.text.npc("Emm, what ?\n",
+                                             begin_txt="Peasant")
+                        self.parent.text.you("Oh, forgive me for my rudeness. I just need a few feathers, if you have a chicken, could you help me?\n")
+                        self.parent.text.npc("Heh, ok i will help you\n", begin_txt="Peasant")
+                        print("""                                
+                                                                                                                  @@   @@      
+                                                                                                                   @@@@@@@@@   
+                                                              @@@@                                             @@@@@@@@@@@@    
+                                                          #@@@@@@@@@                                        @@@@@@@@   @@@@@@   
+                                                   @@@@@@@@@@@@@@@@@@*                                     @@@@@@@@@@@@@@@@@@@@@)
+                                                @@@@@@@@@@@@@@@@@@@@@@@                                   @@@@@@@@@@@@@@@@@.   
+                                                 @@@@@@@@@@@@@@@@@@@@@@@@/                               @@@@@@@@@@@@@@@@      
+                                                     .@@@@@@@@@@@@@@@@@@@@@@.                          *@@@@@@@@@@@@@@@@@@     
+                                                     @@@@@@@@@@@@@@@@@@@@@@@@@@@                      @@@@@@@@@@@@@@@@@@@@@    
+                                                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@                @@@@@@@@@@@@@@@@@@@@@@@@   
+                                                            @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#,,(@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                                         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                                           @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                                              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                                                                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
+                                                                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      
+                                                                    @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#       
+                                                                      @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
+                                                                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,             
+                                                                         @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                   
+                                                                              @@@@@@@@@@@@@@@@@@@@@@@@@@@*                     
+                                                                                      @@@@@@@@@@@@@@@@@@                       
+                                                                                         @@@@@@@@@@@@@                         
+                                                                                          #@@@@@@@                             
+                                                                                            @@@@@@                             
+                                                                                            *@@@@@                             
+                                                                                       .@@@@@@@@@@@@@@@                        
+                                                                                     @@@@@@@@@@@@*@@@@@@@@@@                   
+                                                                                           @@@&                         """)
+                        finded_chicken = random.randint(4, 13)
+                        self.parent.text.npc(
+                            f"Here you are!, give you {finded_chicken} feathers\n", begin_txt="Peasant")
+                        fear_count += finded_chicken
+                        if fear_count > 100:
+                            fear_count = 100
+                        if fear_count != 100:
+                            self.parent.text.you(f"Okay, і already have {fear_count}, i need to find the next one\n")
+                            input(" > ")
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                elif random_chicken == 3:
+                    print(' ')
+                    self.parent.text.you(
+                        "I'm sorry, I see you have chickens, could you help me and give me some feathers?\n")
+                    self.parent.text.npc(
+                        "Yes, of course, but I'm too busy. Go pluck as much as you need\n", begin_txt="Peasant")
+                    self.parent.text.you("Thank you good man\n")
+                    self.parent.text.system("""
+                    The chicken has started to run away from you, try to catch it when it stops.  
+                    Write 'wait' when it goig to fly, or bites grains.
+                    Write 'catch' when she is distracted\n """, txt_only=True)
 
+                    chicken_catch = False
+                    while chicken_catch is False:
+                        chicken_moves = random.randint(1, 3)
+                        if chicken_moves == 1:
+                            self.parent.text.you("Oh no, she is going to fly\n")
+                            player_conversation2 = input(" > ")
+                            if player_conversation2 == "catch":
+                                self.parent.text.system(""" Hey hey , catch her when she is distracted \n""",
+                                                        txt_only=True)
+                            elif player_conversation2 == "wait":
+                                self.parent.text.system("""Right choise\n""", txt_only=True)
+                            else:
+                                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        elif chicken_moves == 2:
+                            self.parent.text.you("Hmm, she bites the grain\n")
+                            player_conversation2 = input(" > ")
+                            if player_conversation2 == "catch":
+                                self.parent.text.system(""" Hey hey , catch her when she is distracted """,
+                                                        txt_only=True)
+                            elif player_conversation2 == "wait":
+                                self.parent.text.system("""Right choise\n""",
+                                                        txt_only=True)
+                            else:
+                                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        elif chicken_moves == 3:
+                            self.parent.text.you("She is distracted!\n")
+                            player_conversation2 = input(" > ")
+                            if player_conversation2 == "catch":
+                                catch_chanse = random.randint(1, 4)
+                                if catch_chanse in [1, 2 ,3]:
+                                    self.parent.text.system("""Yes, you caught her !!!""",
+                                                            txt_only=True)
+                                    print("""                                
+                                                                                                                              @@   @@      
+                                                                                                                               @@@@@@@@@   
+                                                                          @@@@                                             @@@@@@@@@@@@    
+                                                                      #@@@@@@@@@                                        @@@@@@@@   @@@@@@   
+                                                               @@@@@@@@@@@@@@@@@@*                                     @@@@@@@@@@@@@@@@@@@@@)
+                                                            @@@@@@@@@@@@@@@@@@@@@@@                                   @@@@@@@@@@@@@@@@@.   
+                                                             @@@@@@@@@@@@@@@@@@@@@@@@/                               @@@@@@@@@@@@@@@@      
+                                                                 .@@@@@@@@@@@@@@@@@@@@@@.                          *@@@@@@@@@@@@@@@@@@     
+                                                                 @@@@@@@@@@@@@@@@@@@@@@@@@@@                      @@@@@@@@@@@@@@@@@@@@@    
+                                                                   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@                @@@@@@@@@@@@@@@@@@@@@@@@   
+                                                                        @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#,,(@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                                                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                                                       @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@   
+                                                                          @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                                                                             @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@    
+                                                                              @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@     
+                                                                                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@      
+                                                                                @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@#       
+                                                                                  @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@          
+                                                                                   @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@,             
+                                                                                     @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@/                   
+                                                                                          @@@@@@@@@@@@@@@@@@@@@@@@@@@*                     
+                                                                                                  @@@@@@@@@@@@@@@@@@                       
+                                                                                                     @@@@@@@@@@@@@                         
+                                                                                                      #@@@@@@@                             
+                                                                                                        @@@@@@                             
+                                                                                                        *@@@@@                             
+                                                                                                   .@@@@@@@@@@@@@@@                        
+                                                                                                 @@@@@@@@@@@@*@@@@@@@@@@                   
+                                                                                                       @@@&                         """)
+                                    chicken_catch = True
+                                elif catch_chanse == 4:
+                                    self.parent.text.system("""Oh no she broke free!!!\n""",
+                                                            txt_only=True)
+                            elif player_conversation2 == "wait":
+                                self.parent.text.system("""You had to catch her in that moment !!!""",
+                                                        txt_only=True)
+                            else:
+                                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                    finded_chicken = random.randint(8, 17)
+                    self.parent.text.npc(
+                        f"I hope this amount will help you somehow, {finded_chicken} feathers\n", begin_txt="Peasant")
+                    fear_count += finded_chicken
+                    if fear_count > 100:
+                        fear_count = 100
+                    if fear_count != 100:
+                        self.parent.text.you(f"Okay, і already have {fear_count}, i need to find the next one\n")
+                        input(" > ")
+
+        self.parent.text.npc("""Hey hey buddy, did you know that the wizard Elminster has a real dragon?
+        and that this dragon often flies into the valley of dragons for fun or to eat something \n""",begin_txt="Frank")
+        self.parent.text.you("So what?\n")
+        self.parent.text.npc("Have you ever wondered how they fly?\n", begin_txt="Frank")
+        if "Dragon heart" in self.parent.myPlayer.inventory:
+            self.parent.text.you("""No, I don't know, but the dragon you're talking about i has already killed him 
+            І`m busy a little, i had info that i can find a map that i need here 
+            """)
+            self.parent.text.npc("Whaaat ?! No waaay....If so, you would have the dragon's heart with you\n")
+            self.parent.text.you("Yep have one\n")
+            self.parent.text.npc("*The sound of a drooping jaw*\n")
+            self.parent.text.npc("What map do you say you need ?\n")
+            self.parent.text.you("Old map of the former school of magicians Howard\n")
+            self.parent.text.npc("Do you wanna trade? I'll get you a card and you'll give me dragon heart.\n")
+            self.parent.text.system("Do you wanna trade with him ?\n      1.Yes\n       2.Nope")
+            heart_trade = input(" > ")
+            if heart_trade == "1":
+                self.parent.text.you("Alright !\n")
+                self.parent.myPlayer.inventory.pop(12)
+                self.parent.myPlayer.inventory.insert(11, "Ancient map of Howard")
+                self.parent.myPlayer.inventory.pop(16)
+                self.parent.text.npc("It's nice to deal with you!")
+        elif "Dragon heart" not in self.parent.myPlayer.inventory:
+            self.parent.text.you("""No, I'm not very interested in dragons
+      І`m busy a little, i had info that i can find a map that i need here\n """)
+            self.parent.text.npc("What map do you say you need ?\n", begin_txt="Frank")
+            self.parent.text.you("Old map of the former school of magicians Howard\n")
+            self.parent.text.npc("I can get it for you, if you'll done my request\n\n",begin_txt="Frank")
+            print("""
+                                    #######################################################
+                                    ~~~~~~          !  Flight like a bird?           ~~~~~~
+                                    ~~~~~~~~~~~~       No, like a DRAGON !!    ~~~~~~~~~~~~
+                                    #######################################################
+                                    |                                                     |
+                                    | Frank wants to learn to fly, but not like a bird,   |
+                                    | like a DRAGON!                                      |
+                                    | Help him make a costume for flights                 |
+                                    |                                                     |  
+                                    |     I found everything needed for the costume,      |
+                                    |     but i do not have yet 100 feathers              |
+                                    |                                                     |
+                                    |  Reward:  35 coins   +  Ancient map of Howard       |
+                                    |                                                     |
+                                    #######################################################
+                                    |     1.Accept             |         2.Decline        |
+                                    #######################################################\n""")
+            player_choose2 = input(" > ")
+            if player_choose2 == "1":
+                self.parent.text.you("Okay, I'll go look elsewhere")
+                time.sleep(3)
+                chicken_find()
+                time.sleep(3)
+                print(" ")
+                self.parent.text.you("Hi, here are your feathers\n")
+                self.parent.text.npc("Great, great, great. Give it to me\n", begin_txt="Frank")
+                print("""
+                        #######################################################
+                        ~~~~~~          !  Flight like a bird?           ~~~~~~
+                        ~~~~~~~~~~~~       No, like a DRAGON !!    ~~~~~~~~~~~~
+                        #######################################################
+                        |                      Done!                          |
+                        | Frank wants to learn to fly, but not like a bird,   |
+                        | like a DRAGON!                                      |
+                        | Help him make a costume for flights                 |
+                        |                                                     |
+                        #######################################################
+                        |     35 coins           |   Ancient map of Howard    |
+                        #######################################################\n
+                                           """)
+                self.parent.myPlayer.cash += 35
+                self.parent.zonemap['c2']['SOLVED'] = True
+                self.parent.myPlayer.inventory.insert(11, 'Ancient map of Howard')
+                self.parent.myPlayer.inventory.pop(16)
+
+            elif player_choose2 == "2":
+                print("As you wish!\n")
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_c2()
 
     def quest_c3(self, response=None):
         if not response:
+            print(' ')
             self.parent.text.system(
-                text=""" Welcome to the Well of Dragons \n People of this place believe dragons are indeed real creatures\n Some of the are even sure they have seen one!\n""")
+                text=""" - Welcome to the Well of Dragons -\n""")
         self.parent.text.system(
             " Choose one of the below answers\n  1. Go to tavern\n  2. Go to town market\n", txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
-        if response == '1':
+        if response == '1' and self.parent.zonemap['c3']['SOLVED1'] is False:
 
             # TAVERN
             self.parent.text.system(" You walk into a crowdy place full of warriors mages and drunkards\n")
@@ -1287,16 +1921,41 @@ class Quests:
             self.parent.text.you(" Keep talking\n")
             self.parent.text.npc(" The magician Elminster has many strong beasts in his possession, but the Dragon is his favorite and most powerful.\n If you kill him then you will have a better chance to kill him and save the princess.\n And we will be able to survive next winter\n", begin_txt='Litte John')
             self.parent.text.you(f" Plus you {self.parent.myPlayer.name}\n will still receive a reward for killing the dragon. You will receive 200 coins\n")
-            self.parent.text.system(
-                " Choose one of the below answers\n 1.  Accept the offer\n  2. Refuse\n", txt_only=True)
+            print("""
+        #######################################################
+        ~~~~~~~~~         !  Dragon killer            ~~~~~~~~~
+        #######################################################
+        |                                                     |
+        |  Kill the dragon that terrorizes the whole valley.  |
+        |  Residents will thank you generously                |  
+        |                                                     |
+        |  Reward:  200 coins   +  Rare item                  |
+        |                                                     |
+        #######################################################
+        |     1.Accept             |         2.Decline        |
+        #######################################################\n""")
             response_2 = input(" >  ")
             response_2 = str(response_2).lower()
             if response_2 == '1':
                 self.parent.text.you(" I will kill the monster\n")
                 self.parent.fight_dragon()
+                print("""
+        #######################################################
+        ~~~~~~~~~         !  Dragon killer            ~~~~~~~~~
+        #######################################################
+        |                                                     |
+        |  Kill the dragon that terrorizes the whole valley.  |
+        |  Residents will thank you generously                |  
+        |                                                     |
+        |                                                     |
+        #######################################################
+        |        + 200 coins        + Dragon Heart            |
+        #######################################################\n""")
                 self.parent.myPlayer.cash += 200
                 self.parent.myPlayer.xp += 250
-                self.parent.myPlayer.inventory.insert(12, '13_Dragon_heart')
+                self.parent.myPlayer.inventory.insert(12, 'Dragon heart')
+                self.parent.myPlayer.inventory.pop(16)
+                self.parent.zonemap['c3']['SOLVED1'] = True
                 self.parent.text.system('You received 200 coins, and dragon heart\n')
             elif response_2 == '2':
                 self.parent.text.you(" I do not hurt animals. Even dangerous ones\n")
@@ -1313,21 +1972,25 @@ class Quests:
             if response_3 == '1' and self.parent.myPlayer.cash >= 10:
                 self.parent.text.system("You eat an apple\n", txt_only=True)
                 self.parent.myPlayer.HP += 10
+                self.parent.myPlayer.cash -= 10
                 if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             elif response_3 == '2' and self.parent.myPlayer.cash >= 18:
                 self.parent.text.system("You eat a piece of cake\n", txt_only=True)
                 self.parent.myPlayer.HP += 30
+                self.parent.myPlayer.cash -= 18
                 if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             elif response_3 == '3' and self.parent.myPlayer.cash >= 25:
                 self.parent.text.system("You eat a bread\n", txt_only=True)
                 self.parent.myPlayer.HP += 50
+                self.parent.myPlayer.cash -= 25
                 if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             elif response_3 == '4' and self.parent.myPlayer.cash >= 50:
                 self.parent.text.system("You eat a piece of dried meat\n", txt_only=True)
                 self.parent.myPlayer.HP += 100
+                self.parent.myPlayer.cash -= 50
                 if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             else:
@@ -1337,8 +2000,15 @@ class Quests:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_c3(response)
 
+    ## grasland work?
     def quest_c4(self, response=None):
         if not response:
+            print(' ')
+            self.parent.text.system(
+                text=""" - Welcome to the Yarlford -\n""")
+            self.parent.text.system(""" You can go to:\n 1.City center\n 2.Grass meadow\n""")
+            response = input(" > ")
+        if response == "1" and self.parent.zonemap['c4']['SOLVED1'] is False:
             self.parent.text.system(text=""" You meet a funny person on your way\n""")
             self.parent.text.npc(text="""Hey buddy, I'm a local jester.\n""", begin_txt='Jester')
             self.parent.text.you(text='Oh great... can you just let me go and leave me alone?\n')
@@ -1348,78 +2018,631 @@ class Quests:
             self.parent.text.npc(text="""Let us make a deal. If my song will be great enough for you, you will take me as your companion. Do you agree?\n""", begin_txt='Jester')
             self.parent.text.you(text="Hmm I guess there is no other way to get rid of you.. so yes\n")
 
-        self.parent.text.system(
-            f" Choose next sentence\n  1. Oh {self.parent.myPlayer.name} the Great warrior\n  2. Oh valley of plenty\n  3. Once upon a time\n",
-            txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
-        if response == '1':
-            self.parent.text.npc(text=f"Oh {self.parent.myPlayer.name} the Great warrior\n", begin_txt='Jester')
-        elif response == '2':
-            self.parent.text.npc(text=f"Oh valley of plenty\n", begin_txt='Jester')
-        elif response == '3':
-            self.parent.text.npc(text=f"Once upon a time\n", begin_txt='Jester')
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_c4(response)
+            self.parent.text.system(
+                f" Choose next sentence\n  1. Oh {self.parent.myPlayer.name} the Great warrior\n  2. Oh valley of plenty\n  3. Once upon a time\n",
+                txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.npc(text=f"Oh {self.parent.myPlayer.name} the Great warrior\n", begin_txt='Jester')
+            elif response == '2':
+                self.parent.text.npc(text=f"Oh valley of plenty\n", begin_txt='Jester')
+            elif response == '3':
+                self.parent.text.npc(text=f"Once upon a time\n", begin_txt='Jester')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_c4(response)
 
-        self.parent.text.system(
-            f" Choose next sentence\n  1. The weather is so nice yesterday!\n  2. {self.parent.myPlayer.name} and his best companiooon\n  3. Who let the dogs out?!\n",
-            txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
-        if response == '1':
-            self.parent.text.npc(text=f"The weather is so nice yesterday!\n", begin_txt='Jester')
-        elif response == '2':
-            self.parent.text.npc(text=f"{self.parent.myPlayer.name} and his best companiooon\n", begin_txt='Jester')
-        elif response == '3':
-            self.parent.text.npc(text=f"Who let the dogs out?!\n", begin_txt='Jester')
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_c4(response)
+            self.parent.text.system(
+                f" Choose next sentence\n  1. The weather is so nice yesterday!\n  2. {self.parent.myPlayer.name} and his best companiooon\n  3. Who let the dogs out?!\n",
+                txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.npc(text=f"The weather is so nice yesterday!\n", begin_txt='Jester')
+            elif response == '2':
+                self.parent.text.npc(text=f"{self.parent.myPlayer.name} and his best companiooon\n", begin_txt='Jester')
+            elif response == '3':
+                self.parent.text.npc(text=f"Who let the dogs out?!\n", begin_txt='Jester')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_c4(response)
 
-        self.parent.text.system(
-            f" Choose next sentence\n  1. Roses are red\n  2. La la lalala\n  3. Pam pa ram pam pam\n",
-            txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
-        if response == '1':
-            self.parent.text.npc(text=f"Roses are red\n", begin_txt='Jester')
-        elif response == '2':
-            self.parent.text.npc(text=f"La la lalala\n", begin_txt='Jester')
-        elif response == '3':
-            self.parent.text.npc(text=f"Pam pa ram pam pam\n", begin_txt='Jester')
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_c4(response)
-        self.parent.text.you(text="OK STOP, please\n")
-        self.parent.text.npc(text=f"Do you like it my lord?\n", begin_txt='Jester')
-        self.parent.text.you(text="It was the worst thing I have ever heard\n")
-        self.parent.text.npc(text=f"Ah, no one gets my songs. They are so deep\n Can you then at least help me with samll amount of cash?\n", begin_txt='Jester')
-        self.parent.text.system(
-            f" Choose answer\n  1. Yes (-10 coins)\n  2. No\n",
-            txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
-        if response in ('1', 'yes') and self.parent.myPlayer.cash >= 10:
-            self.parent.myPlayer.cash -= 10
-            self.parent.myPlayer.xp += 150
-            self.parent.text.you(text="Yes, here you go\n")
-            self.parent.text.npc(text=f"Thank you my lord\n", begin_txt='Jester')
-            self.parent.text.system(text='Your give 10 coins')
-            self.parent.zonemap['c4']['SOLVED'] = True
-        elif response in ('2', 'no'):
-            self.parent.myPlayer.xp += 130
-            self.parent.text.you(text="No, I don't think you deserve it\n")
-            self.parent.text.npc(text=f"Then Bye\n", begin_txt='Jester')
-            self.parent.zonemap['c4']['SOLVED'] = True
-        else:
-            self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
-            self.quest_c4(response)
+            self.parent.text.system(
+                f" Choose next sentence\n  1. Roses are red\n  2. La la lalala\n  3. Pam pa ram pam pam\n",
+                txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.npc(text=f"Roses are red\n", begin_txt='Jester')
+            elif response == '2':
+                self.parent.text.npc(text=f"La la lalala\n", begin_txt='Jester')
+            elif response == '3':
+                self.parent.text.npc(text=f"Pam pa ram pam pam\n", begin_txt='Jester')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_c4(response)
+            self.parent.text.you(text="OK STOP, please\n")
+            self.parent.text.npc(text=f"Do you like it my lord?\n", begin_txt='Jester')
+            self.parent.text.you(text="It was the worst thing I have ever heard\n")
+            self.parent.text.npc(text=f"Ah, no one gets my songs. They are so deep\n Can you then at least help me with samll amount of cash?\n", begin_txt='Jester')
+            self.parent.text.system(
+                f" Choose answer\n  1. Yes (-10 coins)\n  2. No\n",
+                txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response in ('1', 'yes') and self.parent.myPlayer.cash >= 10:
+                self.parent.myPlayer.cash -= 10
+                self.parent.myPlayer.xp += 150
+                self.parent.text.you(text="Yes, here you go\n")
+                self.parent.text.npc(text=f"Thank you my lord\n", begin_txt='Jester')
+                self.parent.text.system(text='Your give 10 coins')
+                self.parent.zonemap['c4']['SOLVED1'] = True
+            elif response in ('2', 'no'):
+                self.parent.myPlayer.xp += 130
+                self.parent.text.you(text="No, I don't think you deserve it\n")
+                self.parent.text.npc(text=f"Then Bye\n", begin_txt='Jester')
+                self.parent.zonemap['c4']['SOLVED1'] = True
+            else:
+                self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
+                self.quest_c4(response)
+        if response == "2":
+            self.parent.text.system("Welcome to the meadow here you can find a lot various herbs and even you have chanse to find fiery flower\n")
+            find_grass = True
+            i = 0
+            while find_grass is not False:
+                sujestion = input(" > ")
+                if sujestion == "search":
+                    found_chanse = random.randint(0, 100)
+                    if found_chanse <= 75:
+                        self.parent.text.system(" You couldnt find anything !\n")
+                    elif 75 < found_chanse <= 95:
+                        if '-' in self.parent.myPlayer.inventory:
+                            if i == 0:
+                                self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
+                                self.parent.myPlayer.inventory.insert(6, 'Heal grass')
+                                self.parent.myPlayer.inventory.pop(16)
+                                i += 1
+                            elif i == 1:
+                                self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
+                                self.parent.myPlayer.inventory.insert(7, 'Heal grass')
+                                self.parent.myPlayer.inventory.pop(16)
+                                i += 1
+                            elif i == 2:
+                                self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
+                                self.parent.myPlayer.inventory.insert(8, 'Heal grass')
+                                self.parent.myPlayer.inventory.pop(16)
+                                i += 1
+                            else:
+                                self.parent.text.system("It`s to heavy, i cant take anymore heal grass\n")
 
-## TODO: dopisac final quest
+                    elif 95 < found_chanse <= 100 and "Fiery flower" not in self.parent.myPlayer.inventory:
+                        self.parent.text.you("No way! I found fiery flower!\n")
+                        self.parent.myPlayer.inventory.insert(13, 'Fiery flower')
+                        self.parent.myPlayer.inventory.pop(16)
+                    else:
+                        self.parent.text.you("Its not my day...\n")
+                elif sujestion == "end":
+                    find_grass = False
+            self.parent.text.system("Not a bad place, I may come back here someday...\n")
+
+###### TODO: dopisac final quest
     def quest_c5(self):
-        self.parent.text.you(text='I am finally here, and I will finally be able to free this region from this tyrant\n')
+        def boss_fight_harder():
+            print(" ")
+            self.parent.text.you(
+                text='I am finally here, and I will finally be able to free this region from this tyrant\n')
+            self.parent.text.system(" You have opened the hall door\n")
+            self.parent.text.danger(
+        """Interesting, interesting .... Another pig came to play !\n       Well, show our guest what hospitality is\n""",begin_txt="Elminster")
+            if "Abyssal sword" in self.parent.myPlayer.inventory:
+                self.parent.text.danger("Whaat ?!? Abyssal sword ??",begin_txt="Elminster")
+                self.parent.text.system("You have kiled every sodsier")
+            if "Abyssal sword" not in self.parent.myPlayer.inventory:
+                self.parent.boss_soldiers_harder()
+            self.parent.text.danger(
+                """You not only dare to appear on my territory, but also killed my warriors.
+            Well, nothing, I'll take care of you, and then call other soldiers and destroy Wellock.\n""",
+                begin_txt="Elminster")
+            print("""
+                                ###########################################
+                                ~~~~~~        Final boss fight       ~~~~~~
+                                ###########################################
+                                |                                         |
+                                | Defeat the Elmister, and return         |
+                                | the princes to the kingdom              |
+                                |                                         |
+                                |     The fate of the whole kingdom       |
+                                |              lies on you                |
+                                |                                         |
+                                ###########################################
+                                ###########################################\n""")
+            defeated = False
+            Boss_hp = 500
+            while defeated is not True:
+                if Boss_hp != 0:
+                    boss_atempt = 2
+                    while boss_atempt != 0:
+                        boss_atack = random.randint(1, 3)
+                        if boss_atack == 1:
+                            self.parent.text.system("He cast a spell on you, try to dodge!(write 'dodge')\n")
+                            player_dodge_choose = input(" > ")
+                            if player_dodge_choose == "dodge":
+                                player_dodge = random.randint(1, 5)
+                                if player_dodge in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully dodged!\n")
+                                    boss_atempt -= 1
+                                elif player_dodge == 4:
+                                    self.parent.text.system("You dodged badly and received part of the damage\n")
+                                    self.parent.myPlayer.HP -= 10
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_dodge == 5:
+                                    self.parent.text.system("You failed with dodging and received whole damage\n")
+                                    self.parent.myPlayer.HP -= 25
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system("You failed with dodging and received whole damage\n")
+                                self.parent.myPlayer.HP -= 25
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 2:
+                            self.parent.text.system("He begins to cast spells, interrupt him until he not finished(write 'broke')\n")
+                            player_interupt_choose = input(" > ")
+                            if player_interupt_choose == "broke":
+                                player_interupt = random.randint(1, 5)
+                                if player_interupt in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully broke his caste\n")
+                                    boss_atempt -= 1
+                                elif player_interupt == 4:
+                                    self.parent.text.system("You did not manage to stop him, but you jumped in a moment and therefore get only part of the damage\n")
+                                    self.parent.myPlayer.HP -= 18
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_interupt == 5:
+                                    self.parent.text.system("You failed to stop him and received a spell right in the face\n")
+                                    self.parent.myPlayer.HP -= 30
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system(
+                                    "You failed to stop him and received a spell right in the face\n")
+                                self.parent.myPlayer.HP -= 30
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 3:
+                            self.parent.text.system("He summoned 5 soldiers, but they look weak\n")
+                            self.parent.fight_boss_soldiers()
+                            boss_atempt -= 1
+                    boss_atempt = 2
+                    self.parent.text.you("Haha apparently he needs time to recover mana, this is my chance!\n")
+                    player_choise = False
+                    while player_choise is False:
+                        self.parent.text.system(" How do you want to attack?\n   1. Beat\n   2. Spell\n   3. Use an item\n   4. Heal\n", txt_only=True)
+                        player_atempt = input(" > ")
+                        if player_atempt == "1":
+                            damage = self.parent.myPlayer.STR
+                            Boss_hp -= damage
+                            if Boss_hp < 0:
+                                Boss_hp = 0
+                            print(Boss_hp)
+                            player_choise = True
+                        elif player_atempt == "2":
+                            if self.parent.myPlayer.job == "mage":
+                                print(""" Spells:
+                                1. Fire - MP:25  DMG:60
+                                2. Thunder - MP:25  DMG:60
+                                3. Meteor - MP:80  DMG:120
+                                4. Cure - MP:25  DMG:62
+                                5. Cura - MP:32  DMG:70
+                                6. Curaga - MP:50  DMG:120
+                                """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+                             Spells:
+                                1. Fire - MP:25  DMG:60
+                                2. Thunder - MP:25  DMG:60
+                                3. Meteor - MP:80  DMG:120
+                                4. Cure - MP:25  DMG:62
+                                5. Cura - MP:32  DMG:70
+                                6. Curaga - MP:50  DMG:120
+                                """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "3":
+                                    if self.parent.myPlayer.MP >= 80:
+                                        self.parent.myPlayer.MP -= 80
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "4":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 62
+                                        Boss_hp -= damage
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "5":
+                                    if self.parent.myPlayer.MP >= 32:
+                                        self.parent.myPlayer.MP -= 32
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "6":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            ### warrior spels
+                            elif self.parent.myPlayer.job == 'warrior':
+                                print(""" Spells:
+                                1. Fire Sword - MP:20  DMG:35
+                                2. Blizard - MP:25  DMG:50
+                                               """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+                             Spells:
+                                1. Fire Sword - MP:20  DMG:35
+                                2. Blizard - MP:25  DMG:50
+                                               """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 35
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 50
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            #### ranger spels
+                            elif self.parent.myPlayer.job == 'ranger':
+                                print(""" Spells:
+                                1. Blood King - MP:50  DMG:70
+                                2. Dark Dagger Technique - MP:20  DMG:45
+                                                    """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+                            Spells:
+                                1. Blood King - MP:50  DMG:70
+                                2. Dark Dagger Technique - MP:20  DMG:45
+                                                          """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 45
+                                        Boss_hp -= damage
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                        elif player_atempt == "3":
+                            self.parent.text.system("Which element do you want to use?\n")
+                            if elements in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" ~ element\n", txt_only=True)
+                                player_choise = True
+                            else:
+                                self.parent.text.system("You have no items you can use\n")
+                        elif player_atempt == "4":
+                            self.parent.myPlayer.heal()
+                            self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                        elif player_atempt == "exit":
+                            self.quest_c5()
+                if Boss_hp == 0:
+                    defeated = True
+                    self.parent.final_titles()
+
+        def boss_fight():
+            print(" ")
+            self.parent.text.you(
+                text='I am finally here, and I will finally be able to free this region from this tyrant\n')
+            self.parent.text.system(" You have opened the hall door\n")
+            self.parent.text.danger(
+        """Interesting, interesting .... Another pig came to play !\n       Well, show our guest what hospitality is\n""",begin_txt="Elminster")
+            self.parent.text.you("They wont come to help you\n")
+            self.parent.text.danger(
+                """You not only dare to appear on my territory, but also killed my warriors.
+            Well, nothing, I'll take care of you, and then call other soldiers and destroy Wellock.\n""",
+                begin_txt="Elminster")
+            print("""
+                                ###########################################
+                                ~~~~~~        Final boss fight       ~~~~~~
+                                ###########################################
+                                |                                         |
+                                | Defeat the Elmister, and return         |
+                                | the princes to the kingdom              |
+                                |                                         |
+                                |     The fate of the whole kingdom       |
+                                |              lies on you                |
+                                |                                         |
+                                ###########################################
+                                ###########################################\n""")
+            defeated = False
+            Boss_hp = 500
+            while defeated is not True:
+                if Boss_hp != 0:
+                    boss_atempt = 2
+                    while boss_atempt != 0:
+                        boss_atack = random.randint(1, 3)
+                        if boss_atack == 1:
+                            self.parent.text.system("He cast a spell on you, try to dodge!(write 'dodge')\n")
+                            player_dodge_choose = input(" > ")
+                            if player_dodge_choose == "dodge":
+                                player_dodge = random.randint(1, 5)
+                                if player_dodge in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully dodged!\n")
+                                    boss_atempt -= 1
+                                elif player_dodge == 4:
+                                    self.parent.text.system("You dodged badly and received part of the damage\n")
+                                    self.parent.myPlayer.HP -= 10
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_dodge == 5:
+                                    self.parent.text.system("You failed with dodging and received whole damage\n")
+                                    self.parent.myPlayer.HP -= 25
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system("You failed with dodging and received whole damage\n")
+                                self.parent.myPlayer.HP -= 25
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 2:
+                            self.parent.text.system("He begins to cast spells, interrupt him until he not finished(write 'broke')\n")
+                            player_interupt_choose = input(" > ")
+                            if player_interupt_choose == "broke":
+                                player_interupt = random.randint(1, 5)
+                                if player_interupt in [1, 2, 3]:
+                                    self.parent.text.system("You have successfully broke his caste\n")
+                                    boss_atempt -= 1
+                                elif player_interupt == 4:
+                                    self.parent.text.system("You did not manage to stop him, but you jumped in a moment and therefore get only part of the damage\n")
+                                    self.parent.myPlayer.HP -= 18
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                                elif player_interupt == 5:
+                                    self.parent.text.system("You failed to stop him and received a spell right in the face\n")
+                                    self.parent.myPlayer.HP -= 30
+                                    self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                    boss_atempt -= 1
+                            else:
+                                self.parent.text.system(
+                                    "You failed to stop him and received a spell right in the face\n")
+                                self.parent.myPlayer.HP -= 30
+                                self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
+                                boss_atempt -= 1
+                        if boss_atack == 3:
+                            self.parent.text.system("He summoned 5 soldiers, but they look weak\n")
+                            self.parent.fight_boss_soldiers()
+                            boss_atempt -= 1
+                    boss_atempt = 2
+                    self.parent.text.you("Haha apparently he needs time to recover mana, this is my chance!\n")
+                    player_choise = False
+                    while player_choise is False:
+                        self.parent.text.system(" How do you want to attack?\n   1. Beat\n   2. Spell\n   3. Use an item\n   4. Heal\n", txt_only=True)
+                        player_atempt = input(" > ")
+                        if player_atempt == "1":
+                            damage = self.parent.myPlayer.STR
+                            Boss_hp -= damage
+                            if Boss_hp < 0:
+                                Boss_hp = 0
+                            print(Boss_hp)
+                            player_choise = True
+                        elif player_atempt == "2":
+                            if self.parent.myPlayer.job == "mage":
+                                print(""" 
+    Spells:
+        1. Fire - MP:25  DMG:60
+        2. Thunder - MP:25  DMG:60
+        3. Meteor - MP:80  DMG:120
+        4. Cure - MP:25  DMG:62
+        5. Cura - MP:32  DMG:70
+        6. Curaga - MP:50  DMG:120
+                                """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+    Spells:
+        1. Fire - MP:25  DMG:60
+        2. Thunder - MP:25  DMG:60
+        3. Meteor - MP:80  DMG:120
+        4. Cure - MP:25  DMG:62
+        5. Cura - MP:32  DMG:70
+        6. Curaga - MP:50  DMG:120
+                                """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 60
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "3":
+                                    if self.parent.myPlayer.MP >= 80:
+                                        self.parent.myPlayer.MP -= 80
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "4":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 62
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "5":
+                                    if self.parent.myPlayer.MP >= 32:
+                                        self.parent.myPlayer.MP -= 32
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "6":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 120
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            ### warrior spels
+                            elif self.parent.myPlayer.job == 'warrior':
+                                print(""" 
+    Spells:
+        1. Fire Sword - MP:20  DMG:35
+        2. Blizard - MP:25  DMG:50
+                                               """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+    Spells:
+        1. Fire Sword - MP:20  DMG:35
+        2. Blizard - MP:25  DMG:50
+                                               """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 35
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 25:
+                                        self.parent.myPlayer.MP -= 25
+                                        damage = 50
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                            #### ranger spels
+                            elif self.parent.myPlayer.job == 'ranger':
+                                print(""" 
+    Spells:
+        1. Blood King - MP:50  DMG:70
+        2. Dark Dagger Technique - MP:20  DMG:45
+                                                    """)
+                                print(" Which of them do you wanna use ?\n")
+                                telling = input(" > ")
+                                acceptable_actions = ['1', '2']
+                                if telling not in acceptable_actions:
+                                    print(""" Here is no such spell, try again
+    Spells:
+        1. Blood King - MP:50  DMG:70
+        2. Dark Dagger Technique - MP:20  DMG:45
+                                                          """)
+                                elif telling == "1":
+                                    if self.parent.myPlayer.MP >= 50:
+                                        self.parent.myPlayer.MP -= 50
+                                        damage = 70
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                                elif telling == "2":
+                                    if self.parent.myPlayer.MP >= 20:
+                                        self.parent.myPlayer.MP -= 20
+                                        damage = 45
+                                        Boss_hp -= damage
+                                        if Boss_hp < 0:
+                                            Boss_hp = 0
+                                        player_choise = True
+                                    else:
+                                        print(" You have not enough mana points")
+                        elif player_atempt == "3":
+                            self.parent.text.system("Which element do you want to use?\n")
+                            if elements in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" ~ element\n", txt_only=True)
+                                player_choise = True
+                            else:
+                                self.parent.text.system("You have no items you can use\n")
+                        elif player_atempt == "4":
+                            self.parent.heal()
+                        elif player_atempt == "exit":
+                            self.quest_c5()
+                if Boss_hp == 0:
+                    defeated = True
+                    self.parent.final_titles()
+
         print(""" 
         
      .----------------. 
@@ -1431,17 +2654,108 @@ class Quests:
     | |     |_|      | |  Take on this quest, only if you have collected all the things you need.
     | |     (_)      | |
     | '--------------' |
-     '-----------------' 
-     
-""")
-        self.parent.text.system(" Choose one of the below answers\n  1. Go straight to castle\n  2. Walk on the outer territory\n  3.Go to gain strength", txt_only=True)
+     '-----------------' \n""")
+        self.parent.text.system(" Choose one of the below answers\n  1. Go straight to castle\n  2. Walk on the outer territory\n  3. Go to gain strength\n", txt_only=True)
         final_bose = input(" > ")
         if final_bose == "1":
-            print()
+            boss_fight_harder()
         elif final_bose == "2":
-            if self.teritory_map is True:
-                self.parent.text.system("You approached to the drawbridge")
-                self.parent.text.system(" ")
-
+            if "Ancient map of Howard" in self.parent.myPlayer.inventory:
+                self.parent.text.system(
+                    "You approached to the drawbridge. You had no choice but to walk across the bridge\n")
+                self.parent.text.danger("You were noticed by 3 guards\n", begin_txt="SYSTEM")
+                self.parent.fight_soldiers()
+                self.parent.text.system("You have successfully cleared the bridge\n")
+                self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                storage_fight_done = False
+                training_fight_done = False
+                port_fight_done = False
+                boss_fight_done = False
+                while storage_fight_done is not True or training_fight_done is not True or port_fight_done is not True or boss_fight_done is not True:
+                    self.parent.text.system(
+                        """ Where are you going to go now?       
+      1. Storage
+      2. Training hall
+      3. Port
+      4. Main hall (probably Elminster here)\n""", begin_txt=True)
+                    conversation_loop = input(" > ")
+                    if conversation_loop == "1":
+                        if storage_fight_done is False:
+                            self.parent.storage_fight()
+                            storage_fight_done = True
+                        elif storage_fight_done is not False:
+                            self.parent.text.system("You`ve cleared this part\n")
+                    elif conversation_loop == "2":
+                        if training_fight_done is False:
+                            self.parent.training_fight()
+                            training_fight_done = True
+                        elif storage_fight_done is not False:
+                            self.parent.text.system("You`ve cleared this part\n")
+                    elif conversation_loop == "3":
+                        if port_fight_done is False:
+                            self.parent.port_fight()
+                            port_fight_done = True
+                        elif storage_fight_done is not False:
+                            self.parent.text.system("You`ve cleared this part\n")
+                    elif conversation_loop == "4":
+                        if storage_fight_done is not True or training_fight_done is not True or port_fight_done is not True:
+                            boss_fight_harder()
+                            break
+                        elif storage_fight_done is True and training_fight_done is True and port_fight_done is True:
+                            boss_fight()
+                            break
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        self.quest_c5()
+            elif "Ancient map of Howard" not in self.parent.myPlayer.inventory:
+                i = 0
+                while i < 78:
+                    chanse_get_lost = random.randint(0, 100)
+                    i = chanse_get_lost
+                    self.parent.text.danger("You have lost !\n      -write 'look' to find way\n     -write 'give up' if you do not whant to fight\n")
+                    destiny = input(" > ")
+                    if destiny == "look":
+                        self.parent.text.system("You continued to search\n")
+                    elif destiny == "give up":
+                        self.parent.text.system("You have accepted your destiny\n")
+                        sys.exit()
+                self.parent.text.system("You are lucky to cross the magic barrier\n")
+                random_road = random.randint(1, 4)
+                if random_road == 1:
+                    self.parent.text.you(" Finally i get out, what is that -____-\n")
+                    self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                    self.parent.text.npc("Hey, what are you doing here ???\n", begin_txt="soldier")
+                    self.parent.text.npc("It doesn't matter if he die anyway\n", begin_txt="soldier")
+                    self.parent.storage_fight()
+                    self.parent.text.you("Huh, I did it, let's move on to the next building\n")
+                    self.parent.training_fight()
+                    self.parent.text.you("Huh, I did it, there is one more and finally to the main dish of the day\n")
+                    self.parent.port_fight()
+                    boss_fight()
+                elif random_road == 2:
+                    self.parent.text.you(" Finally i get out, what is that -____-\n")
+                    self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                    self.parent.text.npc("Hey, what are you doing here ???\n", begin_txt="soldier")
+                    self.parent.text.npc("It doesn't matter if he die anyway\n", begin_txt="soldier")
+                    self.parent.training_fight()
+                    self.parent.text.you("Huh, I did it, let's move on to the next building\n")
+                    self.parent.port_fight()
+                    self.parent.text.you("Huh, I did it, there is one more and finally to the main dish of the day\n")
+                    self.parent.storage_fight()
+                    boss_fight()
+                elif random_road == 3:
+                    self.parent.port_fight()
+                    self.parent.text.you(" Finally i get out, what is that -____-\n")
+                    self.parent.text.you("I think I could clear the surrounding area from the soldiers\n")
+                    self.parent.text.npc("Hey, what are you doing here ???\n", begin_txt="soldier")
+                    self.parent.text.npc("It doesn't matter if he die anyway\n", begin_txt="soldier")
+                    self.parent.port_fight()
+                    self.parent.text.you("Huh, I did it, let's move on to the next building\n")
+                    self.parent.storage_fight()
+                    self.parent.text.you("Huh, I did it, there is one more and finally to the main dish of the day\n")
+                    self.parent.training_fight()
+                    boss_fight()
+                elif random_road == 4:
+                    boss_fight()
         elif final_bose == "3":
-            print(" Good choise! ")
+            print(" Good choise!\n")

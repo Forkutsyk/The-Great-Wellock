@@ -123,7 +123,7 @@ class Game:
             if choice == "1":
                 self.myPlayer.fight(self.myEnemy, self.myPlayer)
                 if self.myEnemy.HP < 1:
-                    self.myEnemy.die()
+                    self.myEnemy.die(self.myPlayer)
                     break
                 self.myEnemy.show()
                 self.myEnemy.walcz(self.myPlayer)
@@ -136,7 +136,7 @@ class Game:
                 self.myPlayer.show()
                 self.myEnemy.walcz(self.myPlayer)
                 if self.myPlayer.HP < 1:
-                    self.myPlayer.die()
+                    self.myPlayer.die(self.myPlayer)
                     break
                 self.myPlayer.show()
             elif choice == "0":
@@ -165,10 +165,85 @@ class Game:
             self.myEnemy.HP = 70
             self.myEnemy.MP = 0
             self.myEnemy.maxDEF = 0
-            self.myEnemy.STR = 45
-            self.text.danger("*growls aggressively*")
+            self.myEnemy.STR = 20
+            self.text.danger("*growls aggressively*", begin_txt="Soldier")
             self.fight()
             three -= 1
+
+    def storage_fight(self):
+        six = 6
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire']
+        while six != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 45
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 20
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            six -= 1
+
+    def training_fight(self):
+        four = 4
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire']
+        while four != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 70
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 30
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            four -= 1
+
+    def port_fight(self):
+        five = 5
+        monsters = ['Scarletia', 'Barbegazi', 'Frightener', 'Megalodon']
+        while five != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 55
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 15
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            five -= 1
+
+    def fight_boss_soldiers(self):
+        five = 5
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire','Scarletia', 'Barbegazi', 'Megalodon']
+        while five != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 45
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 15
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            five -= 1
+
+    def boss_soldiers_harder(self):
+        five = random.randint(9, 15)
+        monsters = ['Striga', 'Ghoul', 'Frightener', 'Vampire','Scarletia', 'Barbegazi', 'Megalodon']
+        while five != 0:
+            self.myEnemy.name = random.choice(monsters)
+            self.myEnemy.job = 'soldier'
+            self.myEnemy.HP = 45
+            self.myEnemy.MP = 0
+            self.myEnemy.maxDEF = 0
+            self.myEnemy.STR = 15
+            saying = ["I'll dance on your bones", "What makes this delicious steak here", "This pig, my prey"]
+            self.text.danger(f"{random.choice(saying)}", begin_txt="soldier")
+            self.fight()
+            five -= 1
 
     def master_fight(self):
         self.myEnemy.name = 'Tetrex'
@@ -177,9 +252,8 @@ class Game:
         self.myEnemy.MP = 0
         self.myEnemy.maxDEF = 150
         self.myEnemy.STR = 60
-        self.text.danger("You're too selfconfident young man.I will teach you a lesson for free")
+        self.text.danger("You're too selfconfident young man. I will teach you a lesson for free")
         self.fight()
-
 
     def snakes_fight(self):
         self.text.system("""\n  - Swamp of walking snakes  - \n""", txt_only=True)
@@ -206,6 +280,13 @@ class Game:
         print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
         print('\n' + (game.zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
+
+    def inventory_print(self):
+        print("Your inventory:")
+        number = 1
+        for i in range(len(self.myPlayer.inventory)):
+            print(f"{number}.{self.myPlayer.inventory[i]}")
+            number += 1
 
     def list_of_spells(self):
         for spell in self.myPlayer.spells:
@@ -234,6 +315,9 @@ class Game:
                     map_coordinates[r_idx][l_idx] = ' '
         for i in map_coordinates:
             print(i)
+
+    def final_titles(self):
+        print("- Final -")
 
 
 game = Game()
@@ -368,7 +452,7 @@ def prompt():
     print(" ! print 'help' to see abilities\n")
     action = input(" > ")
     acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse",
-                          "heal"]
+                          "heal", 'inventory']
     while action.lower() not in acceptable_actions:
         print(" Unknown action, try again.\n")
         action = input(" > ")
@@ -376,14 +460,8 @@ def prompt():
         print(" Would you like to save the game Y/N?", "\n")
         ask = input(" > ")
         if ask.lower() == "y":
-            saveGame = open('save_game.txt', 'wb')
-            saveValues = (
-                game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
-                game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
-                game.myPlayer.cash,
-                game.myPlayer.HP, game.myPlayer.MP)
-            pickle.dump(saveValues, saveGame)
-            saveGame.close()
+            with open('save_game.txt', 'wb') as save_file:
+                pickle.dump((game.myPlayer, game.zonemap), save_file)
             sys.exit()
         elif ask.lower() == "n":
             print(" Okay, maybe next time!")
@@ -393,15 +471,8 @@ def prompt():
             print(" Would you like to save the game Y/N?", "\n")
             ask = input(" > ")
             if ask.lower() == "y":
-                saveGame = open('save_game.txt', 'wb')
-                saveValues = (
-                    game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP,
-                    game.myPlayer.maxDEF,
-                    game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
-                    game.myPlayer.cash,
-                    game.myPlayer.HP, game.myPlayer.MP)
-                pickle.dump(saveValues, saveGame)
-                saveGame.close()
+                with open('save_game.txt', 'wb') as save_file:
+                    pickle.dump((game.myPlayer, game.zonemap), save_file)
                 sys.exit()
             elif ask.lower() == "n":
                 print(" Okay, maybe next time!")
@@ -420,6 +491,8 @@ def prompt():
         show_stats(action.lower())
     elif action.lower() == "help":
         game_help(action.lower())
+    elif action.lower() == "inventory":
+        game.inventory_print()
 
 
 def player_examine(action):
@@ -438,8 +511,6 @@ def player_examine(action):
 
 
 ###### GAME FUNCTIONALITY ######
-
-
 def main_game_loop():
     while game.myPlayer.game_over is False:
         # game.myPlayer.__pass_time()
@@ -516,19 +587,9 @@ def shop():
 def load_game():
     os.system('cls')
     with open('save_game.txt', 'rb') as game_save:
-        load_values = pickle.load(game_save)
-    game.myPlayer.name = load_values[0]
-    game.myPlayer.job = load_values[1]
-    game.myPlayer.maxHP = load_values[2]
-    game.myPlayer.maxMP = load_values[3]
-    game.myPlayer.maxDEF = load_values[4]
-    game.myPlayer.location = load_values[5]
-    game.myPlayer.game_over = load_values[6]
-    game.myPlayer.STR = load_values[7]
-    game.myPlayer.xp = load_values[8]
-    game.myPlayer.cash = load_values[9]
-    game.myPlayer.HP = load_values[10]
-    game.myPlayer.MP = load_values[11]
+        game_load = pickle.load(game_save)
+    game.myPlayer = game_load[0]
+    game.zonemap = game_load[1]
     main_game_loop()
 
 
