@@ -12,7 +12,7 @@ class Player:
         self.maxDEF = 0
         ### TODO:check if it works correctly
         self.spells = []
-        self.inventory = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15']
+        self.inventory = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
         self.location = 'a0'
         self.cash = 0
         self.xp = 0
@@ -266,8 +266,9 @@ class Enemy(object):
     def show(self):
         print(self.name," I have left:", self.HP, "hp.\n")
 
-    def die(self):
+    def die(self, enemy):
         print("I'm dead. ~", self.name)
+        enemy.xp += 20
 
     def randomize_enemy(self):
         i = int(random.randrange(1, 5))
@@ -309,7 +310,6 @@ class Enemy(object):
             self.STR = 55
             print(" On the way you met an aggressive wolf")
             self.parent.fight()
-            self.xp += 20
 
     def boss(self):
         self.name = 'Big buddy'

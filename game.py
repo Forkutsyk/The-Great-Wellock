@@ -123,7 +123,7 @@ class Game:
             if choice == "1":
                 self.myPlayer.fight(self.myEnemy, self.myPlayer)
                 if self.myEnemy.HP < 1:
-                    self.myEnemy.die()
+                    self.myEnemy.die(self.myPlayer)
                     break
                 self.myEnemy.show()
                 self.myEnemy.walcz(self.myPlayer)
@@ -136,7 +136,7 @@ class Game:
                 self.myPlayer.show()
                 self.myEnemy.walcz(self.myPlayer)
                 if self.myPlayer.HP < 1:
-                    self.myPlayer.die()
+                    self.myPlayer.die(self.myPlayer)
                     break
                 self.myPlayer.show()
             elif choice == "0":
@@ -280,6 +280,13 @@ class Game:
         print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
         print('\n' + (game.zonemap[self.myPlayer.location][DESCRIPTION]) + "\n")
+
+    def inventory_print(self):
+        print("Your inventory:")
+        number = 1
+        for i in range(len(self.myPlayer.inventory)):
+            print(f"{number}.{self.myPlayer.inventory[i]}")
+            number += 1
 
     def list_of_spells(self):
         for spell in self.myPlayer.spells:
@@ -445,7 +452,7 @@ def prompt():
     print(" ! print 'help' to see abilities\n")
     action = input(" > ")
     acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse",
-                          "heal"]
+                          "heal", 'inventory']
     while action.lower() not in acceptable_actions:
         print(" Unknown action, try again.\n")
         action = input(" > ")
@@ -504,6 +511,8 @@ def prompt():
         show_stats(action.lower())
     elif action.lower() == "help":
         game_help(action.lower())
+    elif action.lower() == "inventory":
+        game.inventory_print()
 
 
 def player_examine(action):
