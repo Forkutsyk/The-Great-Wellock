@@ -30,9 +30,9 @@ class Player:
 
     @xp.setter
     def xp(self, value):
-        self.parent.text.system(f"You gained {value} EXP points!\n")
+        self.parent.text.system(f"You gained {value - self._xp} EXP points!\n")
         old_lvl = self.level
-        self._xp += value
+        self._xp = value
         new_lvl = self.level
         if new_lvl > old_lvl:
             self.parent.text.system(f"New level! {new_lvl}!\n")
