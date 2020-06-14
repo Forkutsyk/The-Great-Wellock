@@ -522,14 +522,23 @@ def shop():
     print(" Hello stranger !\n I greet you in the guild shop\n ")
     print(" Here you can buy things which will upgrade your stats ! ")
     print(" This is the only such place in whole Wellock")
-    print(""" So, what would you like ?
-   1. Weapon - 25 coints
-   2. Armor - 25 coins
-   3. Magic stuff -25 coins
-   4. Artifact enhancing the spirit - 30 coins 
-   5. YOU: What is  that things ?
-   6. YOU: Ok, thanks maybe next time...
-""")
+    print("""
+
+                #######################################################
+                ~~~~~~               Guild shop                  ~~~~~~
+                #######################################################
+                |                                                     |
+                |  So, what would you like ?                          |
+                |  1. Weapon - 25 coins                               |
+                |  2. Armor - 25 coins                                |
+                |  3. Magic stuff -25 coins                           |
+                |  4. Artifact enhancing the spirit - 30 coins        |
+                |                                                     |
+                |  5. YOU: What is  that things ?                     |
+                |  6. YOU: Ok, thanks maybe next time...              |
+                |                                                     |
+                #######################################################
+                #######################################################\n""")
     answer = input(" > ")
     if game.myPlayer.cash >= 25:
         if answer == "1":
