@@ -1174,16 +1174,15 @@ class Quests:
             if response == '1':
                 self.parent.text.you(text=f"Can you tell me more about the job?\n")
                 self.parent.text.npc(text=f"I am looking for a man that can help me carrying my flour to my clients\n", begin_txt='Miller')
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '2':
                 self.parent.text.you(text=f"2. How long would I work?\n")
                 self.parent.text.npc(text=f"Only today. Until dawn\n", begin_txt='Miller')
-                # TODO: to check why it crashes here
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '3':
                 self.parent.text.you(text=f"How much am I going to earn?\n")
                 self.parent.text.npc(text=f"100 coins paid after job\n", begin_txt='Miller')
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '4':
                 self.parent.text.you(text=f"OK, I want start working?\n")
                 self.parent.text.npc(text=f"Wonderfull! We can start straight away!\n", begin_txt='Miller')
@@ -1210,7 +1209,7 @@ class Quests:
                 self.parent.text.npc(text=f"Bye bye\n", begin_txt='Miller')
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_b5(response)
+                self.quest_b5()
 
     # spellshop debug
     def quest_c1(self):
