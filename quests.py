@@ -121,7 +121,7 @@ class Quests:
                     if player_choose2 == '1':
                         self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.\n", begin_txt="Young lady")
                         self.parent.myPlayer.inventory.insert(1, 'Elven herbs')
-                        self.parent.myPlayer.inventory.pop(16)
+                        self.parent.myPlayer.inventory.pop(15)
                         self.parent.text.system("You have successfully come out of the woods\n")
                     elif player_choose2 == '2':
                         self.parent.text.npc("Well, no problem, I'll go myself...\n", begin_txt="Young lady")
@@ -131,7 +131,7 @@ class Quests:
                             self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.\n",
                                                  begin_txt="Young lady")
                             self.parent.myPlayer.inventory.insert(1, 'Elven herbs')
-                            self.parent.myPlayer.inventory.pop(16)
+                            self.parent.myPlayer.inventory.pop(15)
                         elif player_choose3 == "2":
                             self.parent.text.system("You have successfully come out of the woods!\n")
                         else:
@@ -523,7 +523,7 @@ class Quests:
                 self.parent.text.you(text="Maybe next time\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                conversation_loop(response)
+                self.quest_a5()
         elif answer == "1" and self.parent.zonemap['a5']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the mine')
         elif answer == "2" and self.parent.zonemap['a5']['SOLVED2'] is True:
@@ -553,8 +553,8 @@ class Quests:
             self.parent.text.system(text=""" Try to look out, maybe you find something interesting...(write look)\n""")
             input(" > ")
             self.parent.text.system(text=""" You noticed an unusual glow behind the waterfall. 
-            Most likely there is something behind the waterfall,
-            however ... It is a waterfall of life and death, if I will enter the water I can die. What should i do ?\n""")
+          Most likely there is something behind the waterfall,
+          however ... It is a waterfall of life and death, if I will enter the water I can die. What should i do ?\n""")
 
             self.parent.text.system(text="""\n  1. Just go through the waterfall, maybe I would be lucky\n  2. Cover yourself with your light cloak, and hope for the best\n  3. Stop and think more\n""",
                 txt_only=True)
@@ -600,8 +600,8 @@ class Quests:
                 self.parent.text.system(text=""" After a long search you found nothing\n""")
                 time.sleep(3)
                 self.parent.text.system(text=""" You wanted to go back, but noticed a small gorge    
-                You decide to go in and see what's inside
-                Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n""")
+          You decide to go in and see what's inside
+          Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n""")
                 self.parent.text.you(" Which of them is the one I need, the old man almost did not describe it...\n")
                 self.parent.text.system(text=""" Wich one you wanna take ?\n  1. Sword inlaid with gems\n  2. Incredibly light and sharp one-handed sword\n  3. Rusty iron sword\n""", txt_only=True)
                 player_choose5 = input(" > ")
@@ -611,12 +611,12 @@ class Quests:
                 elif player_choose5 == "3":
                     self.parent.text.system(text=""" You have taken the knife and went to the master\n""")
                     self.parent.text.npc(text=""" Very well, either you listened to me well, or you have a pure spirit.
-                    Unfortunately, I can do little to help you. However, this sword will definitely help you.
-                    Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
-                    This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
-                    I also will show you how to increse you endurance.\n""", begin_txt='Old warrior')
+               Unfortunately, I can do little to help you. However, this sword will definitely help you.
+               Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
+               This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
+               I also will show you how to increse you endurance.\n""", begin_txt='Old warrior')
                     self.parent.myPlayer.inventory.insert(5, "Abyssal sword")
-                    self.parent.myPlayer.inventory.pop(16)
+                    self.parent.myPlayer.inventory.pop(15)
                     self.parent.myPlayer.maxHP += 30
                     self.parent.myPlayer.xp += 50
                     self.parent.text.system("""After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""", txt_only=True)
@@ -1174,16 +1174,16 @@ class Quests:
             if response == '1':
                 self.parent.text.you(text=f"Can you tell me more about the job?\n")
                 self.parent.text.npc(text=f"I am looking for a man that can help me carrying my flour to my clients\n", begin_txt='Miller')
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '2':
                 self.parent.text.you(text=f"2. How long would I work?\n")
                 self.parent.text.npc(text=f"Only today. Until dawn\n", begin_txt='Miller')
                 # TODO: to check why it crashes here
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '3':
                 self.parent.text.you(text=f"How much am I going to earn?\n")
                 self.parent.text.npc(text=f"100 coins paid after job\n", begin_txt='Miller')
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '4':
                 self.parent.text.you(text=f"OK, I want start working?\n")
                 self.parent.text.npc(text=f"Wonderfull! We can start straight away!\n", begin_txt='Miller')
@@ -1210,7 +1210,7 @@ class Quests:
                 self.parent.text.npc(text=f"Bye bye\n", begin_txt='Miller')
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_b5(response)
+                self.quest_b5()
 
     # spellshop debug
     def quest_c1(self):
@@ -1556,6 +1556,8 @@ class Quests:
                         self.parent.myPlayer.xp += 150
                         self.parent.myPlayer.inventory.insert(2, 'Throwing knife')
                         self.parent.myPlayer.inventory.insert(3, 'Throwing knife')
+                        self.parent.myPlayer.inventory.pop(15)
+                        self.parent.myPlayer.inventory.pop(15)
                         self.parent.zonemap['c1']['SOLVED1'] = True
 
                         places -= 1
@@ -1605,6 +1607,7 @@ class Quests:
                     self.parent.text.npc("Let`s see what can i do...\n")
                     self.parent.myPlayer.inventory.pop(1)
                     self.parent.myPlayer.inventory.insert(1, "Incredible medicine")
+                    self.parent.myPlayer.inventory.pop(15)
                     self.parent.text.npc("Here you are, the best what can i do\n")
                     self.parent.text.you("Thanks!\n")
                 if 'Fiery flower' in self.parent.myPlayer.inventory:
@@ -1613,6 +1616,7 @@ class Quests:
                     self.parent.text.npc("Let`s see what can i do...\n")
                     self.parent.myPlayer.inventory.pop(13)
                     self.parent.myPlayer.inventory.insert(13, "Warrior medicine")
+                    self.parent.myPlayer.inventory.pop(15)
                     self.parent.text.npc("Here you are, the best what can i do\n")
                     self.parent.text.you("Thanks!\n")
             elif player_conversation == "2":
@@ -1624,6 +1628,7 @@ class Quests:
                         self.parent.text.npc("Let`s see what can i do...\n")
                         self.parent.myPlayer.inventory.pop(6)
                         self.parent.myPlayer.inventory.insert(6, "Heal pousion")
+                        self.parent.myPlayer.inventory.pop(15)
                         self.parent.text.npc("Here you are, the best what can i do\n")
                         self.parent.text.you("Thanks!\n")
                         i -= 1
@@ -1634,6 +1639,7 @@ class Quests:
                         self.parent.text.npc("Let`s see what can i do...\n")
                         self.parent.myPlayer.inventory.pop(7)
                         self.parent.myPlayer.inventory.insert(7, "Heal pousion")
+                        self.parent.myPlayer.inventory.pop(15)
                         self.parent.text.npc("Here you are, the best what can i do\n")
                         self.parent.text.you("Thanks!\n")
                         i -= 1
@@ -1644,6 +1650,7 @@ class Quests:
                         self.parent.text.npc("Let`s see what can i do...\n")
                         self.parent.myPlayer.inventory.pop(8)
                         self.parent.myPlayer.inventory.insert(8, "Heal pousion")
+                        self.parent.myPlayer.inventory.pop(15)
                         self.parent.text.npc("Here you are, the best what can i do\n")
                         self.parent.text.you("Thanks!\n")
                         i -= 1
@@ -1909,7 +1916,7 @@ class Quests:
                 self.parent.text.you("Alright !\n")
                 self.parent.myPlayer.inventory.pop(12)
                 self.parent.myPlayer.inventory.insert(11, "Ancient map of Howard")
-                self.parent.myPlayer.inventory.pop(16)
+                self.parent.myPlayer.inventory.pop(15)
                 self.parent.text.npc("It's nice to deal with you!")
         elif "Dragon heart" not in self.parent.myPlayer.inventory:
             self.parent.text.you("""No, I'm not very interested in dragons
@@ -1961,7 +1968,7 @@ class Quests:
                 self.parent.myPlayer.cash += 35
                 self.parent.zonemap['c2']['SOLVED'] = True
                 self.parent.myPlayer.inventory.insert(11, 'Ancient map of Howard')
-                self.parent.myPlayer.inventory.pop(16)
+                self.parent.myPlayer.inventory.pop(15)
 
             elif player_choose2 == "2":
                 print("As you wish!\n")
@@ -2024,7 +2031,7 @@ class Quests:
                 self.parent.myPlayer.cash += 200
                 self.parent.myPlayer.xp += 250
                 self.parent.myPlayer.inventory.insert(12, 'Dragon heart')
-                self.parent.myPlayer.inventory.pop(16)
+                self.parent.myPlayer.inventory.pop(15)
                 self.parent.zonemap['c3']['SOLVED1'] = True
                 self.parent.text.system('You received 200 coins, and dragon heart\n')
             elif response_2 == '2':
@@ -2171,14 +2178,17 @@ class Quests:
                         if '-' in self.parent.myPlayer.inventory:
                             if i == 0:
                                 self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
+                                self.parent.myPlayer.inventory.pop(8)
                                 self.parent.myPlayer.inventory.insert(6, 'Heal grass')
                                 i += 1
                             elif i == 1:
                                 self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
+                                self.parent.myPlayer.inventory.pop(8)
                                 self.parent.myPlayer.inventory.insert(7, 'Heal grass')
                                 i += 1
                             elif i == 2:
                                 self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
+                                self.parent.myPlayer.inventory.pop(8)
                                 self.parent.myPlayer.inventory.insert(8, 'Heal grass')
                                 i += 1
                             else:
@@ -2186,7 +2196,10 @@ class Quests:
 
                     elif 95 < found_chanse <= 100 and "Fiery flower" not in self.parent.myPlayer.inventory:
                         self.parent.text.you("No way! I found fiery flower!\n")
+
                         self.parent.myPlayer.inventory.insert(13, 'Fiery flower')
+
+
                     else:
                         self.parent.text.you("Its not my day...\n")
                 elif sujestion == "end":

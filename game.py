@@ -108,7 +108,7 @@ class Game:
     cut_scene = dialogs()
 
     def fight(self):
-        show_enemy_stats()
+        self.show_enemy_stats()
         choice = None
         while choice != "0" and self.myEnemy.HP > 0 and self.myPlayer.HP > 0:
             print("""    Fight
@@ -316,9 +316,17 @@ class Game:
         for i in map_coordinates:
             print(i)
 
-    def final_titles(self):
+    @staticmethod
+    def final_titles():
         print("- Final -")
 
+    def show_enemy_stats(self):
+        print("\n Enemy name: ", self.myEnemy.name)
+        print(" Enemy class: ", self.myEnemy.job)
+        print(" HP: ", self.myEnemy.HP)
+        print(" MP: ", self.myEnemy.MP)
+        print(" Strength: ", self.myEnemy.STR)
+        print(" Defense: ", self.myEnemy.maxDEF, "\n")
 
 game = Game()
 
@@ -433,15 +441,6 @@ def show_stats(action):
     game.list_of_spells()
 
 
-def show_enemy_stats():
-    print("\n Enemy name: ", game.myEnemy.name)
-    print(" Enemy class: ", game.myEnemy.job)
-    print(" HP: ", game.myEnemy.HP)
-    print(" MP: ", game.myEnemy.MP)
-    print(" Strength: ", game.myEnemy.STR)
-    print(" Defense: ", game.myEnemy.maxDEF, "\n")
-
-
 def purse_print():
     print(" You`ve had", game.myPlayer.cash, "coins. \n")
 
@@ -460,22 +459,8 @@ def prompt():
         print(" Would you like to save the game Y/N?", "\n")
         ask = input(" > ")
         if ask.lower() == "y":
-            saveGame = open('save_game.txt', 'wb')
-            saveValues = (
-                game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP, game.myPlayer.maxDEF,
-                game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
-                game.myPlayer.cash,
-                game.myPlayer.HP, game.myPlayer.MP, game.myPlayer.inventory)
-            pickle.dump(saveValues, saveGame)
-            saveGame.close()
-            saveGame_map = open('save_game_map.txt', 'wb')
-            saveValuesMap = (
-                game.zonemap['a1']['SOLVED'], game.zonemap['a2']['SOLVED'], game.zonemap['a3']['SOLVED'],
-                game.zonemap['a4']['SOLVED'], game.zonemap['a5']['SOLVED'], game.zonemap['a2']['ASISTANT-HEALER'],
-                game.zonemap['a3']['ASISTANT-WARRIOR'], game.zonemap['b3']['HOME']
-                )
-            pickle.dump(saveValuesMap, saveGame_map)
-            saveGame_map.close()
+            with open('save_game.txt', 'wb') as save_file:
+                pickle.dump((game.myPlayer, game.zonemap), save_file)
             sys.exit()
         elif ask.lower() == "n":
             print(" Okay, maybe next time!")
@@ -485,23 +470,8 @@ def prompt():
             print(" Would you like to save the game Y/N?", "\n")
             ask = input(" > ")
             if ask.lower() == "y":
-                saveGame = open('save_game.txt', 'wb')
-                saveValues = (
-                    game.myPlayer.name, game.myPlayer.job, game.myPlayer.maxHP, game.myPlayer.maxMP,
-                    game.myPlayer.maxDEF,
-                    game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
-                    game.myPlayer.cash,
-                    game.myPlayer.HP, game.myPlayer.MP, game.myPlayer.inventory)
-                pickle.dump(saveValues, saveGame)
-                saveGame.close()
-                saveGame_map = open('save_game_map.txt', 'wb')
-                saveValuesMap = (
-                    game.zonemap['a1']['SOLVED'], game.zonemap['a2']['SOLVED'], game.zonemap['a3']['SOLVED'],
-                    game.zonemap['a4']['SOLVED'], game.zonemap['a5']['SOLVED'], game.zonemap['a2']['ASISTANT-HEALER'],
-                    game.zonemap['a3']['ASISTANT-WARRIOR'], game.zonemap['b3']['HOME']
-                )
-                pickle.dump(saveValuesMap, saveGame_map)
-                saveGame_map.close()
+                with open('save_game.txt', 'wb') as save_file:
+                    pickle.dump((game.myPlayer, game.zonemap), save_file)
                 sys.exit()
             elif ask.lower() == "n":
                 print(" Okay, maybe next time!")
@@ -627,31 +597,9 @@ def shop():
 def load_game():
     os.system('cls')
     with open('save_game.txt', 'rb') as game_save:
-        load_values = pickle.load(game_save)
-    game.myPlayer.name = load_values[0]
-    game.myPlayer.job = load_values[1]
-    game.myPlayer.maxHP = load_values[2]
-    game.myPlayer.maxMP = load_values[3]
-    game.myPlayer.maxDEF = load_values[4]
-    game.myPlayer.location = load_values[5]
-    game.myPlayer.game_over = load_values[6]
-    game.myPlayer.STR = load_values[7]
-    game.myPlayer.xp = load_values[8]
-    game.myPlayer.cash = load_values[9]
-    game.myPlayer.HP = load_values[10]
-    game.myPlayer.MP = load_values[11]
-    game.myPlayer.inventory = load_values[12]
-
-    with open('save_game_map.txt', 'rb') as game_save_map:
-        load_values = pickle.load(game_save_map)
-    #game.zonemap['a1']['SOLVED'] = load_values[0]
-    #game.zonemap['a2']['SOLVED'] = load_values[1]
-    #game.zonemap['a3']['SOLVED'] = load_values[2]
-    #game.zonemap['a4']['SOLVED'] = load_values[3]
-    #game.zonemap['a5']['SOLVED'] = load_values[4]
-    game.zonemap['a2']['ASISTANT-HEALER'] = load_values[5]
-    game.zonemap['a3']['ASISTANT-WARRIOR'] = load_values[6]
-    game.zonemap['b3']['HOME'] = load_values[7]
+        game_load = pickle.load(game_save)
+    game.myPlayer = game_load[0]
+    game.zonemap = game_load[1]
     main_game_loop()
 
 

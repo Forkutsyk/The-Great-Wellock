@@ -9,6 +9,9 @@ class Spell(object):
         self.defence = defence
         self.type = type
 
+    def __repr__(self):
+        return f"Spell {self.name} of {self.type} type"
+
     def generate_damage(self):
         low = self.dmg - 15
         high = self.dmg + 15
