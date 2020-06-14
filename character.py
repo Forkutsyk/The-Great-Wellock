@@ -10,7 +10,9 @@ class Player:
         self.maxHP = 0
         self.maxMP = 0
         self.maxDEF = 0
+        ### TODO:check if it works correctly
         self.spells = []
+        self.inventory = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
         self.location = 'a0'
         self.cash = 0
         self.xp = 0
@@ -20,7 +22,9 @@ class Player:
         self.MP = 0
     @property
     def level(self):
+    ### TODO: With level up increasing the characters per 1
         return (self.xp // 100) + 1
+
 
     def fight(self, enemy, player):
         print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
@@ -31,7 +35,7 @@ class Player:
             enemy.HP -= damage
             if enemy.HP < 0:
                 enemy.HP = 0
-            print(" Atakujesz.\n")
+            print(" You are attacking.\n")
             print(damage)
 
         if choise == "2":
@@ -173,7 +177,7 @@ Spells:
         print(self.name, " I have left:", self.HP, "hp. ", "\n")
 
     def heal(self):
-        self.HP += random.randrange(15, 30)
+        self.HP += random.randrange(10, 40)
         if self.HP > self.maxHP and self.MP >= 5:
              self.HP = self.maxHP
              self.MP -= 5
@@ -181,7 +185,7 @@ Spells:
             print(" You have not enoght mana or you health is full")
 
     def die(self):
-        print(" I'm dead. ~", self.name)
+        print(self.name, "~ I'm dead. ")
         # sys.exit()
     def regenaration_mana(self):
         if self.MP < self.maxMP:
@@ -255,7 +259,6 @@ class Enemy(object):
         dmg -= enemy.maxDEF
         enemy.HP -= dmg
         if enemy.HP < 0:
-            self.xp += 25
             enemy.HP = 0
         print(self.name, "attack.\n")
         print(dmg)
@@ -263,8 +266,9 @@ class Enemy(object):
     def show(self):
         print(self.name," I have left:", self.HP, "hp.\n")
 
-    def die(self):
+    def die(self, enemy):
         print("I'm dead. ~", self.name)
+        enemy.xp += 20
 
     def randomize_enemy(self):
         i = int(random.randrange(1, 5))

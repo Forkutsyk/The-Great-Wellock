@@ -14,10 +14,13 @@ _________________
 ZONENAME = 'ZONENAME'
 DESCRIPTION = 'description'
 SOLVED = 'SOLVED'
+UNDERQUEST1 = 'SOLVED1'
+UNDERQUEST2 = 'SOLVED2'
 UP = 'up', 'north'
 DOWN = 'down', 'south'
 LEFT = 'left', 'west'
 RIGHT = 'right', 'east'
+HOME = 'HOME'
 
 
 solved_places = {'a1': False, 'a2': False, 'a3': False, 'a4': False, 'a5': False,
@@ -34,24 +37,6 @@ zonemap = {
         LEFT: "1",
         RIGHT: "1"
     },
-    'a3': {
-        ZONENAME: 'House of a Thousand Faces',
-        DESCRIPTION: " Area with taverns where you can eat and stay overnight. It is better not to walk here in the evening.",
-        'SOLVED': False,
-        UP: "b3",
-        DOWN: "a0",
-        LEFT: "a2",
-        RIGHT: "a4"
-    },
-    'a2': {
-        ZONENAME: 'Sharandar',
-        DESCRIPTION: " The ancient Feywild homeland of the Iliyanbruen elves.",
-        'SOLVED': False,
-        UP: "b2",
-        DOWN: "1",
-        LEFT: "a1",
-        RIGHT: "a3"
-    },
     'a1': {
         ZONENAME: 'Stronghold',
         DESCRIPTION: " Area with castles of large guilds.",
@@ -61,11 +46,33 @@ zonemap = {
         LEFT: "2",
         RIGHT: "a2"
     },
+    'a2': {
+        ZONENAME: 'Sharandar',
+        DESCRIPTION: " The ancient Feywild homeland of the Iliyanbruen elves.",
+        'SOLVED': False,
+        'SOLVED1': False,
+        'SOLVED2': False,
+        UP: "b2",
+        DOWN: "1",
+        LEFT: "a1",
+        RIGHT: "a3"
+    },
+    'a3': {
+        ZONENAME: 'House of a Thousand Faces',
+        DESCRIPTION: " Area with taverns where you can eat and stay overnight. It is better not to walk here in the evening.",
+        'SOLVED': False,
+        UP: "b3",
+        DOWN: "a0",
+        LEFT: "a2",
+        RIGHT: "a4"
+    },
     'a4': {
         ZONENAME: 'Dwarven Valley',
         DESCRIPTION: """ Dwarven Valley, has been corrupted by dwarves from the Hammerstone dig up black ice, 
  and the long dead barbarians who once served Akar Kessell rise once more to wage war in the name of their undying master.""",
         'SOLVED': False,
+        'SOLVED1': False,
+        'SOLVED2': False,
         UP: "b4",
         DOWN: "1",
         LEFT: "a3",
@@ -75,6 +82,8 @@ zonemap = {
         ZONENAME: 'Icespire Peak',
         DESCRIPTION: " The place of origin of black ice extracted by dwarves. Dangerous place, it seems that here can survive or very skilled heroes, or very stupid",
         'SOLVED': False,
+        'SOLVED1': False,
+        'SOLVED2': False,
         UP: "b5",
         DOWN: "1",
         LEFT: "a4",
@@ -82,7 +91,7 @@ zonemap = {
     },
     'b1': {
         ZONENAME: 'Blacklake',
-        DESCRIPTION: "",
+        DESCRIPTION: "The city, a former battle fortress. Only the richest live behind the walls.",
         'SOLVED': False,
         UP: "c1",
         DOWN: "a1",
@@ -91,7 +100,7 @@ zonemap = {
     },
     'b2': {
         ZONENAME: 'Nezeris',
-        DESCRIPTION: " ",
+        DESCRIPTION: "The city is known for its powerful magicians ",
         'SOLVED': False,
         UP: "c2",
         DOWN: "a2",
@@ -100,8 +109,9 @@ zonemap = {
     },
     'b3': {
         ZONENAME: 'Absol',
-        DESCRIPTION: "",
+        DESCRIPTION: "The city is built on ancient ruins. It is not known what was in place of the ruins before, but some ruins of an unknown building still stand.",
         'SOLVED': False,
+        'HOME': False,
         UP: "c3",
         DOWN: "a3",
         LEFT: "b2",
@@ -118,7 +128,7 @@ zonemap = {
     },
     'b5': {
         ZONENAME: 'Arahead',
-        DESCRIPTION: "",
+        DESCRIPTION: "A trading city, where something is bought and sold all the time. One of the most frequent places visited is the bulletin board",
         'SOLVED': False,
         UP: "c5",
         DOWN: "a5",
@@ -127,16 +137,19 @@ zonemap = {
     },
     'c1': {
         ZONENAME: 'Wyllowwood',
-        DESCRIPTION: "",
+        DESCRIPTION: " The city is surrounded by dense forest ",
         'SOLVED': False,
+        'SOLVED1': False,
         UP: "4",
         DOWN: "b1",
         LEFT: "2",
         RIGHT: "c2"
     },
     'c2': {
-        ZONENAME: 'Brickell Whyte',
-        DESCRIPTION: "",
+        ZONENAME: 'Brickellwhite',
+        DESCRIPTION: """An ancient aristocratic family rules this city. 
+        They are rarely seen during the day outside the estate, and those who see pay attention to their beautiful, but overly pale faces. 
+        The family seems to be almost obsessed with the well-being of their subjects, although recently people began to disappear.""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b2",
@@ -145,8 +158,9 @@ zonemap = {
     },
     'c3': {
         ZONENAME: 'The Well of Dragons ',
-        DESCRIPTION: "",
+        DESCRIPTION: "This valley was once a nest of dragons",
         'SOLVED': False,
+        'SOLVED1': False,
         UP: "4",
         DOWN: "b3",
         LEFT: "c2",
@@ -154,7 +168,8 @@ zonemap = {
     },
     'c4': {
         ZONENAME: 'The Yarlford',
-        DESCRIPTION: "",
+        DESCRIPTION: """According to rumors, this valley is the last of the famous places 
+        where once every 50 years a fiery flower blooms with amazing healing properties.""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b4",
@@ -162,8 +177,9 @@ zonemap = {
         RIGHT: "c5"
     },
     'c5': {
-        ZONENAME: 'The final town',
-        DESCRIPTION: "",
+        ZONENAME: 'Homwards',
+        DESCRIPTION: """ Mountain fortress, which for several centuries housed one of the most famous magician schools Homwards.
+ Until Elminster captured the entire territory of the school, and now uses it for his evil affairs""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b5",
