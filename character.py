@@ -29,8 +29,17 @@ class Player:
     def fight(self, enemy, player):
         print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
         choise = input(" > ")
-        if choise == "1":
+        if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is False:
             damage = self.STR
+            damage -= enemy.maxDEF
+            enemy.HP -= damage
+            if enemy.HP < 0:
+                enemy.HP = 0
+            print(" You are attacking.\n")
+            print(damage)
+        if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            damage = self.STR
+            damage += 45
             damage -= enemy.maxDEF
             enemy.HP -= damage
             if enemy.HP < 0:
@@ -177,12 +186,16 @@ Spells:
         print(self.name, " I have left:", self.HP, "hp. ", "\n")
 
     def heal(self):
-        self.HP += random.randrange(10, 40)
-        if self.HP > self.maxHP and self.MP >= 5:
-             self.HP = self.maxHP
-             self.MP -= 5
-        else:
-            print(" You have not enoght mana or you health is full")
+        if zonemap['a2']['ASISTANT-HEALER'] is False:
+            self.HP += random.randrange(10, 40)
+            if self.HP > self.maxHP and self.MP >= 5:
+                 self.HP = self.maxHP
+                 self.MP -= 5
+            else:
+                print(" You have not enoght mana or you health is full")
+        if zonemap['a2']['ASISTANT-HEALER'] is True:
+            self.HP = self.maxHP
+            self.MP = self.maxMP
 
     def die(self):
         print(self.name, "~ I'm dead. ")
@@ -257,6 +270,8 @@ class Enemy(object):
     def walcz(self, enemy):
         dmg = self.STR
         dmg -= enemy.maxDEF
+        if dmg < 0:
+            dmg = 0
         enemy.HP -= dmg
         if enemy.HP < 0:
             enemy.HP = 0
@@ -310,13 +325,3 @@ class Enemy(object):
             self.STR = 55
             print(" On the way you met an aggressive wolf")
             self.parent.fight()
-
-    def boss(self):
-        self.name = 'Big buddy'
-        self.job = 'animal'
-        self.HP = 200
-        self.MP = 0
-        self.maxDEF = 15
-        self.STR = 20
-        print(" Holly molly it`s a Big buddy !")
-        self.parent.fight()

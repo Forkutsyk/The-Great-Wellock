@@ -471,7 +471,8 @@ def prompt():
             saveGame_map = open('save_game_map.txt', 'wb')
             saveValuesMap = (
                 game.zonemap['a1']['SOLVED'], game.zonemap['a2']['SOLVED'], game.zonemap['a3']['SOLVED'],
-                game.zonemap['a4']['SOLVED'], game.zonemap['a5']['SOLVED']
+                game.zonemap['a4']['SOLVED'], game.zonemap['a5']['SOLVED'], game.zonemap['a2']['ASISTANT-HEALER'],
+                game.zonemap['a3']['ASISTANT-WARRIOR'], game.zonemap['b3']['HOME']
                 )
             pickle.dump(saveValuesMap, saveGame_map)
             saveGame_map.close()
@@ -490,9 +491,17 @@ def prompt():
                     game.myPlayer.maxDEF,
                     game.myPlayer.location, game.myPlayer.game_over, game.myPlayer.STR, game.myPlayer.xp,
                     game.myPlayer.cash,
-                    game.myPlayer.HP, game.myPlayer.MP)
+                    game.myPlayer.HP, game.myPlayer.MP, game.myPlayer.inventory)
                 pickle.dump(saveValues, saveGame)
                 saveGame.close()
+                saveGame_map = open('save_game_map.txt', 'wb')
+                saveValuesMap = (
+                    game.zonemap['a1']['SOLVED'], game.zonemap['a2']['SOLVED'], game.zonemap['a3']['SOLVED'],
+                    game.zonemap['a4']['SOLVED'], game.zonemap['a5']['SOLVED'], game.zonemap['a2']['ASISTANT-HEALER'],
+                    game.zonemap['a3']['ASISTANT-WARRIOR'], game.zonemap['b3']['HOME']
+                )
+                pickle.dump(saveValuesMap, saveGame_map)
+                saveGame_map.close()
                 sys.exit()
             elif ask.lower() == "n":
                 print(" Okay, maybe next time!")
@@ -544,14 +553,23 @@ def shop():
     print(" Hello stranger !\n I greet you in the guild shop\n ")
     print(" Here you can buy things which will upgrade your stats ! ")
     print(" This is the only such place in whole Wellock")
-    print(""" So, what would you like ?
-   1. Weapon - 25 coints
-   2. Armor - 25 coins
-   3. Magic stuff -25 coins
-   4. Artifact enhancing the spirit - 30 coins 
-   5. YOU: What is  that things ?
-   6. YOU: Ok, thanks maybe next time...
-""")
+    print("""
+
+            #######################################################
+            ~~~~~~               Guild shop                  ~~~~~~
+            #######################################################
+            |                                                     |
+            |  So, what would you like ?                          |
+            |  1. Weapon - 25 coins                               |
+            |  2. Armor - 25 coins                                |
+            |  3. Magic stuff -25 coins                           |
+            |  4. Artifact enhancing the spirit - 30 coins        |
+            |                                                     |
+            |  5. YOU: What is  that things ?                     |
+            |  6. YOU: Ok, thanks maybe next time...              |
+            |                                                     |
+            #######################################################
+            #######################################################\n""")
     answer = input(" > ")
     if game.myPlayer.cash >= 25:
         if answer == "1":
@@ -624,13 +642,16 @@ def load_game():
     game.myPlayer.MP = load_values[11]
     game.myPlayer.inventory = load_values[12]
 
-    #with open('save_game_map.txt', 'rb') as game_save_map:
-    #    load_values = pickle.load(game_save_map)
+    with open('save_game_map.txt', 'rb') as game_save_map:
+        load_values = pickle.load(game_save_map)
     #game.zonemap['a1']['SOLVED'] = load_values[0]
     #game.zonemap['a2']['SOLVED'] = load_values[1]
     #game.zonemap['a3']['SOLVED'] = load_values[2]
     #game.zonemap['a4']['SOLVED'] = load_values[3]
     #game.zonemap['a5']['SOLVED'] = load_values[4]
+    game.zonemap['a2']['ASISTANT-HEALER'] = load_values[5]
+    game.zonemap['a3']['ASISTANT-WARRIOR'] = load_values[6]
+    game.zonemap['b3']['HOME'] = load_values[7]
     main_game_loop()
 
 

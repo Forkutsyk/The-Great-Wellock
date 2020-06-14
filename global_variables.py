@@ -21,7 +21,8 @@ DOWN = 'down', 'south'
 LEFT = 'left', 'west'
 RIGHT = 'right', 'east'
 HOME = 'HOME'
-
+ASISTANT1 = 'ASISTANT-HEALER'
+ASISTANT2 = 'ASISTANT-WARRIOR'
 
 solved_places = {'a1': False, 'a2': False, 'a3': False, 'a4': False, 'a5': False,
                  'b1': False, 'b2': False, 'b3': False, 'b4': False, 'b5': False,
@@ -52,6 +53,7 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'ASISTANT-HEALER': False,
         UP: "b2",
         DOWN: "1",
         LEFT: "a1",
@@ -61,6 +63,9 @@ zonemap = {
         ZONENAME: 'House of a Thousand Faces',
         DESCRIPTION: " Area with taverns where you can eat and stay overnight. It is better not to walk here in the evening.",
         'SOLVED': False,
+        'SOLVED1': False,
+        'SOLVED2': False,
+        'ASISTANT-WARRIOR': False,
         UP: "b3",
         DOWN: "a0",
         LEFT: "a2",
@@ -91,7 +96,7 @@ zonemap = {
     },
     'b1': {
         ZONENAME: 'Blacklake',
-        DESCRIPTION: "The city, a former battle fortress. Only the richest live behind the walls.",
+        DESCRIPTION: " The city, a former battle fortress. Only the richest live behind the walls.",
         'SOLVED': False,
         UP: "c1",
         DOWN: "a1",
@@ -100,7 +105,7 @@ zonemap = {
     },
     'b2': {
         ZONENAME: 'Nezeris',
-        DESCRIPTION: "The city is known for its powerful magicians ",
+        DESCRIPTION: " The city is known for its powerful magicians ",
         'SOLVED': False,
         UP: "c2",
         DOWN: "a2",
@@ -109,7 +114,7 @@ zonemap = {
     },
     'b3': {
         ZONENAME: 'Absol',
-        DESCRIPTION: "The city is built on ancient ruins. It is not known what was in place of the ruins before, but some ruins of an unknown building still stand.",
+        DESCRIPTION: " The city is built on ancient ruins. It is not known what was in place of the ruins before, but some ruins of an unknown building still stand.",
         'SOLVED': False,
         'HOME': False,
         UP: "c3",
@@ -128,7 +133,7 @@ zonemap = {
     },
     'b5': {
         ZONENAME: 'Arahead',
-        DESCRIPTION: "A trading city, where something is bought and sold all the time. One of the most frequent places visited is the bulletin board",
+        DESCRIPTION: " A trading city, where something is bought and sold all the time. One of the most frequent places visited is the bulletin board",
         'SOLVED': False,
         UP: "c5",
         DOWN: "a5",
@@ -147,9 +152,9 @@ zonemap = {
     },
     'c2': {
         ZONENAME: 'Brickellwhite',
-        DESCRIPTION: """An ancient aristocratic family rules this city. 
-        They are rarely seen during the day outside the estate, and those who see pay attention to their beautiful, but overly pale faces. 
-        The family seems to be almost obsessed with the well-being of their subjects, although recently people began to disappear.""",
+        DESCRIPTION: """ An ancient aristocratic family rules this city. 
+ They are rarely seen during the day outside the estate, and those who see pay attention to their beautiful, but overly pale faces. 
+ The family seems to be almost obsessed with the well-being of their subjects, although recently people began to disappear.""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b2",
@@ -158,7 +163,7 @@ zonemap = {
     },
     'c3': {
         ZONENAME: 'The Well of Dragons ',
-        DESCRIPTION: "This valley was once a nest of dragons",
+        DESCRIPTION: " This valley was once a nest of dragons",
         'SOLVED': False,
         'SOLVED1': False,
         UP: "4",
@@ -168,8 +173,8 @@ zonemap = {
     },
     'c4': {
         ZONENAME: 'The Yarlford',
-        DESCRIPTION: """According to rumors, this valley is the last of the famous places 
-        where once every 50 years a fiery flower blooms with amazing healing properties.""",
+        DESCRIPTION: """ According to rumors, this valley is the last of the famous places 
+ where once every 50 years a fiery flower blooms with amazing healing properties.""",
         'SOLVED': False,
         UP: "4",
         DOWN: "b4",
