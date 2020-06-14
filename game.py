@@ -108,7 +108,7 @@ class Game:
     cut_scene = dialogs()
 
     def fight(self):
-        show_enemy_stats()
+        self.show_enemy_stats()
         choice = None
         while choice != "0" and self.myEnemy.HP > 0 and self.myPlayer.HP > 0:
             print("""    Fight
@@ -316,8 +316,17 @@ class Game:
         for i in map_coordinates:
             print(i)
 
-    def final_titles(self):
+    @staticmethod
+    def final_titles():
         print("- Final -")
+
+    def show_enemy_stats(self):
+        print("\n Enemy name: ", self.myEnemy.name)
+        print(" Enemy class: ", self.myEnemy.job)
+        print(" HP: ", self.myEnemy.HP)
+        print(" MP: ", self.myEnemy.MP)
+        print(" Strength: ", self.myEnemy.STR)
+        print(" Defense: ", self.myEnemy.maxDEF, "\n")
 
 
 game = Game()
@@ -431,16 +440,6 @@ def show_stats(action):
     print(" Defense: ", game.myPlayer.maxDEF)
     print(" Spels: ")
     game.list_of_spells()
-
-
-def show_enemy_stats():
-    print("\n Enemy name: ", game.myEnemy.name)
-    print(" Enemy class: ", game.myEnemy.job)
-    print(" HP: ", game.myEnemy.HP)
-    print(" MP: ", game.myEnemy.MP)
-    print(" Strength: ", game.myEnemy.STR)
-    print(" Defense: ", game.myEnemy.maxDEF, "\n")
-
 
 def purse_print():
     print(" You`ve had", game.myPlayer.cash, "coins. \n")

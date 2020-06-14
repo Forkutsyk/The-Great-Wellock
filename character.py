@@ -37,13 +37,14 @@ class Player:
         if new_lvl > old_lvl:
             self.parent.text.system(f"New level! {new_lvl}!\n")
             bonus_multiplier = new_lvl - old_lvl
-            self.maxHP += 1 * bonus_multiplier
-            self.maxMP += 1 * bonus_multiplier
-            self.maxDEF += 1 * bonus_multiplier
-            self.cash += 1 * bonus_multiplier
-            self.STR += 1 * bonus_multiplier
-            self.HP += 1 * bonus_multiplier
-            self.MP += 1 * bonus_multiplier
+            add_value = 1 * bonus_multiplier
+            self.maxHP += add_value
+            self.maxMP += add_value
+            self.maxDEF += add_value
+            self.cash += add_value
+            self.STR += add_value
+            self.HP += add_value
+            self.MP += add_value
 
     def fight(self, enemy, player):
         print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
@@ -284,6 +285,8 @@ class Enemy(object):
         self.job = ''
         self.HP = 0
         self.HP = 0
+        self.MP = 0
+        self.maxDEF = 0
         self.STR = 0
 
     def walcz(self, enemy):
