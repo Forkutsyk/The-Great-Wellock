@@ -496,7 +496,7 @@ class Quests:
                 self.parent.text.you(text="Maybe next time\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                conversation_loop(response)
+                self.quest_a5()
         elif answer == "1" and self.parent.zonemap['a5']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the mine')
         elif answer == "2" and self.parent.zonemap['a5']['SOLVED2'] is True:

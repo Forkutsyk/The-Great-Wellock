@@ -10,21 +10,40 @@ class Player:
         self.maxHP = 0
         self.maxMP = 0
         self.maxDEF = 0
-        ### TODO:check if it works correctly
         self.spells = []
         self.inventory = ['-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-']
         self.location = 'a0'
         self.cash = 0
-        self.xp = 0
+        self._xp = 0
         self.game_over = False
         self.STR = 0
         self.HP = 0
         self.MP = 0
+
     @property
     def level(self):
-    ### TODO: With level up increasing the characters per 1
         return (self.xp // 100) + 1
 
+    @property
+    def xp(self):
+        return self._xp
+
+    @xp.setter
+    def xp(self, value):
+        self.parent.text.system(f"You gained {value} EXP points!\n")
+        old_lvl = self.level
+        self._xp += value
+        new_lvl = self.level
+        if new_lvl > old_lvl:
+            self.parent.text.system(f"New level! {new_lvl}!\n")
+            bonus_multiplier = new_lvl - old_lvl
+            self.maxHP += 1 * bonus_multiplier
+            self.maxMP += 1 * bonus_multiplier
+            self.maxDEF += 1 * bonus_multiplier
+            self.cash += 1 * bonus_multiplier
+            self.STR += 1 * bonus_multiplier
+            self.HP += 1 * bonus_multiplier
+            self.MP += 1 * bonus_multiplier
 
     def fight(self, enemy, player):
         print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
