@@ -12,11 +12,6 @@ class Spell(object):
     def __repr__(self):
         return f"Spell {self.name} of {self.type} type"
 
-    def generate_damage(self):
-        low = self.dmg - 15
-        high = self.dmg + 15
-        return random.randrange(low, high)
-
     def show_details(self):
         ### name
         if self.name:

@@ -30,9 +30,9 @@ class Player:
 
     @xp.setter
     def xp(self, value):
-        self.parent.text.system(f"You gained {value} EXP points!\n")
+        self.parent.text.system(f"You gained {value - self._xp} EXP points!\n")
         old_lvl = self.level
-        self._xp += value
+        self._xp = value
         new_lvl = self.level
         if new_lvl > old_lvl:
             self.parent.text.system(f"New level! {new_lvl}!\n")
@@ -57,7 +57,7 @@ class Player:
                     enemy.HP = 0
                 print(" You are attacking.\n")
                 print(damage)
-            if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            elif choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
                 damage = self.STR
                 damage += 45
                 damage -= enemy.maxDEF
@@ -208,12 +208,12 @@ class Player:
     def heal(self):
         if zonemap['a2']['ASISTANT-HEALER'] is False:
             self.HP += random.randrange(10, 40)
-            if self.HP > self.maxHP and self.MP >= 5:
+            if self.HP > self.maxHP and self.MP >= 9:
                  self.HP = self.maxHP
-                 self.MP -= 5
+                 self.MP -= 9
             else:
                 print(" You have not enoght mana or you health is full")
-        if zonemap['a2']['ASISTANT-HEALER'] is True:
+        elif zonemap['a2']['ASISTANT-HEALER'] is True:
             self.HP = self.maxHP
             self.MP = self.maxMP
 

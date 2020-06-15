@@ -126,6 +126,8 @@ zonemap = {
         ZONENAME: 'Cardcaster',
         DESCRIPTION: " Cardcaster is built into the side of a mountain, and is known for having tough warriors. The ruler is fair and just, respected by the populace. ",
         'SOLVED': False,
+        'SOLVED1': False,
+        'SOLVED2': False,
         UP: "c4",
         DOWN: "a4",
         LEFT: "b3",
@@ -176,6 +178,7 @@ zonemap = {
         DESCRIPTION: """ According to rumors, this valley is the last of the famous places 
  where once every 50 years a fiery flower blooms with amazing healing properties.""",
         'SOLVED': False,
+        'SOLVED1': False,
         UP: "4",
         DOWN: "b4",
         LEFT: "c3",

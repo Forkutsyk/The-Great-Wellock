@@ -93,7 +93,7 @@ class Game:
     ### Create White Magic
     cure = Spell("Cure", 25, 62, 0, "white")
     cura = Spell("Cura", 32, 70, 0, "white")
-    curaga = Spell("Curaga", 50, 120, 0, "white")
+    curaga = Spell("Curaga", 50, 90, 0, "white")
 
     ### Create spels for wariore
     FireSword = Spell("Fire Sword", 20, 35, 0, "fire")
@@ -103,7 +103,7 @@ class Game:
     bloodKing = Spell("Blood King", 50, 70, 0, "bloody")
 
     # special - can be learned with a quest
-    FireBall = Spell("Fire Ball", 20, 50, 0, "fire")
+    FireBall = Spell("Fire Ball", 70, 160, 0, "fire")
 
     cut_scene = dialogs()
 
