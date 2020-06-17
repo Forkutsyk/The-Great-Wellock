@@ -107,6 +107,7 @@ zonemap = {
         ZONENAME: 'Nezeris',
         DESCRIPTION: " The city is known for its powerful magicians ",
         'SOLVED': False,
+        'SOLVED1': False,
         UP: "c2",
         DOWN: "a2",
         LEFT: "b1",
@@ -126,6 +127,8 @@ zonemap = {
         ZONENAME: 'Cardcaster',
         DESCRIPTION: " Cardcaster is built into the side of a mountain, and is known for having tough warriors. The ruler is fair and just, respected by the populace. ",
         'SOLVED': False,
+        'SOLVED1': False,
+        'SOLVED2': False,
         UP: "c4",
         DOWN: "a4",
         LEFT: "b3",
@@ -176,6 +179,7 @@ zonemap = {
         DESCRIPTION: """ According to rumors, this valley is the last of the famous places 
  where once every 50 years a fiery flower blooms with amazing healing properties.""",
         'SOLVED': False,
+        'SOLVED1': False,
         UP: "4",
         DOWN: "b4",
         LEFT: "c3",
@@ -193,3 +197,35 @@ zonemap = {
     }
 }
 
+#### PLATER EQUIPMENT #####
+
+Name = "equipment_name"
+playerHp = "HP"
+playerDEF = "DEF"
+playerSTR = "STR"
+playerMP = "MP"
+
+equipment_set = {
+    'Armor': {
+        Name: "name",
+        playerHp: 0,
+        playerDEF: 0,
+
+    },
+    'Weapon': {
+        Name: "name",
+        playerDEF: 3,
+        playerSTR: 0,
+    },
+    'Magic stuff': {
+        Name: "name",
+        playerMP: 0
+    },
+    'Artifact': {
+        Name: "name",
+        playerHp: 0,
+        playerDEF: 0,
+        playerSTR: 0,
+        playerMP: 0
+    }
+}

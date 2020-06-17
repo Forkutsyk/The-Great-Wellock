@@ -78,7 +78,7 @@ class dialogs:
             |                                                     |
             |    ooo        ooooo                                 |
             |    `88.       .888'                                 |
-            |    8888b     d'888   .oooo.    .oooooooo  .ooooo.   |
+            |     888b     d'888   .oooo.    .oooooooo  .ooooo.   |
             |     8 Y88. .P  888  `P  )88b  888' `88b  d88' `88b  |
             |     8  `888'   888   .oP"888  888   888  888ooo888  |
             |     8    Y     888  d8(  888  `88bod8P'  888    .o  |
