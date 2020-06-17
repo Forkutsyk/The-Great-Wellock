@@ -1,6 +1,7 @@
 import random
-#import sys
+import sys
 from global_variables import *
+
 
 class Player:
     def __init__(self, parent):
@@ -30,195 +31,217 @@ class Player:
 
     @xp.setter
     def xp(self, value):
-        self.parent.text.system(f"You gained {value} EXP points!\n")
+        self.parent.text.system(f"You gained {value - self._xp} EXP points!\n")
         old_lvl = self.level
-        self._xp += value
+        self._xp = value
         new_lvl = self.level
         if new_lvl > old_lvl:
             self.parent.text.system(f"New level! {new_lvl}!\n")
             bonus_multiplier = new_lvl - old_lvl
-            self.maxHP += 1 * bonus_multiplier
-            self.maxMP += 1 * bonus_multiplier
-            self.maxDEF += 1 * bonus_multiplier
-            self.cash += 1 * bonus_multiplier
-            self.STR += 1 * bonus_multiplier
-            self.HP += 1 * bonus_multiplier
-            self.MP += 1 * bonus_multiplier
+            add_value = 1 * bonus_multiplier
+            self.maxHP += add_value
+            self.maxMP += add_value
+            self.maxDEF += add_value
+            self.cash += add_value
+            self.STR += add_value
+            self.HP += add_value
+            self.MP += add_value
 
     def fight(self, enemy, player):
-        print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
-        choise = input(" > ")
-        if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is False:
-            damage = self.STR
-            damage -= enemy.maxDEF
-            enemy.HP -= damage
-            if enemy.HP < 0:
-                enemy.HP = 0
-            print(" You are attacking.\n")
-            print(damage)
-        if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
-            damage = self.STR
-            damage += 45
-            damage -= enemy.maxDEF
-            enemy.HP -= damage
-            if enemy.HP < 0:
-                enemy.HP = 0
-            print(" You are attacking.\n")
-            print(damage)
+            print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
+            choise = input(" > ")
+            if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
+                damage = self.STR
+                damage += 45
+                damage -= enemy.maxDEF
+                enemy.HP -= damage
+                if enemy.HP < 0:
+                    enemy.HP = 0
+                print(" You are attacking.\n")
+                print(damage)
+            elif choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                print(zonemap['a3']['ASISTANT-WARRIOR'])
+                damage = self.STR
+                damage -= enemy.maxDEF
+                enemy.HP -= damage
+                if enemy.HP < 0:
+                    enemy.HP = 0
+                print(" You are attacking.\n")
+                print(damage)
 
-        if choise == "2":
-            ##### mage spells
-            if self.job == "mage":
-                print(""" Spells:
-    1. Fire - MP:25  DMG:60
-    2. Thunder - MP:25  DMG:60
-    3. Meteor - MP:80  DMG:120
-    4. Cure - MP:25  DMG:62
-    5. Cura - MP:32  DMG:70
-    6. Curaga - MP:50  DMG:120
-    """)
-                print(" Which of them do you wanna use ?\n")
-                telling = input(" > ")
-                acceptable_actions = ['1', '2', '3', '4', '5', '6']
-                if telling not in acceptable_actions:
-                    print(""" Here is no such spell, try again
- Spells:
-    1. Fire - MP:25  DMG:60
-    2. Thunder - MP:25  DMG:60
-    3. Meteor - MP:80  DMG:120
-    4. Cure - MP:25  DMG:62
-    5. Cura - MP:32  DMG:70
-    6. Curaga - MP:50  DMG:120
-    """)
-                elif telling == "1":
-                    if self.MP >= 25:
-                        self.MP -= 25
-                        damage = 60
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-                elif telling == "2":
-                    if self.MP >= 25:
-                        self.MP -= 25
-                        damage = 60
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-                elif telling == "3":
-                    if self.MP >= 80:
-                        self.MP -= 80
-                        damage = 120
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-                elif telling == "4":
-                    if self.MP >= 25:
-                        self.MP -= 25
-                        damage = 62
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-                elif telling == "5":
-                    if self.MP >= 32:
-                        self.MP -= 32
-                        damage = 70
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-                elif telling == "6":
-                    if self.MP >= 50:
-                        self.MP -= 50
-                        damage = 120
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-            ### warrior spels
-            elif self.job == 'warrior':
-                print(""" Spells:
-    1. Fire Sword - MP:20  DMG:35
-    2. Blizard - MP:25  DMG:50
-                   """)
-                print(" Which of them do you wanna use ?\n")
-                telling = input(" > ")
-                acceptable_actions = ['1', '2']
-                if telling not in acceptable_actions:
-                    print(""" Here is no such spell, try again
- Spells:
-    1. Fire Sword - MP:20  DMG:35
-    2. Blizard - MP:25  DMG:50
-                   """)
-                elif telling == "1":
-                    if self.MP >= 20:
-                        self.MP -= 20
-                        damage = 35
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-                elif telling == "2":
-                    if self.MP >= 25:
-                        self.MP -= 25
-                        damage = 50
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-            #### ranger spels
-            elif self.job == 'ranger':
-                print(""" Spells:
-    1. Blood King - MP:50  DMG:70
-    2. Dark Dagger Technique - MP:20  DMG:45
-                        """)
-                print(" Which of them do you wanna use ?\n")
-                telling = input(" > ")
-                acceptable_actions = ['1', '2']
-                if telling not in acceptable_actions:
-                    print(""" Here is no such spell, try again
-Spells:
-    1. Blood King - MP:50  DMG:70
-    2. Dark Dagger Technique - MP:20  DMG:45
-                              """)
-                elif telling == "1":
-                    if self.MP >= 50:
-                        self.MP -= 50
-                        damage = 70
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
-                elif telling == "2":
-                    if self.MP >= 20:
-                        self.MP -= 20
-                        damage = 45
-                        damage -= enemy.maxDEF
-                        enemy.HP -= damage
-                    else:
-                        print(" You have not enough mana points")
+            if choise == "2":
+                ##### mage spells
+                if self.job == "mage":
+                    print(""" Spells:
+        1. Fire - MP:25  DMG:60
+        2. Thunder - MP:25  DMG:60
+        3. Meteor - MP:80  DMG:120
+        4. Cure - MP:25  DMG:62
+        5. Cura - MP:32  DMG:70
+        6. Curaga - MP:50  DMG:120
+        """)
+                    print(" Which of them do you wanna use ?\n")
+                    telling = input(" > ")
+                    acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                    if telling not in acceptable_actions:
+                        print(""" Here is no such spell, try again
+     Spells:
+        1. Fire - MP:25  DMG:60
+        2. Thunder - MP:25  DMG:60
+        3. Meteor - MP:80  DMG:120
+        4. Cure - MP:25  DMG:62
+        5. Cura - MP:32  DMG:70
+        6. Curaga - MP:50  DMG:120
+        """)
+                    elif telling == "1":
+                        if self.MP >= 25:
+                            self.MP -= 25
+                            damage = 60
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                    elif telling == "2":
+                        if self.MP >= 25:
+                            self.MP -= 25
+                            damage = 60
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                    elif telling == "3":
+                        if self.MP >= 80:
+                            self.MP -= 80
+                            damage = 120
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                    elif telling == "4":
+                        if self.MP >= 25:
+                            self.MP -= 25
+                            damage = 62
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                    elif telling == "5":
+                        if self.MP >= 32:
+                            self.MP -= 32
+                            damage = 70
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                    elif telling == "6":
+                        if self.MP >= 50:
+                            self.MP -= 50
+                            damage = 120
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                ### warrior spels
+                elif self.job == 'warrior':
+                    print(""" Spells:
+        1. Fire Sword - MP:20  DMG:35
+        2. Blizard - MP:25  DMG:50
+                       """)
+                    print(" Which of them do you wanna use ?\n")
+                    telling = input(" > ")
+                    acceptable_actions = ['1', '2']
+                    if telling not in acceptable_actions:
+                        print(""" Here is no such spell, try again
+     Spells:
+        1. Fire Sword - MP:20  DMG:35
+        2. Blizard - MP:25  DMG:50
+                       """)
+                    elif telling == "1":
+                        if self.MP >= 20:
+                            self.MP -= 20
+                            damage = 35
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                    elif telling == "2":
+                        if self.MP >= 25:
+                            self.MP -= 25
+                            damage = 50
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                #### ranger spels
+                elif self.job == 'ranger':
+                    print(""" Spells:
+        1. Blood King - MP:50  DMG:70
+        2. Dark Dagger Technique - MP:20  DMG:45
+                            """)
+                    print(" Which of them do you wanna use ?\n")
+                    telling = input(" > ")
+                    acceptable_actions = ['1', '2']
+                    if telling not in acceptable_actions:
+                        print(""" Here is no such spell, try again
+    Spells:
+        1. Blood King - MP:50  DMG:70
+        2. Dark Dagger Technique - MP:20  DMG:45
+                                  """)
+                    elif telling == "1":
+                        if self.MP >= 50:
+                            self.MP -= 50
+                            damage = 70
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
+                    elif telling == "2":
+                        if self.MP >= 20:
+                            self.MP -= 20
+                            damage = 45
+                            damage -= enemy.maxDEF
+                            enemy.HP -= damage
+                        else:
+                            print(" You have not enough mana points")
 
     def show(self):
         print(self.name, " I have left:", self.HP, "hp. ", "\n")
 
+    # here again false
     def heal(self):
+        print(zonemap['a2']['ASISTANT-HEALER'])
         if zonemap['a2']['ASISTANT-HEALER'] is False:
-            self.HP += random.randrange(10, 40)
-            if self.HP > self.maxHP and self.MP >= 5:
-                 self.HP = self.maxHP
-                 self.MP -= 5
+            if self.MP >= 9:
+                self.HP += random.randrange(10, 40)
+                self.MP -= 9
+                if self.HP > self.maxHP:
+                    self.HP = self.maxHP
             else:
-                print(" You have not enoght mana or you health is full")
-        if zonemap['a2']['ASISTANT-HEALER'] is True:
+                print(" You have not enoght mana")
+        elif zonemap['a2']['ASISTANT-HEALER'] is True:
             self.HP = self.maxHP
             self.MP = self.maxMP
-
     def die(self):
         print(self.name, "~ I'm dead. ")
-        # sys.exit()
+        print(f"""
+        
+        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+            `888'     888      888  888       8        888      888  888   888    "     888      888 
+             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+                                                                                             
+                                                                                             
+                You failed to protect the princess or the kingdom or even yourself                                                  
+
+        
+        
+        
+        """)
+        sys.exit()
+
     def regenaration_mana(self):
         if self.MP < self.maxMP:
             regeneration = self.maxMP
@@ -283,6 +306,8 @@ class Enemy(object):
         self.name = ''
         self.job = ''
         self.HP = 0
+        self.MP = 0
+        self.maxDEF = 0
         self.HP = 0
         self.STR = 0
 

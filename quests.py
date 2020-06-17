@@ -11,11 +11,14 @@ class Quests:
     def __init__(self, parent):
         self.parent = parent
         #self.get_gold = 0
+        self.heal_use = 3
+        self.knife_use = 2
 
+    # healer do not work , i dont know why
     def quest_a2(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
-            self.parent.text.system(""" You can go to:\n        1. Old Sharandar Ruins\n        2. The Farthest Forest \n""")
+            self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""", txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
         if response == '1' and self.parent.zonemap['a2']['SOLVED1'] is False:
@@ -120,8 +123,8 @@ class Quests:
                     player_choose2 = input(" > ")
                     if player_choose2 == '1':
                         self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.\n", begin_txt="Young lady")
-                        self.parent.myPlayer.inventory.insert(1, 'Elven herbs')
-                        self.parent.myPlayer.inventory.pop(16)
+                        self.parent.myPlayer.inventory.pop(0)
+                        self.parent.myPlayer.inventory.insert(0, 'Elven herbs')
                         self.parent.text.system("You have successfully come out of the woods\n")
                     elif player_choose2 == '2':
                         self.parent.text.npc("Well, no problem, I'll go myself...\n", begin_txt="Young lady")
@@ -130,8 +133,8 @@ class Quests:
                         if player_choose3 == "1":
                             self.parent.text.npc("This is great news, I will be incredibly grateful for the great hero.\n",
                                                  begin_txt="Young lady")
-                            self.parent.myPlayer.inventory.insert(1, 'Elven herbs')
-                            self.parent.myPlayer.inventory.pop(16)
+                            self.parent.myPlayer.inventory.pop(0)
+                            self.parent.myPlayer.inventory.insert(0, 'Elven herbs')
                         elif player_choose3 == "2":
                             self.parent.text.system("You have successfully come out of the woods!\n")
                         else:
@@ -165,7 +168,8 @@ class Quests:
         |      60 coins         +       Assistant-healer      |
         #######################################################\n""")
                 self.parent.myPlayer.cash += 60
-                self.parent.myPlayer.inventory.pop(1)
+                self.parent.myPlayer.inventory.pop(0)
+                self.parent.myPlayer.inventory.insert(0, '-')
                 self.parent.zonemap['a2']['ASISTANT-HEALER'] = True
                 self.parent.zonemap['a2']['SOLVED2'] = True
                 if self.parent.zonemap['a2']['SOLVED1'] is True:
@@ -175,7 +179,6 @@ class Quests:
         elif response == '2' and self.parent.zonemap['a2']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the Ruins')
 
-    # part 2 works? helper works ?
     def quest_a3(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  House of a Thousand Faces - \n""", txt_only=True)
@@ -266,8 +269,8 @@ class Quests:
         elif response == '2' and "Warrior medicine" in self.parent.myPlayer.inventory and self.parent.zonemap['a3']['SOLVED2'] is False:
             self.parent.text.you("Thank God he is still alive\n")
             self.parent.text.system("You gave the warrior medicine, and they instantly healed his wounds\n")
-            self.parent.myPlayer.inventory.pop(13)
-            self.parent.myPlayer.inventory.insert(13, '-')
+            self.parent.myPlayer.inventory.pop(12)
+            self.parent.myPlayer.inventory.insert(12, '-')
             self.parent.text.npc("I offer my life for my salvation.\n")
             print("""
             
@@ -292,7 +295,6 @@ class Quests:
         elif response == '2' and self.parent.zonemap['a3']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to Billie Jo tavern\n')
 
-    # tavern going twice
     def quest_a4(self):
         def tavern():
             self.parent.text.system(
@@ -303,7 +305,7 @@ class Quests:
                 self.parent.text.system("You have found one tavern nearby\n")
             elif starv_danger == "2":
                 self.parent.text.danger(""" - You've died from starvation -  \n""", begin_txt="SYSTEM")
-                self.parent.text.system(" Reloading from the last ceckpoint\n")
+                self.parent.text.system(" Reloading from the last checkpoint\n")
                 #self.parent.myPlayer.cash -= self.get_gold
                 #self.parent.zonemap['a4']['SOLVED1'] = False
                 self.parent.text.system(" .................................\n", txt_only=True)
@@ -411,12 +413,14 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_a1(response)
+        if self.parent.zonemap['a4']['SOLVED1'] is True and self.parent.zonemap['a4']['SOLVED2'] is False:
+            tavern()
 
     def quest_a5(self):
         print(' ')
         self.parent.text.system(
             text=""" - Welcome to Icespire Peak -\n""")
-        self.parent.text.system("""You can go to:\n          1.Stable\n          2.Black ice mines\n""")
+        self.parent.text.system(""" You can go to:\n  1.Stable\n  2.Black ice mines\n""",txt_only=True)
         answer = input(" > ")
         print(" ")
 
@@ -451,10 +455,10 @@ class Quests:
                 if choise == "1":
                     self.parent.text.npc(" Hmm ... this substance is also used in mines. This is not a reason to contact with the royal guard.\n", begin_txt='Owner')
                     self.parent.text.danger('You`ve failed !\n', begin_txt='SYSTEM')
-                if choise == "2":
-                    self.parent.text.npc(" You're kidding, we're on Dwarven Valley, dark ice is everywhere!\n Get out of here !\n", begin_txt='Owner')
+                elif choise == "2":
+                    self.parent.text.npc("You're kidding, we're on Dwarven Valley, dark ice is everywhere!\n        Get out of here !\n", begin_txt='Owner')
                     self.parent.text.danger('You`ve failed !\n', begin_txt='SYSTEM')
-                if choise == "3":
+                elif choise == "3":
                     self.parent.text.npc("Did you find it in the stable?!?! I will immediately notify the royal guards.\n        Thank you very much hero\n        Here is your reward\n", begin_txt='Owner')
                     print("""
         #######################################################
@@ -478,6 +482,7 @@ class Quests:
                 elif response in ('no', '2'):
                     self.parent.text.system(""" You tell the owner to go away as you have more urgent business on your mind""")
                 else:
+
                     self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                     self.quest_a5()
 
@@ -493,9 +498,9 @@ class Quests:
                     result = random.randint(1, 6)
                     self.parent.myPlayer.xp += 5
                     if result == 5:
-                        self.parent.text.system(' You were strong enough to hold the lever!\n')
-                        self.parent.text.system(' Dwarf give you your reward\n')
-                        self.parent.text.system(' Greeting you have got 100 xp, 25 coins\n')
+                        self.parent.text.system('You were strong enough to hold the lever!\n')
+                        self.parent.text.system('Dwarf give you your reward\n')
+                        self.parent.text.system('Greeting you have got 100 xp, 25 coins\n')
                         self.parent.myPlayer.cash += 25
                         self.parent.myPlayer.xp += 100
                         self.parent.zonemap['a5']['SOLVED2'] = True
@@ -553,8 +558,8 @@ class Quests:
             self.parent.text.system(text=""" Try to look out, maybe you find something interesting...(write look)\n""")
             input(" > ")
             self.parent.text.system(text=""" You noticed an unusual glow behind the waterfall. 
-            Most likely there is something behind the waterfall,
-            however ... It is a waterfall of life and death, if I will enter the water I can die. What should i do ?\n""")
+          Most likely there is something behind the waterfall,
+          however ... It is a waterfall of life and death, if I will enter the water I can die. What should i do ?\n""")
 
             self.parent.text.system(text="""\n  1. Just go through the waterfall, maybe I would be lucky\n  2. Cover yourself with your light cloak, and hope for the best\n  3. Stop and think more\n""",
                 txt_only=True)
@@ -563,6 +568,9 @@ class Quests:
                 chanse_to_die = random.randint(1, 2)
                 if chanse_to_die == 1:
                     self.parent.text.danger(' Luck is not on your side, you died just by going into the water\n',begin_txt='SYSTEM')
+                    self.parent.text.system(" Reloading from the last checkpoint\n")
+                    self.parent.text.system(" .................................\n", txt_only=True)
+                    os.system('cls')
                     self.quest_b1()
                 else:
                     self.parent.text.system(""" luck on your side, you went through the waterfall without consequences\n""",txt_only=True)
@@ -595,31 +603,34 @@ class Quests:
                         self.quest_b1()
             elif player_choose4 == "2":
                 self.parent.text.danger(' It was a terrible plan, you died just by going into the water\n',begin_txt='SYSTEM')
+                self.parent.text.system(" Reloading from the last ceckpoint\n")
+                self.parent.text.system(" .................................\n", txt_only=True)
+                os.system('cls')
                 self.quest_b1()
             elif player_choose4 == "3":
                 self.parent.text.system(text=""" After a long search you found nothing\n""")
                 time.sleep(3)
                 self.parent.text.system(text=""" You wanted to go back, but noticed a small gorge    
-                You decide to go in and see what's inside
-                Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n""")
+          You decide to go in and see what's inside
+          Behind the waterfall was a cave it was incredibly dark there, but there were 3 swords that shone slightly\n""")
                 self.parent.text.you(" Which of them is the one I need, the old man almost did not describe it...\n")
                 self.parent.text.system(text=""" Wich one you wanna take ?\n  1. Sword inlaid with gems\n  2. Incredibly light and sharp one-handed sword\n  3. Rusty iron sword\n""", txt_only=True)
                 player_choose5 = input(" > ")
                 if player_choose5 in ['1', '2']:
-                    self.parent.text.system(text=""" You have taken the knife and went to the master""")
+                    self.parent.text.system(text=""" You have taken the knife and went to the master\n""")
                     self.parent.text.npc(text=""" You are very inattentive, I will not help you and leave this trinket to yourself, it is a useless thing.\n""", begin_txt='Old warrior')
                 elif player_choose5 == "3":
                     self.parent.text.system(text=""" You have taken the knife and went to the master\n""")
                     self.parent.text.npc(text=""" Very well, either you listened to me well, or you have a pure spirit.
-                    Unfortunately, I can do little to help you. However, this sword will definitely help you.
-                    Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
-                    This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
-                    I also will show you how to increse you endurance.\n""", begin_txt='Old warrior')
-                    self.parent.myPlayer.inventory.insert(5, "Abyssal sword")
-                    self.parent.myPlayer.inventory.pop(16)
+               Unfortunately, I can do little to help you. However, this sword will definitely help you.
+               Yes, maybe he looks like an ordinary rusty sword. However, this sword is cursed, it will help you cope with an incredible amount of light opponents.
+               This rust is the blood of the dead from this sword, which because of the curses cannot be washed away.
+               I also will show you how to increse you endurance.\n""", begin_txt='Old warrior')
+                    self.parent.myPlayer.inventory.pop(4)
+                    self.parent.myPlayer.inventory.insert(4, "Abyssal sword")
                     self.parent.myPlayer.maxHP += 30
                     self.parent.myPlayer.xp += 50
-                    self.parent.text.system("""After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword""", txt_only=True)
+                    self.parent.text.system(""" After a whole day of hard training, you managed to increase your HP for 30, and learnd how to use the Abyssal sword\n""", txt_only=True)
                     self.parent.zonemap['b1']['SOLVED'] = True
                 else:
                     self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
@@ -643,6 +654,7 @@ class Quests:
             player_choose2 = input(" > ")
             if player_choose2 == "1":
                 desert_quest()
+                print(" ")
                 self.parent.text.you("There is literally nothing there...only a lot of quicksands \n")
                 self.parent.text.npc(text=""" Hmm , in general there at least two more places where it is possible to find this sword\n""",
                     begin_txt='Old warrior')
@@ -703,10 +715,11 @@ class Quests:
                                      begin_txt='Gandalfux')
 
             i = 0
-            thrown_knifes = random.randint(2, 5)
+            thrown_knifes = random.randint(2, 8)
+            failed = int((thrown_knifes/2)+2)
             catch_chanse = 0
             print(thrown_knifes)
-
+            print(failed)
             self.parent.text.system(
                 """Press ENTER to catch the knife! Press as fast as you can , or you won't catch a knife\n""")
             while i != thrown_knifes:
@@ -722,67 +735,106 @@ class Quests:
                 exit = input(" > ")
                 if exit == "exit":
                     self.quest_b2()
-
-                if catch_chanse < 26:
-                    y = random.randint(1, 4)
-                    if y == 1:
-                        print(" You catch knife1")
+                if failed != 0:
+                    if catch_chanse < 26:
+                        y = random.randint(1, 4)
+                        if y == 1:
+                            print(" You catch knife")
+                            i += 1
+                            print(i)
+                        else:
+                            print("You didn`t catch")
+                            failed -= 1
+                            print(failed)
+                    elif 25 < catch_chanse <= 50:
+                        y = random.randint(1, 4)
+                        if y in [1, 4]:
+                            print(" You catch knife")
+                            i += 1
+                            print(i)
+                        else:
+                            print("You didn`t catch")
+                            failed -= 1
+                            print(failed)
+                    elif 50 < catch_chanse <= 75:
+                        y = random.randint(1, 4)
+                        if y in [1, 2, 3]:
+                            print(" You catch knife")
+                            i += 1
+                            print(i)
+                        else:
+                            print("You didnt catch")
+                            failed -= 1
+                            print(failed)
+                    elif 75 < catch_chanse <= 130:
+                        print(" You catch knife")
                         i += 1
-                    else:
-                        print("You didnt catch1")
-                elif 25 < catch_chanse <= 50:
-                    y = random.randint(1, 4)
-                    if y in [1, 4]:
-                        print(" You catch knife2")
-                        i += 1
-                    else:
-                        print("You didnt catch2")
-                elif 50 < catch_chanse <= 75:
-                    y = random.randint(1, 4)
-                    if y in [1, 2, 3]:
-                        print(" You catch knife3")
-                        i += 1
-                    else:
-                        print("You didnt catch3")
-                elif 75 < catch_chanse <= 130:
-                    print(" You catch knife4")
-                    i += 1
-
-            self.parent.text.npc(text="""Yo worked well. And now the last task!\n""", begin_txt='Gandalfux')
-            self.parent.text.npc(text="""I want to test your courage and strength of spirit\n""", begin_txt='Gandalfux')
-            self.parent.text.npc(text="""I will give you my staff, so you must pour your mana into it. And now  cross this homeless gorge. 
+                elif failed == 0:
+                    self.parent.text.npc(text="""You failed\n""",
+                                         begin_txt='Gandalfux')
+                    self.quest_b2(response)
+                    break
+            if failed != 0:
+                self.parent.text.npc(text="""Yo worked well. And now the last task!\n""", begin_txt='Gandalfux')
+                self.parent.text.npc(text="""I want to test your courage and strength of spirit\n""", begin_txt='Gandalfux')
+                self.parent.text.npc(text="""I will give you my staff, so you must pour your mana into it. And now  cross this homeless gorge. 
             Don't worry the levitation spell, I'll tell you, you just have to repeat me word for word.\n""",
-                                 begin_txt='Gandalfux')
-            self.parent.text.npc(text="""Ready ?\n""", begin_txt='Gandalfux')
-            input(" > ")
+                                     begin_txt='Gandalfux')
+                self.parent.text.npc(text="""Ready ?\n""", begin_txt='Gandalfux')
+                input(" > ")
 
-            self.parent.text.you(text="""Ok lets start""")
-            self.parent.text.npc(text="""Gaudeamus igitur\n""", begin_txt='Gandalfux')
-            lev_spell_1 = input(" > ").lower()
-            if lev_spell_1 != "gaudeamus igitur":
-                self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
-            self.parent.text.npc(text="""Juvenes dum sumus\n""", begin_txt='Gandalfux')
-            lev_spell_2 = input(" > ").lower()
-            if lev_spell_2 != "juvenes dum sumus":
-                self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
-            self.parent.text.npc(text="""Post jucundam juventutem\n""", begin_txt='Gandalfux')
-            lev_spell_2 = input(" > ").lower()
-            if lev_spell_2 != "post jucundam juventutem":
-                self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
-            self.parent.text.npc(text="""Nos habebit humus.\n""", begin_txt='Gandalfux')
-            lev_spell_2 = input(" > ").lower()
-            if lev_spell_2 != "nos habebit humus.":
-                self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
-            self.parent.text.you(text="You step on the other end of the abyss\n")
-            self.parent.text.npc(text="""You worked well. I think you're good enough to be my student!\n""",
-                                 begin_txt='Gandalfux')
+                self.parent.text.you(text="""Ok lets start\n""")
+                self.parent.text.npc(text="""Gaudeamus igitur\n""", begin_txt='Gandalfux')
+                spell_1 = False
+                spell_2 = False
+                spell_3 = False
+                spell_4 = False
+                lev_spell_1 = input(" > ").lower()
+                if lev_spell_1 != "gaudeamus igitur":
+                    self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
+                    self.parent.text.system(" Reloading from the last ceckpoint\n")
+                    self.parent.text.system(" .................................\n", txt_only=True)
+                    os.system('cls')
+                    self.quest_b2()
+                elif lev_spell_1 == "gaudeamus igitur":
+                    self.parent.text.npc(text="""Juvenes dum sumus\n""", begin_txt='Gandalfux')
+                    lev_spell_2 = input(" > ").lower()
+                    if lev_spell_2 != "juvenes dum sumus":
+                        self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
+                        self.parent.text.system(" Reloading from the last ceckpoint\n")
+                        self.parent.text.system(" .................................\n", txt_only=True)
+                        os.system('cls')
+                        self.quest_b2()
+                    elif lev_spell_2 == "juvenes dum sumus":
+                        self.parent.text.npc(text="""Post jucundam juventutem\n""", begin_txt='Gandalfux')
+                        lev_spell_3 = input(" > ").lower()
+                        if lev_spell_3 != "post jucundam juventutem":
+                            self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
+                            self.parent.text.system(" Reloading from the last ceckpoint\n")
+                            self.parent.text.system(" .................................\n", txt_only=True)
+                            os.system('cls')
+                            self.quest_b2()
+                        elif lev_spell_3 == "post jucundam juventutem":
+                            self.parent.text.npc(text="""Nos habebit humus\n""", begin_txt='Gandalfux')
+                            lev_spell_4 = input(" > ").lower()
+                            if lev_spell_4 != "nos habebit humus":
+                                self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
+                                self.parent.text.system(" Reloading from the last ceckpoint\n")
+                                self.parent.text.system(" .................................\n", txt_only=True)
+                                os.system('cls')
+                                self.quest_b2()
+                            elif lev_spell_4 == "nos habebit humus":
+                                self.parent.text.you(text="You step on the other end of the abyss\n")
+                                self.parent.text.npc(text="""You worked well. I think you're good enough to be my student!\n""",
+                                                     begin_txt='Gandalfux')
+                                self.parent.zonemap['a2']['SOLVED1'] = True
 
         if not response:
             self.parent.text.system(text=""" Close to a castle you meet a mage\n""")
             self.parent.text.npc(
                 text="""People and other creatures call me Gandalfux. I have power over white magic\n""",
                 begin_txt='Gandalfux')
-            self.parent.text.you(text=f'Good day, I am {self.parent.myPlayer.name}\n Can you learn me something new?\n')
+            self.parent.text.you(text=f'Good day, I am {self.parent.myPlayer.name}\n      Can you learn me something new?\n')
             self.parent.text.npc(
                 text="""If you want me to teach you, you have to prove that you are worthy of it. You must successfully complete 2 of my tasks and not die\n""",
                 begin_txt='Gandalfux')
@@ -793,40 +845,44 @@ class Quests:
         if response in ('1', 'yes'):
             self.parent.text.you(text="Yes\n")
             tasks()
-            self.parent.text.npc(text=f" Let go outside the town to the Gardens. I will teach you there\n",
-                                 begin_txt='Gandalfux')
-            self.parent.text.you(text="OK\n")
-            self.parent.text.system(
-                text='....After several hours of training. You start to think that this might actually not wor to learn anything from him\n')
-            self.parent.text.system(f"Finally after many struggles you learn a new spell!\n", txt_only=True)
-            self.parent.text.system(text='Your can now use Fire Ball special spell\n')
-            self.parent.myPlayer.spells.append(self.parent.FireBall)
-            print(self.parent.myPlayer.spells)
-            self.parent.zonemap['b2']['SOLVED'] = True
-            self.parent.text.system(
-            """
-            During training, you find out that Elminster is a former student of Gandelfux. He told you that 
-            the magician Elminster uses high-quality magic in his territory, which creates a barrier around the castle, 
-            and that without a special object (something like a map) it is almost impossible to get there.
-            Also, that the magician Elminster performed a ritual that incredibly increases his armor, so he advised to 
-            visit Cardcaster and find a secret treasure there.  There should be a staff that removes the effect of the ritual.
-            """, txt_only=True)
+            if self.parent.zonemap['a2']['SOLVED1'] is True:
+                self.parent.text.npc(text=f" Let go outside the town to the Gardens. I will teach you there\n",
+                                     begin_txt='Gandalfux')
+                self.parent.text.you(text="OK\n")
+                self.parent.text.system(
+                    text='....After several hours of training. You start to think that this might actually not wor to learn anything from him\n')
+                self.parent.text.system(f" Finally after many struggles you learn a new spell!\n", txt_only=True)
+                self.parent.text.system(text='Your can now use Fire Ball special spell\n')
+                self.parent.myPlayer.spells.append(self.parent.FireBall)
+                self.parent.zonemap['b2']['SOLVED'] = True
+                self.parent.text.system(
+                """
+                During training, you find out that Elminster is a former student of Gandelfux. He told you that 
+                the magician Elminster uses high-quality magic in his territory, which creates a barrier around the castle, 
+                and that without a special object (something like a map) it is almost impossible to get there.
+                Also, that the magician Elminster performed a ritual that incredibly increases his armor, so he advised to 
+                visit Cardcaster and find a secret treasure there.  There should be a staff that removes the effect of the ritual.
+                """, txt_only=True)
+            else:
+                self.parent.text.npc(text=f" Train your mana and than come back\n",
+                                     begin_txt='Gandalfux')
         elif response in ('2', 'no'):
             self.parent.text.you(text="No, I don't think it is a good idea\n")
             self.parent.text.npc(text=f"Bye\n", begin_txt='Gandalfux')
         else:
-            self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_b2(response)
 
     def quest_b3(self):
         def auction():
             self.parent.text.system("""\n  - On the auction - \n""", txt_only=True)
+            print("")
             self.parent.text.npc(" Ladies and gentlemen, and the current lot, is a house located on the edge of town\n", begin_txt='Auction leader')
             self.parent.text.npc(" The initial bet is 500 coins\n", begin_txt='Auction leader')
             auction_lasts = False
             ### first bet
             while auction_lasts is False:
-                self.parent.text.system("Write your bet using only nums\n", txt_only=True)
+                self.parent.text.system(" Write your bet using only nums\n", txt_only=True)
                 bet = int(input(" > "))
                 self.parent.text.npc(f" I hear {bet}\n\n", begin_txt='Auction leader')
 
@@ -861,7 +917,7 @@ class Quests:
         if self.parent.zonemap['b3']['HOME'] is False:
             self.parent.text.system("\n  - Welcome to Absol -\n", txt_only=True)
             self.parent.text.system(""" You saw three soldiers werewolves attacking an elf\n""")
-            self.parent.text.system(""" Do you wanna to help him\n    1.Yes\n    2.No\n""", txt_only=True)
+            self.parent.text.system(""" Do you wanna to help him\n    1. Yes\n    2. No\n""", txt_only=True)
             help_elf = input(" > ")
             if help_elf == "1":
                 self.parent.text.danger(" Hey buddy do you know who we are?\n", begin_txt="Werewolve soldier")
@@ -871,7 +927,6 @@ class Quests:
                 self.parent.text.npc(f" Please, wait a minute {self.parent.myPlayer.name}! What would you like as a reward for my salvation?!\n", begin_txt='Tretogor')
                 self.parent.text.you(" Thanks but I don't need anything, I'm in a hurry\n")
                 self.parent.text.npc(" In that case, I have a little job for you. If you don't mind \n", begin_txt='Tretogor')
-                self.parent.text.system(""" Do you wanna take the job\n    1.Yes\n    2.No\n""", txt_only=True)
                 print("""
                            #######################################################
                            ~~~~~~       !  The elf has a job for you        ~~~~~~
@@ -913,7 +968,7 @@ class Quests:
                 self.quest_b3()
         else:
             self.parent.text.system("""\n  - Welcome to your home - \n""", txt_only=True)
-            self.parent.text.system(""" What do you wanna to do\n    1.Go to rest\n    2.Train\n""", txt_only=True)
+            self.parent.text.system(""" What do you wanna to do\n    1. Go to rest\n    2. Train\n    3. Go out\n""", txt_only=True)
             house_choise = input(" > ")
             if house_choise == "1":
                 sleep_quality = ['great', 'so-so', 'bad']
@@ -921,16 +976,16 @@ class Quests:
                 if mood == 'great':
                     self.parent.myPlayer.regenaration_mana()
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
-                    self.parent.text.system("""Congratulations, you slept well you completely recovered!\n""", txt_only=True)
+                    self.parent.text.system(""" Congratulations, you slept well you completely recovered!\n""", txt_only=True)
                     self.quest_b3()
                 elif mood == 'so-so':
                     self.parent.myPlayer.regenaration_mana()
                     self.parent.myPlayer.heal()
-                    self.parent.text.system("""You haven't slept well you recovered full mana, and some health points \n""", txt_only=True)
+                    self.parent.text.system(""" You haven't slept well you recovered full mana, and some health points \n""", txt_only=True)
                     self.quest_b3()
                 elif mood == 'bad':
                     self.parent.myPlayer.regenaration_mana()
-                    self.parent.text.system("""You  slept bad but you recovered mana\n""", txt_only=True)
+                    self.parent.text.system(""" You  slept bad but you recovered mana\n""", txt_only=True)
                     self.quest_b3()
                 elif self.parent.myPlayer.HP == self.parent.myPlayer.maxHP and self.parent.myPlayer.MP == self.parent.myPlayer.maxMP:
                     self.parent.text.system("""You rested well\n""", txt_only=True)
@@ -943,35 +998,43 @@ class Quests:
                     if training_chanse < 10:
                         self.parent.myPlayer.maxHP += 2
                         self.parent.text.system(""" Congratulations you have improved your health\n""", txt_only=True)
-                elif training_chanse == "2":
+                    else:
+                        self.parent.text.system("""You did not succeed\n""", txt_only=True)
+                        self.quest_b3()
+                elif training_choose == "2":
                     self.parent.text.system(""" Repeat the spell to practice\n""", txt_only=True)
                     spellbook = ['Parseltongue', 'Metamorphmagi', 'Seers', 'Legilimency', 'Apparition ',
                                  'Occlumency ', 'Posteriori','Avada Kedavra', 'Crucio', 'Imperio', 'Inferius ',
                                  'Horcrux', 'Portraits', ]
-                    train_mana = random.choice(spellbook)
-                    print(train_mana)
-                    player_spell = input(" > ")
                     false_spell = 0
                     i = 0
-                    while player_spell == spellbook and i != 7:
+                    while i != 7:
+                        train_mana = random.choice(spellbook)
+                        print(train_mana)
+                        player_spell = input(" > ")
                         if false_spell == 3:
                             self.parent.text.system(""" You failed your training\n """)
                             break
                         elif i == 6:
-                            self.parent.myPlayer.maxHP += 5
-                            self.parent.text.system(""" Congratulations you successfully eded  your training and uped MP\n""")
+                            self.parent.myPlayer.MP += 5
+                            self.parent.text.system(""" Congratulations you successfully ended  your training and uped MP\n""")
                             break
-                        elif i != 6 :
+                        elif i != 6 and player_spell == train_mana:
                             self.parent.text.system(""" You have successfully cast a spell\n""")
                             i += 1
-                    if player_spell != spellbook:
-                        self.parent.text.system(""" You`ve made mistake!\n""")
-                        false_spell += 1
+                        elif player_spell != train_mana:
+                            self.parent.text.system(""" You`ve made mistake!\n""")
+                            false_spell += 1
 
                 elif training_choose == "1":
                     if training_chanse < 10:
                         self.parent.myPlayer.maxHP += 2
                         self.parent.text.system(""" Congratulations you have improved your health\n""", txt_only=True)
+                    else:
+                        self.parent.text.system("""You did not succeed\n""", txt_only=True)
+                        self.quest_b3()
+            elif house_choise == "3":
+                self.parent.text.system('Have a nice day!\n')
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b3()
@@ -979,7 +1042,7 @@ class Quests:
     def quest_b4(self):
         self.parent.text.system("\n  - Welcome to Cardcaster -\n", txt_only=True)
         self.parent.text.npc("This is a charming city known for its smithies. If there would problems, do not worry, contact the guards.\n", begin_txt='Town Guardian')
-        self.parent.text.system("""  You can go to:\n          1.Abandoned forge\n          2.Mysterious gorge\n""")
+        self.parent.text.system(""" You can go to:\n  1.Abandoned forge\n  2.Mysterious gorge\n""",txt_only=True)
         answer = input(" > ")
         print(" ")
 
@@ -989,18 +1052,22 @@ class Quests:
 
             if answer_1 == "1":
                 chanse_of_GO = random.randint(1, 6)
-                if chanse_of_GO == 5:
+                if chanse_of_GO == 6:
                     self.parent.text.system("Congratulations you got out of the trap\n")
                     self.parent.text.you(" Now that old man learns that it's better not to play with me\n")
-                    self.parent.text.you(" Hmm and what i should to do now ?\n           1. Go to the local guards\n           2. Go to tavern to find out some ifo about him \n")
+                    self.parent.text.you(" Hmm and what i should to do now ?\n           1. Go to the local guards\n           2. Go to tavern to find out some info about him \n")
                     npc_asking =input(" > ")
                     if npc_asking == "1":
                         self.parent.text.system("You told everything to the guards, they promised to deal with him\n")
+                        self.parent.zonemap['b4']['SOLVED1'] = True
+
+                        if self.parent.zonemap['b4']['SOLVED2'] is True:
+                            self.parent.zonemap['b4']['SOLVED'] = True
                     elif npc_asking == "2":
                         self.parent.text.you(" Maybe you know something about Abandoned forge near you tavern? \n")
                         self.parent.text.npc('Yes, it was destroyed 2 days ago because the owner was selling forbidden things.\n', begin_txt='The owner of the tavern')
                         self.parent.text.you(" And what does the owner look like, and is it possible to know where he is now \n")
-                        self.parent.text.npc('it`s an ungle old man. And if you wanna i can tell you were is he hiding. \n', begin_txt='The owner of the tavern')
+                        self.parent.text.npc('it`s an ungly old man. And if you wanna i can tell you were is he hiding. \n', begin_txt='The owner of the tavern')
                         self.parent.text.system(' Few moments later...\n')
                         self.parent.text.you(
                             " You have foud that man \n       It was a long 3 hours .... for him\n       I also find out that Elminster's possession is a former school of magic\n       And that old Howards school map can be found in the vicinity of Bricklewhite\n")
@@ -1012,8 +1079,10 @@ class Quests:
 
                         if self.parent.zonemap['b4']['SOLVED2'] is True:
                             self.parent.zonemap['b4']['SOLVED'] = True
+                    else:
+                        p_choise()
 
-                elif chanse_of_GO in [1, 2, 3, 4, 6]:
+                elif chanse_of_GO in range(1,5):
                     self.parent.text.system("You didn't succeed, try again\n")
                     p_choise()
 
@@ -1099,7 +1168,7 @@ class Quests:
          But no one don't want to say why no one has taken the treasure yet.
          Maybe it's a trap?!
 """)
-            self.parent.text.you("*It's too dark, maybe I should light a torch?*\n 1. Yes, i should\n 2. NO, no way\n")
+            self.parent.text.you("*It's too dark, maybe I should light a torch?*\n      1. Yes, i should\n      2. NO, no way\n")
             response = input(" > ")
             response = str(response).lower()
             if response == '1':
@@ -1113,7 +1182,8 @@ class Quests:
                     self.parent.myPlayer.xp += 150
                     self.parent.text.system(" Congratulations you have found a tresure 150 coins,magic staff and a potion that increases strength\n ")
                     self.parent.zonemap['b4']['SOLVED2'] = True
-                    self.parent.myPlayer.inventory(9, 'Antimagic staff')
+                    self.parent.myPlayer.inventory.pop(8)
+                    self.parent.myPlayer.inventory.insert(8, 'Antimagic staff')
                     if self.parent.zonemap['b4']['SOLVED1'] is True:
                         self.parent.zonemap['b4']['SOLVED'] = True
                 else:
@@ -1133,7 +1203,7 @@ class Quests:
 
         elif answer == "1" and self.parent.zonemap['b4']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the gorge')
-        elif answer == "2" and self.parent.zonemap['b4']['SOLVED2'] is False:
+        elif answer == "2" and self.parent.zonemap['b4']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the forge')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
@@ -1145,8 +1215,6 @@ class Quests:
                 self.parent.text.system(text=""" When you walk to market in the morning you see on a wall a pinned leaflet\n""")
                 self.parent.text.system(text=""" It looks like local miller looks for an employee\n""")
                 self.parent.text.system(text=""" This could be an occasion for quick money\n""")
-                self.parent.text.system(
-                    f" Choose option\n  1. Go to see the miller\n  2. Do not work\n", txt_only=True)
                 print("""
                 #######################################################
                 ~~~~~~~~       !   Work for the day            ~~~~~~~~
@@ -1158,7 +1226,7 @@ class Quests:
                 |  Reward:  ????????????????                          |
                 |                                                     |
                 #######################################################
-                |     1.Accept             |           2.Decline      |
+                |     1.Go to miller       |           2.Go away      |
                 #######################################################\n""")
                 response = input(" >  ")
                 response = str(response).lower()
@@ -1168,24 +1236,23 @@ class Quests:
                 self.parent.text.npc(text=f"Hi there\n", begin_txt='Miller')
                 self.parent.text.npc(text=f"Great, how can I help you?\n", begin_txt='Miller')
             self.parent.text.system(
-                f" Choose option\n1. Can you tell me more about the job?\n2. How long would I work?\n3. How much am I going to earn?\n4. OK, I want start working\n5. I have to go\n", txt_only=True)
+                f" Choose option\n  1. Can you tell me more about the job?\n  2. How long would I work?\n  3. How much am I going to earn?\n  4. OK, I want start working\n  5. I have to go\n", txt_only=True)
             response = input(" >  ")
             response = str(response).lower()
             if response == '1':
                 self.parent.text.you(text=f"Can you tell me more about the job?\n")
                 self.parent.text.npc(text=f"I am looking for a man that can help me carrying my flour to my clients\n", begin_txt='Miller')
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '2':
                 self.parent.text.you(text=f"2. How long would I work?\n")
                 self.parent.text.npc(text=f"Only today. Until dawn\n", begin_txt='Miller')
-                # TODO: to check why it crashes here
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '3':
                 self.parent.text.you(text=f"How much am I going to earn?\n")
                 self.parent.text.npc(text=f"100 coins paid after job\n", begin_txt='Miller')
-                self.quest_b5(response, True)
+                self.quest_b5('1', True)
             elif response == '4':
-                self.parent.text.you(text=f"OK, I want start working?\n")
+                self.parent.text.you(text=f"OK, I want start working!\n")
                 self.parent.text.npc(text=f"Wonderfull! We can start straight away!\n", begin_txt='Miller')
                 self.parent.text.system(text=""" After whole day of work you get paid by the miller. Also he lets you sleep in his mill so can recover a bit\n""")
                 self.parent.myPlayer.cash += 100
@@ -1210,9 +1277,8 @@ class Quests:
                 self.parent.text.npc(text=f"Bye bye\n", begin_txt='Miller')
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_b5(response)
+                self.quest_b5()
 
-    # spellshop debug
     def quest_c1(self):
         print(" ")
         self.parent.text.system("""\n  -  Wyllowwood - \n""", txt_only=True)
@@ -1533,7 +1599,7 @@ class Quests:
                                 places -= 1
                                 self.parent.myPlayer.cash += 75
                                 self.parent.myPlayer.xp += 75
-                        elif final_fish > fisherman2 and final_fish > fisherman3:
+                        elif final_fish > fisherman2 and final_fish > fisherman1:
                             self.parent.text.system(f"Second place is: {final_fish}\n")
                             self.parent.text.npc(
                                 "Not bad young man, here is your 100 coins for the 2 place\n",
@@ -1554,8 +1620,10 @@ class Quests:
                             begin_txt="Mr.Fishman")
                         self.parent.myPlayer.cash += 150
                         self.parent.myPlayer.xp += 150
+                        self.parent.myPlayer.inventory.pop(1)
+                        self.parent.myPlayer.inventory.pop(2)
+                        self.parent.myPlayer.inventory.insert(1, 'Throwing knife')
                         self.parent.myPlayer.inventory.insert(2, 'Throwing knife')
-                        self.parent.myPlayer.inventory.insert(3, 'Throwing knife')
                         self.parent.zonemap['c1']['SOLVED1'] = True
 
                         places -= 1
@@ -1603,18 +1671,20 @@ class Quests:
                     self.parent.text.npc("What do you need a hero?\n")
                     self.parent.text.you("I have these herbs, I heard that you can help me, turn them into medicine.\n")
                     self.parent.text.npc("Let`s see what can i do...\n")
-                    self.parent.myPlayer.inventory.pop(1)
-                    self.parent.myPlayer.inventory.insert(1, "Incredible medicine")
+                    self.parent.myPlayer.inventory.pop(0)
+                    self.parent.myPlayer.inventory.insert(0, "Incredible medicine")
                     self.parent.text.npc("Here you are, the best what can i do\n")
                     self.parent.text.you("Thanks!\n")
                 if 'Fiery flower' in self.parent.myPlayer.inventory:
                     self.parent.text.npc("What do you need a hero?\n")
                     self.parent.text.you("I have these flower, i heard that you can help me, turn them into medicine.\n")
                     self.parent.text.npc("Let`s see what can i do...\n")
-                    self.parent.myPlayer.inventory.pop(13)
-                    self.parent.myPlayer.inventory.insert(13, "Warrior medicine")
+                    self.parent.myPlayer.inventory.pop(12)
+                    self.parent.myPlayer.inventory.insert(12, "Warrior medicine")
                     self.parent.text.npc("Here you are, the best what can i do\n")
                     self.parent.text.you("Thanks!\n")
+                else:
+                    self.parent.text.system("You do not have nothing what to refactor!")
             elif player_conversation == "2":
                 i = 3
                 if 'Heal grass' in self.parent.myPlayer.inventory and i != 0:
@@ -1622,33 +1692,35 @@ class Quests:
                         self.parent.text.npc("What do you need a hero?\n")
                         self.parent.text.you("I have these heal grass, i heard that you can help me, turn them into medicine.\n")
                         self.parent.text.npc("Let`s see what can i do...\n")
-                        self.parent.myPlayer.inventory.pop(6)
-                        self.parent.myPlayer.inventory.insert(6, "Heal pousion")
+                        self.parent.myPlayer.inventory.pop(5)
+                        self.parent.myPlayer.inventory.insert(5, "Heal pousion")
                         self.parent.text.npc("Here you are, the best what can i do\n")
                         self.parent.text.you("Thanks!\n")
                         i -= 1
                     if i == 2:
                         self.parent.text.npc("What do you need a hero?\n")
                         self.parent.text.you(
-                            "I have these flower, i heard that you can help me, turn them into medicine.\n")
+                            "I have these heal grass, i heard that you can help me, turn them into medicine.\n")
                         self.parent.text.npc("Let`s see what can i do...\n")
-                        self.parent.myPlayer.inventory.pop(7)
-                        self.parent.myPlayer.inventory.insert(7, "Heal pousion")
+                        self.parent.myPlayer.inventory.pop(6)
+                        self.parent.myPlayer.inventory.insert(6, "Heal pousion")
                         self.parent.text.npc("Here you are, the best what can i do\n")
                         self.parent.text.you("Thanks!\n")
                         i -= 1
                     if i == 1:
                         self.parent.text.npc("What do you need a hero?\n")
                         self.parent.text.you(
-                            "I have these flower, i heard that you can help me, turn them into medicine.\n")
+                            "I have these heal grass, i heard that you can help me, turn them into medicine.\n")
                         self.parent.text.npc("Let`s see what can i do...\n")
-                        self.parent.myPlayer.inventory.pop(8)
-                        self.parent.myPlayer.inventory.insert(8, "Heal pousion")
+                        self.parent.myPlayer.inventory.pop(7)
+                        self.parent.myPlayer.inventory.insert(7, "Heal pousion")
                         self.parent.text.npc("Here you are, the best what can i do\n")
                         self.parent.text.you("Thanks!\n")
                         i -= 1
                 if 'Heal grass' not in self.parent.myPlayer.inventory:
                     self.parent.text.you("I dont have anything...")
+        elif player_choise1 == "1" and self.parent.zonemap['c1']['SOLVED1'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to the spellshop if you have something to refactor')
 
     def quest_c2(self):
         def chicken_find():
@@ -1698,10 +1770,11 @@ class Quests:
                     if fear_count != 100:
                         self.parent.text.you(f"Okay, і already have {fear_count}, i need to find the next one\n")
                         input(" > ")
+
                 elif random_chicken == 2:
                     print(' ')
                     self.parent.text.you("Okay maybe this gentleman will help me\n")
-                    self.parent.text.system("What do you wanna tell him?\n   1.Greetings, can i ask you about help\n   2.Do you have a chicken\n",txt_only=True)
+                    self.parent.text.system(" What do you wanna tell him?\n   1.Greetings, can i ask you about help\n   2.Do you have a chicken\n",txt_only=True)
                     player_conversation1 = input(" > ")
                     if player_conversation1 == "1":
                         self.parent.text.you("Greetings, can i ask you about help\n")
@@ -1795,6 +1868,7 @@ class Quests:
                             input(" > ")
                     else:
                         self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+
                 elif random_chicken == 3:
                     print(' ')
                     self.parent.text.you(
@@ -1895,25 +1969,25 @@ class Quests:
         self.parent.text.npc("Have you ever wondered how they fly?\n", begin_txt="Frank")
         if "Dragon heart" in self.parent.myPlayer.inventory:
             self.parent.text.you("""No, I don't know, but the dragon you're talking about i has already killed him 
-            І`m busy a little, i had info that i can find a map that i need here 
-            """)
+      І`m busy a little, i had info that i can find a map that i need here \n""")
             self.parent.text.npc("Whaaat ?! No waaay....If so, you would have the dragon's heart with you\n")
             self.parent.text.you("Yep have one\n")
             self.parent.text.npc("*The sound of a drooping jaw*\n")
             self.parent.text.npc("What map do you say you need ?\n")
             self.parent.text.you("Old map of the former school of magicians Howard\n")
             self.parent.text.npc("Do you wanna trade? I'll get you a card and you'll give me dragon heart.\n")
-            self.parent.text.system("Do you wanna trade with him ?\n      1.Yes\n       2.Nope")
+            self.parent.text.system("Do you wanna trade with him ?\n      1.Yes\n      2.Nope\n")
             heart_trade = input(" > ")
             if heart_trade == "1":
                 self.parent.text.you("Alright !\n")
-                self.parent.myPlayer.inventory.pop(12)
-                self.parent.myPlayer.inventory.insert(11, "Ancient map of Howard")
-                self.parent.myPlayer.inventory.pop(16)
+                self.parent.myPlayer.inventory.pop(11)
+                self.parent.myPlayer.inventory.insert(11, "-")
+                self.parent.myPlayer.inventory.pop(10)
+                self.parent.myPlayer.inventory.insert(10, "Ancient map of Howard")
                 self.parent.text.npc("It's nice to deal with you!")
         elif "Dragon heart" not in self.parent.myPlayer.inventory:
             self.parent.text.you("""No, I'm not very interested in dragons
-      І`m busy a little, i had info that i can find a map that i need here\n """)
+      І`m busy a little, i had info that i can find a map that i need here\n""")
             self.parent.text.npc("What map do you say you need ?\n", begin_txt="Frank")
             self.parent.text.you("Old map of the former school of magicians Howard\n")
             self.parent.text.npc("I can get it for you, if you'll done my request\n\n",begin_txt="Frank")
@@ -1960,8 +2034,8 @@ class Quests:
                                            """)
                 self.parent.myPlayer.cash += 35
                 self.parent.zonemap['c2']['SOLVED'] = True
-                self.parent.myPlayer.inventory.insert(11, 'Ancient map of Howard')
-                self.parent.myPlayer.inventory.pop(16)
+                self.parent.myPlayer.inventory.pop(10)
+                self.parent.myPlayer.inventory.insert(10, 'Ancient map of Howard')
 
             elif player_choose2 == "2":
                 print("As you wish!\n")
@@ -1975,7 +2049,7 @@ class Quests:
             self.parent.text.system(
                 text=""" - Welcome to the Well of Dragons -\n""")
         self.parent.text.system(
-            " Choose one of the below answers\n  1. Go to tavern\n  2. Go to town market\n", txt_only=True)
+            " Choose one of the below answers\n  1. Go to tavern\n  2. Go to town market\n  3. Get out\n", txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
         if response == '1' and self.parent.zonemap['c3']['SOLVED1'] is False:
@@ -2009,24 +2083,28 @@ class Quests:
             if response_2 == '1':
                 self.parent.text.you(" I will kill the monster\n")
                 self.parent.fight_dragon()
-                print("""
-        #######################################################
-        ~~~~~~~~~         !  Dragon killer            ~~~~~~~~~
-        #######################################################
-        |                                                     |
-        |  Kill the dragon that terrorizes the whole valley.  |
-        |  Residents will thank you generously                |  
-        |                                                     |
-        |                                                     |
-        #######################################################
-        |        + 200 coins        + Dragon Heart            |
-        #######################################################\n""")
-                self.parent.myPlayer.cash += 200
-                self.parent.myPlayer.xp += 250
-                self.parent.myPlayer.inventory.insert(12, 'Dragon heart')
-                self.parent.myPlayer.inventory.pop(16)
-                self.parent.zonemap['c3']['SOLVED1'] = True
-                self.parent.text.system('You received 200 coins, and dragon heart\n')
+                if self.parent.myPlayer.HP < 0:
+                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                    self.quest_c3()
+                elif self.parent.myPlayer.HP > 0:
+                    print("""
+            #######################################################
+            ~~~~~~~~~         !  Dragon killer            ~~~~~~~~~
+            #######################################################
+            |                                                     |
+            |  Kill the dragon that terrorizes the whole valley.  |
+            |  Residents will thank you generously                |  
+            |                                                     |
+            |                                                     |
+            #######################################################
+            |        + 200 coins        + Dragon Heart            |
+            #######################################################\n""")
+                    self.parent.myPlayer.cash += 200
+                    self.parent.myPlayer.xp += 250
+                    self.parent.myPlayer.inventory.pop(11)
+                    self.parent.myPlayer.inventory.insert(11, 'Dragon heart')
+                    self.parent.zonemap['c3']['SOLVED1'] = True
+                    self.parent.text.system('You received 200 coins, and dragon heart\n')
             elif response_2 == '2':
                 self.parent.text.you(" I do not hurt animals. Even dangerous ones\n")
             else:
@@ -2066,19 +2144,22 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_c3(response_3)
+        elif response == "3":
+            self.parent.text.system("Have a nice day !")
+        if response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to town market')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_c3(response)
 
-    ## grasland work?
     def quest_c4(self, response=None):
         if not response:
             print(' ')
             self.parent.text.system(
                 text=""" - Welcome to the Yarlford -\n""")
-            self.parent.text.system(""" You can go to:\n  1.City center\n  2.Grass meadow\n""", txt_only=True)
-            response = input(" > ")
-        if response == "1" and self.parent.zonemap['c4']['SOLVED1'] is False:
+            self.parent.text.system(""" You can go to:\n  1. City center\n  2. Grass meadow\n  3. Get out\n""", txt_only=True)
+        player_choose = input(" > ")
+        if player_choose == "1" and self.parent.zonemap['c4']['SOLVED1'] is False:
             self.parent.text.system(text=""" You meet a funny person on your way\n""")
             self.parent.text.npc(text="""Hey buddy, I'm a local jester.\n""", begin_txt='Jester')
             self.parent.text.you(text='Oh great... can you just let me go and leave me alone?\n')
@@ -2135,7 +2216,7 @@ class Quests:
             self.parent.text.you(text="OK STOP, please\n")
             self.parent.text.npc(text=f"Do you like it my lord?\n", begin_txt='Jester')
             self.parent.text.you(text="It was the worst thing I have ever heard\n")
-            self.parent.text.npc(text=f"Ah, no one gets my songs. They are so deep\n Can you then at least help me with samll amount of cash?\n", begin_txt='Jester')
+            self.parent.text.npc(text=f"Ah, no one gets my songs. They are so deep\n         Can you then at least help me with samll amount of cash?\n", begin_txt='Jester')
             self.parent.text.system(
                 f" Choose answer\n  1. Yes (-10 coins)\n  2. No\n",
                 txt_only=True)
@@ -2156,7 +2237,7 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input or lack of money\n', begin_txt='SYSTEM')
                 self.quest_c4(response)
-        if response == "2":
+        elif player_choose == "2":
             print(" ")
             self.parent.text.system("Welcome to the meadow here you can find a lot various herbs and even you have chanse to find fiery flower\n         (write 'search' or write 'end')\n")
             find_grass = True
@@ -2171,30 +2252,38 @@ class Quests:
                         if '-' in self.parent.myPlayer.inventory:
                             if i == 0:
                                 self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
-                                self.parent.myPlayer.inventory.insert(6, 'Heal grass')
+                                self.parent.myPlayer.inventory.pop(5)
+                                self.parent.myPlayer.inventory.insert(5, 'Heal grass')
                                 i += 1
                             elif i == 1:
                                 self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
-                                self.parent.myPlayer.inventory.insert(7, 'Heal grass')
+                                self.parent.myPlayer.inventory.pop(6)
+                                self.parent.myPlayer.inventory.insert(6, 'Heal grass')
                                 i += 1
                             elif i == 2:
                                 self.parent.text.you("hooray i found heal grass, it would , help me to do heal potion\n")
-                                self.parent.myPlayer.inventory.insert(8, 'Heal grass')
+                                self.parent.myPlayer.inventory.pop(7)
+                                self.parent.myPlayer.inventory.insert(7, 'Heal grass')
                                 i += 1
                             else:
                                 self.parent.text.system("It`s to heavy, i cant take anymore heal grass\n")
 
                     elif 95 < found_chanse <= 100 and "Fiery flower" not in self.parent.myPlayer.inventory:
                         self.parent.text.you("No way! I found fiery flower!\n")
-                        self.parent.myPlayer.inventory.insert(13, 'Fiery flower')
+                        self.parent.myPlayer.inventory.pop(12)
+                        self.parent.myPlayer.inventory.insert(12, 'Fiery flower')
                     else:
                         self.parent.text.you("Its not my day...\n")
                 elif sujestion == "end":
                     find_grass = False
             self.parent.text.system("Not a bad place, I may come back here someday...\n")
+        elif player_choose == "3":
+            self.parent.text.system("Have a nice day !")
+        elif player_choose == "1" and self.parent.zonemap['c4']['SOLVED1'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to town market')
 
-###### TODO: dopisac final quest
     def quest_c5(self):
+
         def boss_fight_harder():
             print(" ")
             self.parent.text.you(
@@ -2203,8 +2292,8 @@ class Quests:
             self.parent.text.danger(
         """Interesting, interesting .... Another pig came to play !\n       Well, show our guest what hospitality is\n""",begin_txt="Elminster")
             if "Abyssal sword" in self.parent.myPlayer.inventory:
-                self.parent.text.danger("Whaat ?!? Abyssal sword ??",begin_txt="Elminster")
-                self.parent.text.system("You have kiled every sodsier")
+                self.parent.text.danger("Whaat ?!? Abyssal sword ??\n",begin_txt="Elminster")
+                self.parent.text.system("You have kiled every sodsiers\n")
             if "Abyssal sword" not in self.parent.myPlayer.inventory:
                 self.parent.boss_soldiers_harder()
             self.parent.text.danger(
@@ -2225,9 +2314,10 @@ class Quests:
                                 ###########################################
                                 ###########################################\n""")
             defeated = False
-            Boss_hp = 500
+            boss_hp = 900
+            boss_def = 90
             while defeated is not True:
-                if Boss_hp != 0:
+                if boss_hp != 0:
                     boss_atempt = 2
                     while boss_atempt != 0:
                         boss_atack = random.randint(1, 3)
@@ -2289,157 +2379,389 @@ class Quests:
                         self.parent.text.system(" How do you want to attack?\n   1. Beat\n   2. Spell\n   3. Use an item\n   4. Heal\n", txt_only=True)
                         player_atempt = input(" > ")
                         if player_atempt == "1":
-                            if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
-                                damage = self.parent.myPlayer.STR
-                                Boss_hp -= damage
-                                if Boss_hp < 0:
-                                    Boss_hp = 0
-                                print(Boss_hp)
-                                player_choise = True
-                            elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
-                                damage = self.parent.myPlayer.STR
-                                damage += 45
-                                Boss_hp -= damage
-                                if Boss_hp < 0:
-                                    Boss_hp = 0
-                                print(Boss_hp)
-                                player_choise = True
+                            if "Antimagic staff" not in self.parent.myPlayer.inventory:
+                                if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                                    print(self.parent.zonemap['a3']['ASISTANT-WARRIOR'])
+                                    damage = self.parent.myPlayer.STR
+                                    damage -= boss_def
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print("here 1")
+                                    print(boss_hp)
+                                    player_choise = True
+                                elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+                                    damage = self.parent.myPlayer.STR
+                                    damage += 45
+                                    damage -= boss_def
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print("here 2")
+                                    print(boss_hp)
+                                    player_choise = True
+                            elif "Antimagic staff" in self.parent.myPlayer.inventory:
+                                if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                                    damage = self.parent.myPlayer.STR
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print(boss_hp)
+                                    player_choise = True
+                                elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+                                    damage = self.parent.myPlayer.STR
+                                    damage += 45
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print(boss_hp)
+                                    player_choise = True
                         elif player_atempt == "2":
-                            if self.parent.myPlayer.job == "mage":
-                                print(""" Spells:
-                                1. Fire - MP:25  DMG:60
-                                2. Thunder - MP:25  DMG:60
-                                3. Meteor - MP:80  DMG:120
-                                4. Cure - MP:25  DMG:62
-                                5. Cura - MP:32  DMG:70
-                                6. Curaga - MP:50  DMG:120
-                                """)
-                                print(" Which of them do you wanna use ?\n")
-                                telling = input(" > ")
-                                acceptable_actions = ['1', '2', '3', '4', '5', '6']
-                                if telling not in acceptable_actions:
-                                    print(""" Here is no such spell, try again
-                             Spells:
-                                1. Fire - MP:25  DMG:60
-                                2. Thunder - MP:25  DMG:60
-                                3. Meteor - MP:80  DMG:120
-                                4. Cure - MP:25  DMG:62
-                                5. Cura - MP:32  DMG:70
-                                6. Curaga - MP:50  DMG:120
-                                """)
-                                elif telling == "1":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 60
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "2":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 60
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "3":
-                                    if self.parent.myPlayer.MP >= 80:
-                                        self.parent.myPlayer.MP -= 80
-                                        damage = 120
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "4":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 62
-                                        Boss_hp -= damage
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "5":
-                                    if self.parent.myPlayer.MP >= 32:
-                                        self.parent.myPlayer.MP -= 32
-                                        damage = 70
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "6":
-                                    if self.parent.myPlayer.MP >= 50:
-                                        self.parent.myPlayer.MP -= 50
-                                        damage = 120
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                            ### warrior spels
-                            elif self.parent.myPlayer.job == 'warrior':
-                                print(""" Spells:
-                                1. Fire Sword - MP:20  DMG:35
-                                2. Blizard - MP:25  DMG:50
-                                               """)
-                                print(" Which of them do you wanna use ?\n")
-                                telling = input(" > ")
-                                acceptable_actions = ['1', '2']
-                                if telling not in acceptable_actions:
-                                    print(""" Here is no such spell, try again
-                             Spells:
-                                1. Fire Sword - MP:20  DMG:35
-                                2. Blizard - MP:25  DMG:50
-                                               """)
-                                elif telling == "1":
-                                    if self.parent.myPlayer.MP >= 20:
-                                        self.parent.myPlayer.MP -= 20
-                                        damage = 35
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "2":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 50
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                            #### ranger spels
-                            elif self.parent.myPlayer.job == 'ranger':
-                                print(""" Spells:
-                                1. Blood King - MP:50  DMG:70
-                                2. Dark Dagger Technique - MP:20  DMG:45
-                                                    """)
-                                print(" Which of them do you wanna use ?\n")
-                                telling = input(" > ")
-                                acceptable_actions = ['1', '2']
-                                if telling not in acceptable_actions:
-                                    print(""" Here is no such spell, try again
-                            Spells:
-                                1. Blood King - MP:50  DMG:70
-                                2. Dark Dagger Technique - MP:20  DMG:45
-                                                          """)
-                                elif telling == "1":
-                                    if self.parent.myPlayer.MP >= 50:
-                                        self.parent.myPlayer.MP -= 50
-                                        damage = 70
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "2":
-                                    if self.parent.myPlayer.MP >= 20:
-                                        self.parent.myPlayer.MP -= 20
-                                        damage = 45
-                                        Boss_hp -= damage
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
+                            if "Antimagic staff" not in self.parent.myPlayer.inventory:
+                                if self.parent.myPlayer.job == "mage":
+                                    print(""" Spells:
+                                    1. Fire - MP:25  DMG:60
+                                    2. Thunder - MP:25  DMG:60
+                                    3. Meteor - MP:80  DMG:120
+                                    4. Cure - MP:25  DMG:62
+                                    5. Cura - MP:32  DMG:70
+                                    6. Curaga - MP:50  DMG:120
+                                    """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                 Spells:
+                                    1. Fire - MP:25  DMG:60
+                                    2. Thunder - MP:25  DMG:60
+                                    3. Meteor - MP:80  DMG:120
+                                    4. Cure - MP:25  DMG:62
+                                    5. Cura - MP:32  DMG:70
+                                    6. Curaga - MP:50  DMG:120
+                                    """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "3":
+                                        if self.parent.myPlayer.MP >= 80:
+                                            self.parent.myPlayer.MP -= 80
+                                            damage = 120
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "4":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 62
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "5":
+                                        if self.parent.myPlayer.MP >= 32:
+                                            self.parent.myPlayer.MP -= 32
+                                            damage = 70
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "6":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 120
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                ### warrior spels
+                                elif self.parent.myPlayer.job == 'warrior':
+                                    print(""" Spells:
+                                    1. Fire Sword - MP:20  DMG:35
+                                    2. Blizard - MP:25  DMG:50
+                                                   """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                 Spells:
+                                    1. Fire Sword - MP:20  DMG:35
+                                    2. Blizard - MP:25  DMG:50
+                                                   """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 35
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 50
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                #### ranger spels
+                                elif self.parent.myPlayer.job == 'ranger':
+                                    print(""" Spells:
+                                    1. Blood King - MP:50  DMG:70
+                                    2. Dark Dagger Technique - MP:20  DMG:45
+                                                        """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                Spells:
+                                    1. Blood King - MP:50  DMG:70
+                                    2. Dark Dagger Technique - MP:20  DMG:45
+                                                              """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 70
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 45
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                            elif "Antimagic staff" in self.parent.myPlayer.inventory:
+                                if self.parent.myPlayer.job == "mage":
+                                    print(""" Spells:
+                                                                   1. Fire - MP:25  DMG:60
+                                                                   2. Thunder - MP:25  DMG:60
+                                                                   3. Meteor - MP:80  DMG:120
+                                                                   4. Cure - MP:25  DMG:62
+                                                                   5. Cura - MP:32  DMG:70
+                                                                   6. Curaga - MP:50  DMG:120
+                                                                   """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                                                Spells:
+                                                                   1. Fire - MP:25  DMG:60
+                                                                   2. Thunder - MP:25  DMG:60
+                                                                   3. Meteor - MP:80  DMG:120
+                                                                   4. Cure - MP:25  DMG:62
+                                                                   5. Cura - MP:32  DMG:70
+                                                                   6. Curaga - MP:50  DMG:120
+                                                                   """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "3":
+                                        if self.parent.myPlayer.MP >= 80:
+                                            self.parent.myPlayer.MP -= 80
+                                            damage = 120
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "4":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 62
+                                            boss_hp -= damage
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "5":
+                                        if self.parent.myPlayer.MP >= 32:
+                                            self.parent.myPlayer.MP -= 32
+                                            damage = 70
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "6":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 120
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    ### warrior spels
+                                elif self.parent.myPlayer.job == 'warrior':
+                                    print(""" Spells:
+                                                                   1. Fire Sword - MP:20  DMG:35
+                                                                   2. Blizard - MP:25  DMG:50
+                                                                                  """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                                                Spells:
+                                                                   1. Fire Sword - MP:20  DMG:35
+                                                                   2. Blizard - MP:25  DMG:50
+                                                                                  """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 35
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 50
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    #### ranger spels
+                                elif self.parent.myPlayer.job == 'ranger':
+                                    print(""" Spells:
+                                                                   1. Blood King - MP:50  DMG:70
+                                                                   2. Dark Dagger Technique - MP:20  DMG:45
+                                                                                       """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                                               Spells:
+                                                                   1. Blood King - MP:50  DMG:70
+                                                                   2. Dark Dagger Technique - MP:20  DMG:45
+                                                                                             """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 70
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 45
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
                         elif player_atempt == "3":
                             self.parent.text.system("Which element do you want to use?\n")
-                            if elements in self.parent.myPlayer.inventory:
-                                self.parent.text.system(" ~ element\n", txt_only=True)
+                            if "Heal pousion" in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" 1. Heal pousion\n", txt_only=True)
+                            if "Throwing knife" in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" 2. Throwing knife\n", txt_only=True)
+                            if "Antimagic staff" in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" 3. Antimagic staff\n", txt_only=True)
+
+                            elment_choose = input(" > ")
+                            if elment_choose == "1":
+                                if self.heal_use == 3:
+                                    self.parent.myPlayer.inventory.pop(5)
+                                    self.parent.myPlayer.inventory.insert(5, '-')
+                                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                                    print(self.parent.myPlayer.HP)
+                                    self.heal_use -= 1
+                                    player_choise = True
+                                elif self.heal_use == 2:
+                                    self.parent.myPlayer.inventory.pop(6)
+                                    self.parent.myPlayer.inventory.insert(6, '-')
+                                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                                    self.heal_use -= 1
+                                    print(self.parent.myPlayer.HP)
+                                    player_choise = True
+                                elif self.heal_use == 1:
+                                    self.parent.myPlayer.inventory.pop(7)
+                                    self.parent.myPlayer.inventory.insert(7, '-')
+                                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                                    self.heal_use -= 1
+                                    print(self.parent.myPlayer.HP)
+                                    player_choise = True
+                            elif elment_choose == "2":
+                                if self.knife_use == 2:
+                                    self.parent.myPlayer.inventory.pop(2)
+                                    self.parent.myPlayer.inventory.insert(2, '-')
+                                    boss_hp -= 50
+                                    print(boss_hp)
+                                    self.knife_use -= 1
+                                    player_choise = True
+                                elif self.knife_use == 1:
+                                    self.parent.myPlayer.inventory.pop(3)
+                                    self.parent.myPlayer.inventory.insert(3, '-')
+                                    boss_hp -= 50
+                                    print(boss_hp)
+                                    self.knife_use -= 1
+                                    player_choise = True
+                            elif elment_choose == "3":
+                                boss_def = 0
+                                print(boss_def)
+                                self.parent.text.system(" Elminster do not have defense anymore\n", txt_only=True)
                                 player_choise = True
                             else:
                                 self.parent.text.system("You have no items you can use\n")
@@ -2452,12 +2774,13 @@ class Quests:
                                 else:
                                     print(" You have not enoght mana or you health is full")
                             elif self.parent.zonemap['a2']['ASISTANT-HEALER'] is True:
+                                print(self.parent.zonemap['a2']['ASISTANT-HEALER'])
                                 self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
                                 self.parent.myPlayer.MP = self.parent.myPlayer.maxMP
                             self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
                         elif player_atempt == "exit":
                             self.quest_c5()
-                if Boss_hp == 0:
+                if boss_hp == 0:
                     defeated = True
                     self.parent.final_titles()
 
@@ -2487,9 +2810,10 @@ class Quests:
                                 ###########################################
                                 ###########################################\n""")
             defeated = False
-            Boss_hp = 500
+            boss_hp = 900
+            boss_def = 90
             while defeated is not True:
-                if Boss_hp != 0:
+                if boss_hp != 0:
                     boss_atempt = 2
                     while boss_atempt != 0:
                         boss_atack = random.randint(1, 3)
@@ -2551,181 +2875,389 @@ class Quests:
                         self.parent.text.system(" How do you want to attack?\n   1. Beat\n   2. Spell\n   3. Use an item\n   4. Heal\n", txt_only=True)
                         player_atempt = input(" > ")
                         if player_atempt == "1":
-                            if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
-                                damage = self.parent.myPlayer.STR
-                                Boss_hp -= damage
-                                if Boss_hp < 0:
-                                    Boss_hp = 0
-                                print(Boss_hp)
-                                player_choise = True
-                            elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
-                                damage = self.parent.myPlayer.STR
-                                damage += 45
-                                Boss_hp -= damage
-                                if Boss_hp < 0:
-                                    Boss_hp = 0
-                                print(Boss_hp)
-                                player_choise = True
+                            if "Antimagic staff" not in self.parent.myPlayer.inventory:
+                                if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                                    print(self.parent.zonemap['a3']['ASISTANT-WARRIOR'])
+                                    damage = self.parent.myPlayer.STR
+                                    damage -= boss_def
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print("here 1")
+                                    print(boss_hp)
+                                    player_choise = True
+                                elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+                                    damage = self.parent.myPlayer.STR
+                                    damage += 45
+                                    damage -= boss_def
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print("here 2")
+                                    print(boss_hp)
+                                    player_choise = True
+                            elif "Antimagic staff" in self.parent.myPlayer.inventory:
+                                if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                                    damage = self.parent.myPlayer.STR
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print(boss_hp)
+                                    player_choise = True
+                                elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+                                    damage = self.parent.myPlayer.STR
+                                    damage += 45
+                                    boss_hp -= damage
+                                    if boss_hp < 0:
+                                        boss_hp = 0
+                                    print(boss_hp)
+                                    player_choise = True
                         elif player_atempt == "2":
-                            if self.parent.myPlayer.job == "mage":
-                                print(""" 
-    Spells:
-        1. Fire - MP:25  DMG:60
-        2. Thunder - MP:25  DMG:60
-        3. Meteor - MP:80  DMG:120
-        4. Cure - MP:25  DMG:62
-        5. Cura - MP:32  DMG:70
-        6. Curaga - MP:50  DMG:120
-                                """)
-                                print(" Which of them do you wanna use ?\n")
-                                telling = input(" > ")
-                                acceptable_actions = ['1', '2', '3', '4', '5', '6']
-                                if telling not in acceptable_actions:
-                                    print(""" Here is no such spell, try again
-    Spells:
-        1. Fire - MP:25  DMG:60
-        2. Thunder - MP:25  DMG:60
-        3. Meteor - MP:80  DMG:120
-        4. Cure - MP:25  DMG:62
-        5. Cura - MP:32  DMG:70
-        6. Curaga - MP:50  DMG:120
-                                """)
-                                elif telling == "1":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 60
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "2":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 60
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "3":
-                                    if self.parent.myPlayer.MP >= 80:
-                                        self.parent.myPlayer.MP -= 80
-                                        damage = 120
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "4":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 62
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "5":
-                                    if self.parent.myPlayer.MP >= 32:
-                                        self.parent.myPlayer.MP -= 32
-                                        damage = 70
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "6":
-                                    if self.parent.myPlayer.MP >= 50:
-                                        self.parent.myPlayer.MP -= 50
-                                        damage = 120
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                            ### warrior spels
-                            elif self.parent.myPlayer.job == 'warrior':
-                                print(""" 
-    Spells:
-        1. Fire Sword - MP:20  DMG:35
-        2. Blizard - MP:25  DMG:50
-                                               """)
-                                print(" Which of them do you wanna use ?\n")
-                                telling = input(" > ")
-                                acceptable_actions = ['1', '2']
-                                if telling not in acceptable_actions:
-                                    print(""" Here is no such spell, try again
-    Spells:
-        1. Fire Sword - MP:20  DMG:35
-        2. Blizard - MP:25  DMG:50
-                                               """)
-                                elif telling == "1":
-                                    if self.parent.myPlayer.MP >= 20:
-                                        self.parent.myPlayer.MP -= 20
-                                        damage = 35
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "2":
-                                    if self.parent.myPlayer.MP >= 25:
-                                        self.parent.myPlayer.MP -= 25
-                                        damage = 50
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                            #### ranger spels
-                            elif self.parent.myPlayer.job == 'ranger':
-                                print(""" 
-    Spells:
-        1. Blood King - MP:50  DMG:70
-        2. Dark Dagger Technique - MP:20  DMG:45
-                                                    """)
-                                print(" Which of them do you wanna use ?\n")
-                                telling = input(" > ")
-                                acceptable_actions = ['1', '2']
-                                if telling not in acceptable_actions:
-                                    print(""" Here is no such spell, try again
-    Spells:
-        1. Blood King - MP:50  DMG:70
-        2. Dark Dagger Technique - MP:20  DMG:45
-                                                          """)
-                                elif telling == "1":
-                                    if self.parent.myPlayer.MP >= 50:
-                                        self.parent.myPlayer.MP -= 50
-                                        damage = 70
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
-                                elif telling == "2":
-                                    if self.parent.myPlayer.MP >= 20:
-                                        self.parent.myPlayer.MP -= 20
-                                        damage = 45
-                                        Boss_hp -= damage
-                                        if Boss_hp < 0:
-                                            Boss_hp = 0
-                                        player_choise = True
-                                    else:
-                                        print(" You have not enough mana points")
+                            if "Antimagic staff" not in self.parent.myPlayer.inventory:
+                                if self.parent.myPlayer.job == "mage":
+                                    print(""" Spells:
+                                    1. Fire - MP:25  DMG:60
+                                    2. Thunder - MP:25  DMG:60
+                                    3. Meteor - MP:80  DMG:120
+                                    4. Cure - MP:25  DMG:62
+                                    5. Cura - MP:32  DMG:70
+                                    6. Curaga - MP:50  DMG:120
+                                    """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                 Spells:
+                                    1. Fire - MP:25  DMG:60
+                                    2. Thunder - MP:25  DMG:60
+                                    3. Meteor - MP:80  DMG:120
+                                    4. Cure - MP:25  DMG:62
+                                    5. Cura - MP:32  DMG:70
+                                    6. Curaga - MP:50  DMG:120
+                                    """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "3":
+                                        if self.parent.myPlayer.MP >= 80:
+                                            self.parent.myPlayer.MP -= 80
+                                            damage = 120
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "4":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 62
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "5":
+                                        if self.parent.myPlayer.MP >= 32:
+                                            self.parent.myPlayer.MP -= 32
+                                            damage = 70
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "6":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 120
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                ### warrior spels
+                                elif self.parent.myPlayer.job == 'warrior':
+                                    print(""" Spells:
+                                    1. Fire Sword - MP:20  DMG:35
+                                    2. Blizard - MP:25  DMG:50
+                                                   """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                 Spells:
+                                    1. Fire Sword - MP:20  DMG:35
+                                    2. Blizard - MP:25  DMG:50
+                                                   """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 35
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 50
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                #### ranger spels
+                                elif self.parent.myPlayer.job == 'ranger':
+                                    print(""" Spells:
+                                    1. Blood King - MP:50  DMG:70
+                                    2. Dark Dagger Technique - MP:20  DMG:45
+                                                        """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                Spells:
+                                    1. Blood King - MP:50  DMG:70
+                                    2. Dark Dagger Technique - MP:20  DMG:45
+                                                              """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 70
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 45
+                                            damage -= boss_def
+                                            if damage < 0:
+                                                damage = 0
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                            elif "Antimagic staff" in self.parent.myPlayer.inventory:
+                                if self.parent.myPlayer.job == "mage":
+                                    print(""" Spells:
+                                                                   1. Fire - MP:25  DMG:60
+                                                                   2. Thunder - MP:25  DMG:60
+                                                                   3. Meteor - MP:80  DMG:120
+                                                                   4. Cure - MP:25  DMG:62
+                                                                   5. Cura - MP:32  DMG:70
+                                                                   6. Curaga - MP:50  DMG:120
+                                                                   """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2', '3', '4', '5', '6']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                                                Spells:
+                                                                   1. Fire - MP:25  DMG:60
+                                                                   2. Thunder - MP:25  DMG:60
+                                                                   3. Meteor - MP:80  DMG:120
+                                                                   4. Cure - MP:25  DMG:62
+                                                                   5. Cura - MP:32  DMG:70
+                                                                   6. Curaga - MP:50  DMG:120
+                                                                   """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 60
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "3":
+                                        if self.parent.myPlayer.MP >= 80:
+                                            self.parent.myPlayer.MP -= 80
+                                            damage = 120
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "4":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 62
+                                            boss_hp -= damage
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "5":
+                                        if self.parent.myPlayer.MP >= 32:
+                                            self.parent.myPlayer.MP -= 32
+                                            damage = 70
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "6":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 120
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    ### warrior spels
+                                elif self.parent.myPlayer.job == 'warrior':
+                                    print(""" Spells:
+                                                                   1. Fire Sword - MP:20  DMG:35
+                                                                   2. Blizard - MP:25  DMG:50
+                                                                                  """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                                                Spells:
+                                                                   1. Fire Sword - MP:20  DMG:35
+                                                                   2. Blizard - MP:25  DMG:50
+                                                                                  """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 35
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 25:
+                                            self.parent.myPlayer.MP -= 25
+                                            damage = 50
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    #### ranger spels
+                                elif self.parent.myPlayer.job == 'ranger':
+                                    print(""" Spells:
+                                                                   1. Blood King - MP:50  DMG:70
+                                                                   2. Dark Dagger Technique - MP:20  DMG:45
+                                                                                       """)
+                                    print(" Which of them do you wanna use ?\n")
+                                    telling = input(" > ")
+                                    acceptable_actions = ['1', '2']
+                                    if telling not in acceptable_actions:
+                                        print(""" Here is no such spell, try again
+                                                               Spells:
+                                                                   1. Blood King - MP:50  DMG:70
+                                                                   2. Dark Dagger Technique - MP:20  DMG:45
+                                                                                             """)
+                                    elif telling == "1":
+                                        if self.parent.myPlayer.MP >= 50:
+                                            self.parent.myPlayer.MP -= 50
+                                            damage = 70
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
+                                    elif telling == "2":
+                                        if self.parent.myPlayer.MP >= 20:
+                                            self.parent.myPlayer.MP -= 20
+                                            damage = 45
+                                            boss_hp -= damage
+                                            player_choise = True
+                                        else:
+                                            print(" You have not enough mana points")
                         elif player_atempt == "3":
                             self.parent.text.system("Which element do you want to use?\n")
-                            if elements in self.parent.myPlayer.inventory:
-                                self.parent.text.system(" ~ element\n", txt_only=True)
+                            if "Heal pousion" in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" 1. Heal pousion\n", txt_only=True)
+                            if "Throwing knife" in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" 2. Throwing knife\n", txt_only=True)
+                            if "Antimagic staff" in self.parent.myPlayer.inventory:
+                                self.parent.text.system(" 3. Antimagic staff\n", txt_only=True)
+
+                            elment_choose = input(" > ")
+                            if elment_choose == "1":
+                                if self.heal_use == 3:
+                                    self.parent.myPlayer.inventory.pop(5)
+                                    self.parent.myPlayer.inventory.insert(5, '-')
+                                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                                    print(self.parent.myPlayer.HP)
+                                    self.heal_use -= 1
+                                    player_choise = True
+                                elif self.heal_use == 2:
+                                    self.parent.myPlayer.inventory.pop(6)
+                                    self.parent.myPlayer.inventory.insert(6, '-')
+                                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                                    self.heal_use -= 1
+                                    print(self.parent.myPlayer.HP)
+                                    player_choise = True
+                                elif self.heal_use == 1:
+                                    self.parent.myPlayer.inventory.pop(7)
+                                    self.parent.myPlayer.inventory.insert(7, '-')
+                                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                                    self.heal_use -= 1
+                                    print(self.parent.myPlayer.HP)
+                                    player_choise = True
+                            elif elment_choose == "2":
+                                if self.knife_use == 2:
+                                    self.parent.myPlayer.inventory.pop(2)
+                                    self.parent.myPlayer.inventory.insert(2, '-')
+                                    boss_hp -= 50
+                                    print(boss_hp)
+                                    self.knife_use -= 1
+                                    player_choise = True
+                                elif self.knife_use == 1:
+                                    self.parent.myPlayer.inventory.pop(3)
+                                    self.parent.myPlayer.inventory.insert(3, '-')
+                                    boss_hp -= 50
+                                    print(boss_hp)
+                                    self.knife_use -= 1
+                                    player_choise = True
+                            elif elment_choose == "3":
+                                boss_def = 0
+                                print(boss_def)
+                                self.parent.text.system(" Elminster do not have defense anymore\n", txt_only=True)
                                 player_choise = True
                             else:
                                 self.parent.text.system("You have no items you can use\n")
@@ -2738,13 +3270,16 @@ class Quests:
                                 else:
                                     print(" You have not enoght mana or you health is full")
                             elif self.parent.zonemap['a2']['ASISTANT-HEALER'] is True:
+                                print(self.parent.zonemap['a2']['ASISTANT-HEALER'])
                                 self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
                                 self.parent.myPlayer.MP = self.parent.myPlayer.maxMP
+                            self.parent.text.system(f"You have left: {self.parent.myPlayer.HP}\n", txt_only=True)
                         elif player_atempt == "exit":
                             self.quest_c5()
-                if Boss_hp == 0:
+                if boss_hp == 0:
                     defeated = True
                     self.parent.final_titles()
+
 
         print(""" 
         
@@ -2815,7 +3350,7 @@ class Quests:
                 while i < 78:
                     chanse_get_lost = random.randint(0, 100)
                     i = chanse_get_lost
-                    self.parent.text.danger("You have lost !\n      -write 'look' to find way\n     -write 'give up' if you do not whant to fight\n")
+                    self.parent.text.danger("You have lost !\n     -write 'look' to find way\n     -write 'give up' if you do not whant to fight\n")
                     destiny = input(" > ")
                     if destiny == "look":
                         self.parent.text.system("You continued to search\n")
