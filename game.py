@@ -82,6 +82,7 @@ class Game:
         self.myEnemy = Enemy(self)
         self.quests = Quests(self)
         self.zonemap = zonemap
+        self.equipment_set = equipment_set
 
     ### Create Black Magic
     fire = Spell("Fire", 25, 60, 0, "black")
