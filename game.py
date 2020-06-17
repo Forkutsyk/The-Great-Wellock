@@ -138,7 +138,7 @@ class Game:
                 self.myPlayer.show()
                 self.myEnemy.walcz(self.myPlayer)
                 if self.myPlayer.HP < 1:
-                    self.myPlayer.die(self.myPlayer)
+                    self.myPlayer.die()
                     break
                 self.myPlayer.show()
             elif choice == "0":

@@ -412,7 +412,7 @@ class Quests:
                 tavern()
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_a1(response)
+                self.quest_a4()
         if self.parent.zonemap['a4']['SOLVED1'] is True and self.parent.zonemap['a4']['SOLVED2'] is False:
             tavern()
 
@@ -954,14 +954,14 @@ class Quests:
             elif help_elf == "2":
                 self.parent.text.you(" Meeeh, this does not concern me\n")
                 self.parent.text.danger(" Hey, you what are you staring ?!", begin_txt="Werewolve soldier")
-                self.text.danger(" If you do not want problems pay 25 coins\n", begin_txt="Werewolve soldier")
+                self.parent.text.danger(" If you do not want problems pay 25 coins\n", begin_txt="Werewolve soldier")
                 self.parent.text.system(""" Choose what do you wanna say\n    1.Yes, off course, i`m sorry\n    2.Ignore\n    3. Who said that i do not wanna ?""")
                 player_answer = input(" > ")
                 if player_answer == '1':
                     self.parent.myPlayer.cash -= 25
-                    self.text.danger(" Good boy, now run while you can!\n", begin_txt="Werewolve soldier")
+                    self.parent.text.danger(" Good boy, now run while you can!\n", begin_txt="Werewolve soldier")
                 elif player_answer in ['2', '3']:
-                    self.text.danger(" Hey buddy do you know who we are?\n", begin_txt="Werewolve soldier")
+                    self.parent.text.danger(" Hey buddy do you know who we are?\n", begin_txt="Werewolve soldier")
                     self.parent.fight_soldiers()
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
