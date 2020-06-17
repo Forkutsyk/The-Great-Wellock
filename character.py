@@ -1,6 +1,7 @@
 import random
-#import sys
+import sys
 from global_variables import *
+
 
 class Player:
     def __init__(self, parent):
@@ -49,17 +50,18 @@ class Player:
     def fight(self, enemy, player):
             print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
             choise = input(" > ")
-            if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is False:
+            if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
                 damage = self.STR
+                damage += 45
                 damage -= enemy.maxDEF
                 enemy.HP -= damage
                 if enemy.HP < 0:
                     enemy.HP = 0
                 print(" You are attacking.\n")
                 print(damage)
-            elif choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            elif choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                print(zonemap['a3']['ASISTANT-WARRIOR'])
                 damage = self.STR
-                damage += 45
                 damage -= enemy.maxDEF
                 enemy.HP -= damage
                 if enemy.HP < 0:
@@ -205,21 +207,41 @@ class Player:
     def show(self):
         print(self.name, " I have left:", self.HP, "hp. ", "\n")
 
+    # here again false
     def heal(self):
+        print(zonemap['a2']['ASISTANT-HEALER'])
         if zonemap['a2']['ASISTANT-HEALER'] is False:
-            self.HP += random.randrange(10, 40)
-            if self.HP > self.maxHP and self.MP >= 9:
-                 self.HP = self.maxHP
-                 self.MP -= 9
+            if self.MP >= 9:
+                self.HP += random.randrange(10, 40)
+                self.MP -= 9
+                if self.HP > self.maxHP:
+                    self.HP = self.maxHP
             else:
-                print(" You have not enoght mana or you health is full")
+                print(" You have not enoght mana")
         elif zonemap['a2']['ASISTANT-HEALER'] is True:
             self.HP = self.maxHP
             self.MP = self.maxMP
-
     def die(self):
         print(self.name, "~ I'm dead. ")
-        # sys.exit()
+        print(f"""
+        
+        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+            `888'     888      888  888       8        888      888  888   888    "     888      888 
+             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+                                                                                             
+                                                                                             
+                You failed to protect the princess or the kingdom or even yourself                                                  
+
+        
+        
+        
+        """)
+        sys.exit()
+
     def regenaration_mana(self):
         if self.MP < self.maxMP:
             regeneration = self.maxMP

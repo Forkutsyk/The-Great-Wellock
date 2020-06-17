@@ -107,6 +107,7 @@ class Game:
 
     cut_scene = dialogs()
 
+    #### FIGHTINGS
     def fight(self):
         self.show_enemy_stats()
         choice = None
@@ -165,7 +166,7 @@ class Game:
             self.myEnemy.HP = 70
             self.myEnemy.MP = 0
             self.myEnemy.maxDEF = 0
-            self.myEnemy.STR = 20
+            self.myEnemy.STR = 30
             self.text.danger("*growls aggressively*", begin_txt="Soldier")
             self.fight()
             three -= 1
@@ -248,11 +249,11 @@ class Game:
     def master_fight(self):
         self.myEnemy.name = 'Tetrex'
         self.myEnemy.job = 'Old master'
-        self.myEnemy.HP = 300
+        self.myEnemy.HP = 5000
         self.myEnemy.MP = 0
-        self.myEnemy.maxDEF = 150
-        self.myEnemy.STR = 60
-        self.text.danger("You're too selfconfident young man. I will teach you a lesson for free")
+        self.myEnemy.maxDEF = 500
+        self.myEnemy.STR = 500
+        self.text.danger("You're too selfconfident young man. I will teach you a lesson for free",begin_txt="Tetrex")
         self.fight()
 
     def snakes_fight(self):
@@ -267,14 +268,15 @@ class Game:
         while number_enemies != 0:
             self.myEnemy.name = 'Walking snake'
             self.myEnemy.job = 'animal'
-            self.myEnemy.HP = 20
+            self.myEnemy.HP = 45
             self.myEnemy.MP = 0
             self.myEnemy.maxDEF = 20
-            self.myEnemy.STR = 15
+            self.myEnemy.STR = 45
             self.text.danger("Shhhhh\n")
             self.fight()
             number_enemies -= 1
 
+    #### PRINTING
     def location_print(self):
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
         print(" " + '# ' + game.zonemap[self.myPlayer.location][ZONENAME].upper() + ' #')
@@ -284,6 +286,49 @@ class Game:
     def inventory_print(self):
         print("Your inventory:")
         number = 1
+        print(" ")
+        if equipment_set['Armor'][Name] != "name":
+            print(f""" Armor: {equipment_set['Armor'][Name]}
+        +{equipment_set['Armor'][playerHp]} hp
+        +{equipment_set['Armor'][playerDEF]} def
+        """)
+        elif equipment_set['Armor'][Name] == "name":
+            print(f""" Armor: none
+        0 hp
+        0 def
+                    """)
+        if equipment_set['Weapon'][Name] != "name":
+            print(f""" Weapon: {equipment_set['Weapon'][Name]}
+        +{equipment_set['Weapon'][playerSTR]} str
+        +{equipment_set['Weapon'][playerDEF]} def
+        """)
+        elif equipment_set['Weapon'][Name] == "name":
+            print(f""" Weapon: none
+         0 str
+         0 def
+                    """)
+        if equipment_set['Magic stuff'][Name] != "name":
+            print(f""" Magic stuff: {equipment_set['Magic stuff'][Name]}
+        +{equipment_set['Magic stuff'][playerMP]} mp
+        """)
+        elif equipment_set['Magic stuff'][Name] == "name":
+            print(f""" Magic stuff: none
+              0 mp
+                    """)
+        if equipment_set['Artifact'][Name] != "name":
+            print(f""" Artifact: {equipment_set['Artifact'][Name]}
+        +{equipment_set['Artifact'][playerSTR]} str
+        +{equipment_set['Artifact'][playerDEF]} def
+        +{equipment_set['Artifact'][playerHp]} hp
+        +{equipment_set['Artifact'][playerMP]} mp
+        """)
+        elif equipment_set['Artifact'][Name] == "name":
+            print(f""" Artifact: none
+           0 str
+           0 def
+           0 hp
+           0 mp
+                    """)
         for i in range(len(self.myPlayer.inventory)):
             print(f"{number}.{self.myPlayer.inventory[i]}")
             number += 1
@@ -318,7 +363,27 @@ class Game:
 
     @staticmethod
     def final_titles():
-        print("- Final -")
+        print(""" 
+        
+        
+        88888888888 888    888 8888888888      8888888888 888b    888 8888888b.  
+            888     888    888 888             888        8888b   888 888  "Y88b 
+            888     888    888 888             888        88888b  888 888    888 
+            888     8888888888 8888888         8888888    888Y88b 888 888    888 
+            888     888    888 888             888        888 Y88b888 888    888 
+            888     888    888 888             888        888  Y88888 888    888 
+            888     888    888 888             888        888   Y8888 888  .d88P 
+            888     888    888 8888888888      8888888888 888    Y888 8888888P"  
+                      
+                      
+            You defeated the evil wizard Elminstra, saved the princess. 
+            You did it! You saved the kingdom!                                                   
+                                               
+            Made by: Poplavskyi Oleksandr 
+                     sr-13                                                                                         
+
+        """)
+        sys.exit()
 
     def show_enemy_stats(self):
         print("\n Enemy name: ", self.myEnemy.name)
@@ -332,8 +397,12 @@ game = Game()
 
 
 def flee():
-    print(" Uciekasz z pola walki.")
-    # main_game_loop()
+    flee_chanse = random.randint(1, 4)
+    if flee_chanse in range(1, 3):
+        print(" Uciekasz z pola walki.")
+    else:
+        print("You managed to escape, but you stayed in the same location")
+        main_game_loop()
 
 
 ##### Title Screen ####
@@ -418,17 +487,20 @@ def help_menu():  # доделать
 def game_help(action):  # доделать
     print(""" 
     Your abilities:
-    ~  write "move" or "go" to move around the map
+    ~  write "look" or "inspect" to view the location for the presence of the quest
+    ~  write "move" to move around the map
     ~  write "map" to see a map
     ~  write "purse" to se how much coins you have
-    ~  write "inspect" or "look" to view the location for the presence of the quest
+    ~  write "inventory" to se what do you have
     ~  write "stats" to look at your current stats 
     ~  write "quit" to exit the game
+    
+    ! You can heal yourself writing 'heal', but it costs 9 mana points 
     Good luck , and have fun!   
     """)
 
 
-#### PRINTING HERO STATS ####
+#### PRINTING HERO STATS
 def show_stats(action):
     print(" Heroes name: ", game.myPlayer.name)
     print(" Heroes class: ", game.myPlayer.job)
@@ -445,6 +517,152 @@ def purse_print():
     print(" You`ve had", game.myPlayer.cash, "coins. \n")
 
 
+def player_examine(action):
+    if game.zonemap[game.myPlayer.location][SOLVED]:
+        print(" You have already exhausted this zone.")
+    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Stronghold':
+        shop()
+    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
+        print(" I have nothing to do here , i have to go up ")
+    else:
+        try:
+            quest = getattr(game.quests, f'quest_{game.myPlayer.location}')
+            quest()
+        except:
+            print(" You can trigger a quest here.")
+
+
+def shop():
+    print("\n - Jou`re in the shop -\n")
+    print(" Hello stranger !\n I greet you in the guild shop\n ")
+    print(" Here you can buy things which will upgrade your stats ! ")
+    print(" This is the only such place in whole Wellock")
+    print("""
+
+            #######################################################
+            ~~~~~~               Guild shop                  ~~~~~~
+            #######################################################
+            |                                                     |
+            |  So, what would you like ?                          |
+            |  1. Weapon - 50 coins                               |
+            |  2. Armor - 50 coins                                |
+            |  3. Magic stuff -50 coins                           |
+            |  4. Artifact enhancing the spirit - 150 coins       |
+            |                                                     |
+            |  5. YOU: What is  that things ?                     |
+            |  6. YOU: Ok, thanks maybe next time...              |
+            |                                                     |
+            #######################################################
+            #######################################################\n""")
+    answer = input(" > ")
+    if game.myPlayer.cash >= 50:
+        if answer == "1":
+            weapons = ['Wooden sword', 'Iron sword of a knight', 'Stylish lightweight sword',
+                       'The sword of the former general']
+            game.myPlayer.cash -= 50
+            buff = random.randrange(5, 20)
+            equipment_set['Weapon'][Name] = random.choice(weapons)
+            equipment_set['Weapon'][playerSTR] = buff
+            game.myPlayer.maxDEF += equipment_set['Weapon'][playerDEF]
+            game.myPlayer.STR += equipment_set['Weapon'][playerSTR]
+            print(f" You've got: {equipment_set['Weapon'][Name]} And it will add you, {equipment_set['Weapon'][playerSTR]} strenght.")
+        elif answer == "2":
+            armor = ['Lether armor', 'Iron chain mail', 'Full iron armor', 'Armor of a fallen general']
+            game.myPlayer.cash -= 50
+            buff1 = random.randrange(5, 40)
+            buff2 = random.randrange(5, 20)
+            equipment_set['Armor'][Name] = random.choice(armor)
+            equipment_set['Armor'][playerHp] = buff1
+            equipment_set['Armor'][playerDEF] = buff2
+            game.myPlayer.maxDEF += equipment_set['Armor'][playerDEF]
+            game.myPlayer.maxHP += equipment_set['Armor'][playerHp]
+            print(f" You've got: {equipment_set['Armor'][Name]} ; And it will add you, {equipment_set['Armor'][playerDEF]} defense and {equipment_set['Armor'][playerHp]} hp.")
+        elif answer == "3":
+            magic = ['The mana ring of the beast', "Midnight Demon's Bone Necklaces", ' ????????? ',
+                     'The ring of the fallen general']
+            game.myPlayer.cash -= 50
+            buff = random.randrange(5, 40)
+            equipment_set['Magic stuff'][Name] = random.choice(magic)
+            equipment_set['Magic stuff'][playerMP] = buff
+            print(f" You've got: {equipment_set['Magic stuff'][Name]} ; And it will add you, {equipment_set['Magic stuff'][playerMP]} mana points.")
+        elif answer == "4":
+            if game.myPlayer.cash >= 150:
+                artifact = ['The bone of a colossal beast', "Midnight Demon's eye", ' The king grail', '']
+                game.myPlayer.cash -= 150
+                choise = random.randrange(1, 5)
+                if choise == 1:
+                    buff1 = random.randrange(15, 50)
+                    buff2 = random.randrange(15, 50)
+                    equipment_set['Artifact'][Name] = random.choice(artifact)
+                    equipment_set['Artifact'][playerDEF] = buff1
+                    equipment_set['Artifact'][playerHp] = buff2
+                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
+                    game.myPlayer.maxHP += equipment_set['Artifact'][playerHp]
+                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerDEF]} defense and {equipment_set['Artifact'][playerHp]} hp.")
+                elif choise == 2:
+                    buff1 = random.randrange(15, 50)
+                    buff2 = random.randrange(15, 50)
+                    equipment_set['Artifact'][Name] = random.choice(artifact)
+                    equipment_set['Artifact'][playerDEF] = buff1
+                    equipment_set['Artifact'][playerSTR] = buff2
+                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
+                    game.myPlayer.STR += equipment_set['Artifact'][playerSTR]
+                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerDEF]} defense and {equipment_set['Artifact'][playerSTR]} hp.")
+                elif choise == 3:
+                    buff1 = random.randrange(15, 50)
+                    buff2 = random.randrange(15, 50)
+                    equipment_set['Artifact'][Name] = random.choice(artifact)
+                    equipment_set['Artifact'][playerDEF] = buff1
+                    equipment_set['Artifact'][playerMP] = buff2
+                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
+                    game.myPlayer.maxMP += equipment_set['Artifact'][playerMP]
+                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerDEF]} defense and {equipment_set['Artifact'][playerMP]} hp.")
+                elif choise == 4:
+                    buff1 = random.randrange(15, 50)
+                    buff2 = random.randrange(15, 50)
+                    equipment_set['Artifact'][Name] = random.choice(artifact)
+                    equipment_set['Artifact'][playerSTR] = buff1
+                    equipment_set['Artifact'][playerHp] = buff2
+                    game.myPlayer.STR += equipment_set['Artifact'][playerSTR]
+                    game.myPlayer.maxHP += equipment_set['Artifact'][playerHp]
+                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerSTR]} defense and {equipment_set['Artifact'][playerHp]} hp.")
+                elif choise == 5:
+                    buff1 = random.randrange(15, 50)
+                    buff2 = random.randrange(15, 50)
+                    buff3 = random.randrange(15, 50)
+                    equipment_set['Artifact'][Name] = random.choice(artifact)
+                    equipment_set['Artifact'][playerSTR] = buff1
+                    equipment_set['Artifact'][playerHp] = buff2
+                    equipment_set['Artifact'][playerDEF] = buff3
+                    game.myPlayer.STR += equipment_set['Artifact'][playerSTR]
+                    game.myPlayer.maxHP += equipment_set['Artifact'][playerHp]
+                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
+                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerSTR]} defense and {equipment_set['Artifact'][playerHp]} hp and {equipment_set['Artifact'][playerDEF]}.")
+            else:
+                print(" I'm sorry you don't have enough money")
+        elif answer == "5":
+            print("""  Guild Shop:
+        ~  If you choose weapon you will get random weapon which will add you strength (5-20) and 4 defense
+        ~  If you choose Armor you will get random armor which will add you defense (5-20) and (5-40) health
+        ~  If you choose Magic stuff you will get random magic stuff which will add you mana points(5-40)
+        ~  If you choose Artifact you will get random Artifact which will add points to your one random characteristic(It could be health also)
+            """)
+            shop()
+        elif answer == "6":
+            print(" Come when you want, stranger! ")
+            main_game_loop()
+    else:
+        print(" I'm sorry you don't have enough money")
+        main_game_loop()
+
+###### GAME FUNCTIONALITY ######
+
+
+def main_game_loop():
+    while game.myPlayer.game_over is False:
+        # game.myPlayer.__pass_time()
+        prompt()
+
 def prompt():
     print("\n" + " =======================")
     print(" What would you like to do?")
@@ -460,13 +678,13 @@ def prompt():
         ask = input(" > ")
         if ask.lower() == "y":
             with open('save_game.txt', 'wb') as save_file:
-                pickle.dump((game.myPlayer, game.zonemap), save_file)
+                pickle.dump((game.myPlayer, game.zonemap, game.equipment_set), save_file)
             sys.exit()
         elif ask.lower() == "n":
             print(" Okay, maybe next time!")
             sys.exit()
         else:
-            print(" I dont know such command please try again")
+            print(" I don`t know such command please try again")
             print(" Would you like to save the game Y/N?", "\n")
             ask = input(" > ")
             if ask.lower() == "y":
@@ -494,112 +712,13 @@ def prompt():
         game.inventory_print()
 
 
-def player_examine(action):
-    if game.zonemap[game.myPlayer.location][SOLVED]:
-        print(" You have already exhausted this zone.")
-    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Stronghold':
-        shop()
-    elif game.zonemap[game.myPlayer.location][ZONENAME] == 'Docks':
-        print(" I have nothing to do here , i have to go up ")
-    else:
-        try:
-            quest = getattr(game.quests, f'quest_{game.myPlayer.location}')
-            quest()
-        except:
-            print(" You can trigger a quest here.")
-
-
-###### GAME FUNCTIONALITY ######
-
-
-def main_game_loop():
-    while game.myPlayer.game_over is False:
-        # game.myPlayer.__pass_time()
-        prompt()
-
-
-def shop():
-    print("\n - Jou`re in the shop -\n")
-    print(" Hello stranger !\n I greet you in the guild shop\n ")
-    print(" Here you can buy things which will upgrade your stats ! ")
-    print(" This is the only such place in whole Wellock")
-    print("""
-
-            #######################################################
-            ~~~~~~               Guild shop                  ~~~~~~
-            #######################################################
-            |                                                     |
-            |  So, what would you like ?                          |
-            |  1. Weapon - 25 coins                               |
-            |  2. Armor - 25 coins                                |
-            |  3. Magic stuff -25 coins                           |
-            |  4. Artifact enhancing the spirit - 30 coins        |
-            |                                                     |
-            |  5. YOU: What is  that things ?                     |
-            |  6. YOU: Ok, thanks maybe next time...              |
-            |                                                     |
-            #######################################################
-            #######################################################\n""")
-    answer = input(" > ")
-    if game.myPlayer.cash >= 25:
-        if answer == "1":
-            weapons = ['Wooden sword', 'Iron sword of a knight', 'Stylish lightweight sword',
-                       'The sword of the former general']
-            game.myPlayer.cash -= 25
-            buff = random.randrange(5, 20)
-            game.myPlayer.STR += buff
-            print(" You've got: ", random.choice(weapons), "; And it will add you, ", buff, "strenght.")
-        elif answer == "2":
-            armor = ['Lether armor', 'Iron chain mail', 'Full iron armor', 'Armor of a fallen general']
-            game.myPlayer.cash -= 25
-            buff = random.randrange(5, 40)
-            game.myPlayer.maxDEF += buff
-            print(" You've got: ", random.choice(armor), "; And it will add you, ", buff, "defense.")
-        elif answer == "3":
-            magic = ['The mana ring of the beast', "Midnight Demon's Bone Necklaces", ' ????????? ',
-                     'The ring of the fallen general']
-            game.myPlayer.cash -= 25
-            buff = random.randrange(5, 40)
-            game.myPlayer.maxMP += buff
-            print(" You've got: ", random.choice(magic), "; And it will add you, ", buff, "mana points.")
-        elif answer == "4":
-            artifact = ['The bone of a colossal beast', "Midnight Demon's eye", ' The king grail', '']
-            game.myPlayer.cash -= 25
-            choise = random.randrange(1, 3)
-            if choise == 1:
-                buff = random.randrange(5, 40)
-                game.myPlayer.maxHP += buff
-                print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "health points.")
-            elif choise == 2:
-                buff = random.randrange(5, 40)
-                game.myPlayer.maxMP += buff
-                print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "mana points.")
-            elif choise == 3:
-                buff = random.randrange(5, 40)
-                game.myPlayer.maxDEF += buff
-                print(" You've got: ", random.choice(artifact), "; And it will add you, ", buff, "defense.")
-        elif answer == "5":
-            print("""  Guild Shop:
-        ~  If you choose weapon you will get random weapon which will add you strength
-        ~  If you choose Armor you will get random armor which will add you defense
-        ~  If you choose Magic stuff you will get random magic stuff which will add you mana points
-        ~  If you choose Artifact you will get random Artifact which will add points to your one random characteristic(It could be health also)
-            """)
-            shop()
-        elif answer == "6":
-            print(" Come when you want, stranger! ")
-            main_game_loop()
-    else:
-        print(" I'm sorry you don't have enough money")
-        main_game_loop()
-
-
 def load_game():
     os.system('cls')
     with open('save_game.txt', 'rb') as game_save:
         game_load = pickle.load(game_save)
     game.myPlayer = game_load[0]
     game.zonemap = game_load[1]
+    game.equipment_set = game_load[2]
     main_game_loop()
 
 
@@ -671,7 +790,7 @@ def setup_game():
         game.myPlayer.maxDEF = 10
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
-        game.myPlayer.xp = 500
+        game.myPlayer.xp = 0
         game.myPlayer.spells = [game.fire, game.thunder, game.meteor, game.cure, game.cura, game.curaga]
     if game.myPlayer.job == 'ranger':
         game.myPlayer.STR = 70
@@ -681,7 +800,7 @@ def setup_game():
         game.myPlayer.MP = 60
         game.myPlayer.maxDEF = 6
         game.myPlayer.cash = 0
-        game.myPlayer.xp = 500
+        game.myPlayer.xp = 0
         game.myPlayer.spells = [game.bloodKing, game.DarkDaggerTechnique]
 
     #### INTRODUCTION
@@ -691,7 +810,7 @@ def setup_game():
     skip = input("\n\n\n To start playing press enter")
     if skip == 's':
         os.system('cls')
-        game.myPlayer.cash += 100
+        game.myPlayer.cash += 10
         main_game_loop()
     os.system('cls')
     game.cut_scene.dialog = SYSTEM + """ 
