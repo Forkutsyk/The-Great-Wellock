@@ -169,6 +169,7 @@ zonemap = {
         DESCRIPTION: " This valley was once a nest of dragons",
         'SOLVED': False,
         'SOLVED1': False,
+        'SOLVED2': False,
         UP: "4",
         DOWN: "b3",
         LEFT: "c2",

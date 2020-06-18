@@ -1,6 +1,6 @@
+import os
 import random
 import sys
-import os
 import time
 
 roadswrongs = 1
@@ -1280,6 +1280,75 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b5()
+        elif response == '2':
+            self.parent.text.system("Pff i don't need this")
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            self.quest_b5(response)
+
+    def peepers_game(self):
+        self.parent.text.system("To your surprise, you noticed a large group of people who were constantly shouting and laughing\n")
+        self.parent.text.system(
+            " Do you want to come and find out what happened there?\n  1.Yes\n  2.Nope\n",txt_only=True)
+        group_of_people = input(" > ")
+        if group_of_people == "1":
+            self.parent.text.you("Lest1s see...")
+            self.parent.text.system("You have noticed a strange situation, people are playing peepers with a one-eyed dwarf")
+            self.parent.text.npc("Hey everybody look another player has come")
+            print("""
+
+                    #######################################################
+                    ~~~~~~          !  Champion in peepers           ~~~~~~
+                    #######################################################
+                    |                                                     |
+                    |    You were offered to play peepers with            |
+                    |     a one-eyed gnome. What answer will you give?    |
+                    |                                                     |
+                    |  Reward:  30 coins                                  |
+                    |                                                     |
+                    #######################################################
+                    #######################################################\n""")
+            self.parent.text.system(
+                " Choose how you answer\n  1.Hmm, what are the rules\n 2.No, i just come to see\n", txt_only=True)
+            join_game = input(" > ")
+            if join_game == "1":
+                self.parent.text.npc("In general, you sit in front of Tandibrad and you look into each other's eyes.\n Who can not stand and blinks, the loser. Tandibrad has already won 11 times in a row, can you win it?")
+                win_chanse = random.randint(1,100)
+                if win_chanse >= 85:
+                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
+                    self.parent.text.npc("Hmm, interesting who will lose")
+                    print("""
+
+                                       #######################################################
+                                       ~~~~~~          !  Champion in peepers           ~~~~~~
+                                       #######################################################
+                                       |                       Done                          |
+                                       |    You were offered to play peepers with            |
+                                       |     a one-eyed gnome.                               |
+                                       |      You won !!! Now you are the current champion   |
+                                       |                                                     |
+                                       |  Reward:  30 coins                                  |
+                                       |                                                     |
+                                       #######################################################
+                                       |           Congratulations you`ve won + 30 coins     |      
+                                       #######################################################\n""")
+                    self.parent.myPlayer.cash += 30
+                elif win_chanse >= 85:
+                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
+                    self.parent.text.npc("Hmm, interesting who will lose")
+                    self.parent.text.you("Ahhh I`ve lost. He is a strong opponent")
+            elif join_game == "2":
+                self.parent.text.npc("Oh well okay...")
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                peepers_game()
+        elif group_of_people == "2":
+            self.parent.text.you("Meeeeh")
+            self.parent.text.you("You`ve continued your journey!")
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            peepers_game()
+    # i need to add this ^ to quests b5
 
     def quest_c1(self):
         print(" ")
@@ -2045,11 +2114,9 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_c2()
 
-    def quest_c3(self, response=None):
-        if not response:
-            print(' ')
-            self.parent.text.system(
-                text=""" - Welcome to the Well of Dragons -\n""")
+    def quest_c3(self):
+        print(' ')
+        self.parent.text.system(text=""" - Welcome to the Well of Dragons -\n""")
         self.parent.text.system(
             " Choose one of the below answers\n  1. Go to tavern\n  2. Go to town market\n  3. Get out\n", txt_only=True)
         response = input(" >  ")
@@ -2111,8 +2178,226 @@ class Quests:
                 self.parent.text.you(" I do not hurt animals. Even dangerous ones\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_c3(response_2)
-        elif response == '2':
+                self.quest_c3()
+        elif response == '2' and self.parent.zonemap['c3']['SOLVED2'] is False:
+            self.parent.text.npc("Good afternoon, young man, did you know that you were cursed?\n",begin_txt="Shona")
+            self.parent.text.you("Whaaaat !?!?\n")
+            self.parent.text.npc("If you do not remove this curse, you may die soon\n", begin_txt="Shona")
+            self.parent.text.you("And how do I take it off\n")
+            self.parent.text.npc("Play one game with me, if you manage to win, I will help you for free. However, if you lose you will have to pay for help 50 coins\n", begin_txt="Shona")
+            print("""
+            
+                                #######################################################
+                                ~~~~~~              !  Gambler                   ~~~~~~
+                                #######################################################
+                                |                                                     |
+                                |    You know you're cursed. Do you want to play      |
+                                |    with Shona so she can take it of the curse       |
+                                |    for free?                                        |
+                                |                                                     |
+                                |  Reward:  Shona will take off the curse for free    |
+                                |                                                     |
+                                #######################################################
+                                |         1. Yes           |         2. Nope          |
+                                #######################################################\n""")
+            player_choise = input(" > ")
+            if player_choise == "1":
+                self.parent.text.npc("""The rules are simple. We will play the times.I drag a card then you drag a card.
+        Bigger card win. Whoever wins 2 attempts wins 
+        When you would be ready, press enter\n""",begin_txt="Shona")
+                input(" > ")
+                self.parent.text.you("Allright, lets get it\n")
+                attempts = 3
+                you = 0
+                shon = 0
+                while attempts != 0:
+                    if shon >= 2:
+                        self.parent.text.npc("Hurray i have won\n", begin_txt="Shona")
+                        self.parent.text.npc("So if you want to take off this curse, pay 50 \n", begin_txt="Shona")
+                        self.parent.text.system(
+                            " Choose \n  1. Pay to take off the curse\n  2. Do not pay\n",
+                            txt_only=True)
+                        curse_choose = input(" > ")
+                        if curse_choose == '1':
+                            self.parent.myPlayer.cash -= 50
+                            self.parent.text.system("You have been deceived, by the thief\n")
+                            self.parent.zonemap['c3']['SOLVED2'] = True
+                            break
+                        elif curse_choose == '2':
+                            self.parent.text.you("Nooope\n")
+                            break
+                    elif you == 2:
+                        self.parent.text.npc("WHAT !?\n",begin_txt="Shona")
+                        self.parent.text.you("Hurray i have won\n")
+                        self.parent.text.you("So do what you promised\n")
+                        self.parent.text.npc("Do you seriously believe this ??\n", begin_txt="Shona")
+                        self.parent.text.system("  1.Either you pay me what you promised or I call a guard\n  2.Get out of here while you can\n",txt_only=True)
+                        robber_fate = input(" > ")
+                        if robber_fate == '1':
+                            self.parent.text.npc("Okay, I just wanted to play with someone\n", begin_txt="Shona")
+                            self.parent.myPlayer.cash += 50
+                            self.parent.myPlayer.xp += 50
+                            self.parent.zonemap['c3']['SOLVED2'] = True
+                            break
+                        elif robber_fate == '2':
+                            self.parent.text.npc("Okay, just don't call them", begin_txt="Shona")
+                            self.parent.myPlayer.xp += 100
+                            self.parent.zonemap['c3']['SOLVED2'] = True
+                            break
+                    elif shon <= 2:
+                        cards = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', 'Joker']
+                        your_card = random.choice(cards)
+                        if your_card == 'Joker':
+                            cards.pop(9)
+                        shon_card = random.choice(cards)
+                        print(f" ~ You`ve get {your_card}\n")
+                        print(f" ~ Shon gets {shon_card}\n")
+                        if your_card == '6':
+                            if shon_card == '6':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            elif shon_card == 'A':
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '7':
+                            if shon_card == '6':
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '7':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '8':
+                            if shon_card in ['6', '7']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '8':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '9':
+                            if shon_card in ['6', '7', '8']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '9':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '10':
+                            if shon_card in ['6', '7', '8', '9']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '10':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'J':
+                            if shon_card in ['6', '7', '8', '9', '10']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'J':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'Q':
+                            if shon_card in ['6', '7', '8', '9', '10', 'J']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'Q':
+                                self.parent.text.system("You got the same cards\n")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'K':
+                            if shon_card in ['6', '7', '8', '9', '10', 'J', 'Q']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'K':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'K':
+                            if shon_card in ['6', '7', '8', '9', '10', 'J', 'Q']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'K':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'A':
+                            if shon_card == 'A':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            elif shon_card == 'Joker':
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                            else:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                        else:
+                            self.parent.text.system("You won this attempt\n")
+                            input("To play next one press Enter")
+                            attempts -= 1
+                            you += 1
+                            cards.insert(9, 'Joker')
+        elif response == '2' and self.parent.zonemap['c3']['SOLVED2'] is True:
             # TOWN MARKET
             self.parent.text.you(" Hmmm, I'm hungry. Let's buy something to eat\n")
             self.parent.text.system(
@@ -2145,14 +2430,14 @@ class Quests:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_c3(response_3)
+                self.quest_c3()
         elif response == "3":
-            self.parent.text.system("Have a nice day !")
-        if response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
-            self.parent.text.system(' You have already passed this quest, try to go to town market')
+            self.parent.text.system("Have a nice day !\n")
+        elif response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to town market\n')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_c3(response)
+            self.quest_c3()
 
     def quest_c4(self, response=None):
         if not response:
