@@ -1,6 +1,6 @@
 import random
 import sys
-from global_variables import *
+from global_variables import UP, DOWN, LEFT, RIGHT, ASISTANT1, ASISTANT2
 
 
 class Player:
@@ -50,7 +50,7 @@ class Player:
     def fight(self, enemy, player):
             print(" How do you wanna atack?\n 1. Beat\n 2. By spells")
             choise = input(" > ")
-            if choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            if choise == "1" and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
                 damage = self.STR
                 damage += 45
                 damage -= enemy.maxDEF
@@ -59,8 +59,8 @@ class Player:
                     enemy.HP = 0
                 print(" You are attacking.\n")
                 print(damage)
-            elif choise == "1" and zonemap['a3']['ASISTANT-WARRIOR'] is False:
-                print(zonemap['a3']['ASISTANT-WARRIOR'])
+            elif choise == "1" and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                print(self.parent.zonemap['a3']['ASISTANT-WARRIOR'])
                 damage = self.STR
                 damage -= enemy.maxDEF
                 enemy.HP -= damage
@@ -209,8 +209,8 @@ class Player:
 
     # here again false
     def heal(self):
-        print(zonemap['a2']['ASISTANT-HEALER'])
-        if zonemap['a2']['ASISTANT-HEALER'] is False:
+        print(self.parent.zonemap['a2']['ASISTANT-HEALER'])
+        if self.parent.zonemap['a2']['ASISTANT-HEALER'] is False:
             if self.MP >= 9:
                 self.HP += random.randrange(10, 40)
                 self.MP -= 9
@@ -218,9 +218,10 @@ class Player:
                     self.HP = self.maxHP
             else:
                 print(" You have not enoght mana")
-        elif zonemap['a2']['ASISTANT-HEALER'] is True:
+        elif self.parent.zonemap['a2']['ASISTANT-HEALER'] is True:
             self.HP = self.maxHP
             self.MP = self.maxMP
+
     def die(self):
         print(self.name, "~ I'm dead. ")
         print(f"""
@@ -257,39 +258,39 @@ class Player:
         district_3 = ['c1', 'c2', 'c3', 'c4', 'c5']
 
         if dest in ['up', 'west']:
-            if zonemap[self.location][UP] in none_move:
+            if self.parent.zonemap[self.location][UP] in none_move:
                 print(" !!! Here is a big wall !!! ")
             else:
-                if zonemap[self.location][UP] in district_2 and self.level < 3:
+                if self.parent.zonemap[self.location][UP] in district_2 and self.level < 3:
                     print(" Level up and then go to district 2 ")
-                elif zonemap[self.location][UP] in district_2 and self.level >= 3:
-                    destination = zonemap[self.location][UP]
+                elif self.parent.zonemap[self.location][UP] in district_2 and self.level >= 3:
+                    destination = self.parent.zonemap[self.location][UP]
                     self.movement_handler(destination)
-                elif zonemap[self.location][UP] in district_3 and self.level < 5:
+                elif self.parent.zonemap[self.location][UP] in district_3 and self.level < 5:
                     print(" Level up and then go to district 3 ")
-                elif zonemap[self.location][UP] in district_3 and self.level >= 5:
-                    destination = zonemap[self.location][UP]
+                elif self.parent.zonemap[self.location][UP] in district_3 and self.level >= 5:
+                    destination = self.parent.zonemap[self.location][UP]
                     self.movement_handler(destination)
                 else:
-                    destination = zonemap[self.location][UP]
+                    destination = self.parent.zonemap[self.location][UP]
                     self.movement_handler(destination)
         elif dest in ['left', 'west']:
-            if zonemap[self.location][LEFT] in none_move:
+            if self.parent.zonemap[self.location][LEFT] in none_move:
                 print(" !!! Here is a big wall !!! ")
             else:
-                destination = zonemap[self.location][LEFT]
+                destination = self.parent.zonemap[self.location][LEFT]
                 self.movement_handler(destination)
         elif dest in ['right', 'east']:
-            if zonemap[self.location][RIGHT] in none_move:
+            if self.parent.zonemap[self.location][RIGHT] in none_move:
                 print(" !!! Here is a big wall !!! ")
             else:
-                destination = zonemap[self.location][RIGHT]
+                destination = self.parent.zonemap[self.location][RIGHT]
                 self.movement_handler(destination)
         elif dest in ['down', 'south']:
-            if zonemap[self.location][DOWN] in none_move:
+            if self.parent.zonemap[self.location][DOWN] in none_move:
                 print(" !!! Here is a big wall !!!")
             else:
-                destination = zonemap[self.location][DOWN]
+                destination = self.parent.zonemap[self.location][DOWN]
                 self.movement_handler(destination)
 
     def movement_handler(self, destination):
@@ -309,6 +310,8 @@ class Enemy(object):
         self.MP = 0
         self.maxDEF = 0
         self.HP = 0
+        self.MP = 0
+        self.maxDEF = 0
         self.STR = 0
 
     def walcz(self, enemy):

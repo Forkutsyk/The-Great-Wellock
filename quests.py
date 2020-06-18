@@ -10,7 +10,7 @@ sproby = 0
 class Quests:
     def __init__(self, parent):
         self.parent = parent
-        #self.get_gold = 0
+        self.gold_quest_a4_1 = 0
         self.heal_use = 3
         self.knife_use = 2
 
@@ -306,8 +306,8 @@ class Quests:
             elif starv_danger == "2":
                 self.parent.text.danger(""" - You've died from starvation -  \n""", begin_txt="SYSTEM")
                 self.parent.text.system(" Reloading from the last checkpoint\n")
-                #self.parent.myPlayer.cash -= self.get_gold
-                #self.parent.zonemap['a4']['SOLVED1'] = False
+                self.parent.myPlayer.cash -= self.gold_quest_a4_1
+                self.parent.zonemap['a4']['SOLVED1'] = False
                 self.parent.text.system(" .................................\n", txt_only=True)
                 os.system('cls')
                 self.quest_a4()
@@ -357,7 +357,7 @@ class Quests:
                         self.parent.text.npc(
                             "Yep, there are mage master Who lives somewhere in Nezeris\n            and another warrior master which lives somewhere in Blacklake\n            That's all what can I say\n",
                             begin_txt='The Gamer')
-                        break
+                        return
                     elif your_guess > number:
                         self.parent.text.npc("Nope, the number is too big\n", begin_txt='The Gamer')
                     elif your_guess < number:
@@ -365,8 +365,9 @@ class Quests:
                         tries -= 1
                     if tries == 0:
                         self.parent.text.npc(f"It is too late {self.parent.myPlayer.name}. You lost the game\n", begin_txt='The Gamer')
-                        break
+                        return
                 self.parent.text.system("You ate quietly. And then continued your journey\n")
+                return
             elif response == '2':
                 self.parent.text.you(" If you say so.. Bye\n")
                 self.parent.myPlayer.xp += 30
@@ -375,6 +376,10 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 if self.parent.zonemap['a4']['SOLVED2'] is not True:
                     tavern()
+
+        if self.parent.zonemap['a4']['SOLVED1'] is True and self.parent.zonemap['a4']['SOLVED2'] is False:
+            tavern()
+
         if self.parent.zonemap['a4']['SOLVED1'] is False:
             print("")
             self.parent.text.system(text=""" While having a walk through the little town you find on ground a unique and strange golden ring.\n          You think that someone had to lose it here\n          What do you want to do with it?\n""")
@@ -391,7 +396,7 @@ class Quests:
                 self.parent.text.you(" Thank you\n")
                 self.parent.text.system(" You receive 100 coins\n")
                 self.parent.myPlayer.cash += 100
-                #self.get_gold = 100
+                self.gold_quest_a4_1 = 100
                 self.parent.myPlayer.xp += 150
                 self.parent.zonemap['a4']['SOLVED1'] = True
                 tavern()
@@ -406,15 +411,13 @@ class Quests:
                 self.parent.text.you(" What a lucky day! GOLD!\n")
                 self.parent.text.system(" You receive 150 coins\n")
                 self.parent.myPlayer.cash += 150
-                #self.get_gold = 150
+                self.gold_quest_a4_1 = 150
                 self.parent.myPlayer.xp += 10
                 self.parent.zonemap['a4']['SOLVED1'] = True
                 tavern()
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_a1(response)
-        if self.parent.zonemap['a4']['SOLVED1'] is True and self.parent.zonemap['a4']['SOLVED2'] is False:
-            tavern()
+                self.quest_a4()
 
     def quest_a5(self):
         print(' ')
@@ -954,14 +957,14 @@ class Quests:
             elif help_elf == "2":
                 self.parent.text.you(" Meeeh, this does not concern me\n")
                 self.parent.text.danger(" Hey, you what are you staring ?!", begin_txt="Werewolve soldier")
-                self.text.danger(" If you do not want problems pay 25 coins\n", begin_txt="Werewolve soldier")
+                self.parent.text.danger(" If you do not want problems pay 25 coins\n", begin_txt="Werewolve soldier")
                 self.parent.text.system(""" Choose what do you wanna say\n    1.Yes, off course, i`m sorry\n    2.Ignore\n    3. Who said that i do not wanna ?""")
                 player_answer = input(" > ")
                 if player_answer == '1':
                     self.parent.myPlayer.cash -= 25
-                    self.text.danger(" Good boy, now run while you can!\n", begin_txt="Werewolve soldier")
+                    self.parent.text.danger(" Good boy, now run while you can!\n", begin_txt="Werewolve soldier")
                 elif player_answer in ['2', '3']:
-                    self.text.danger(" Hey buddy do you know who we are?\n", begin_txt="Werewolve soldier")
+                    self.parent.text.danger(" Hey buddy do you know who we are?\n", begin_txt="Werewolve soldier")
                     self.parent.fight_soldiers()
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')

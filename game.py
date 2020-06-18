@@ -138,7 +138,7 @@ class Game:
                 self.myPlayer.show()
                 self.myEnemy.walcz(self.myPlayer)
                 if self.myPlayer.HP < 1:
-                    self.myPlayer.die(self.myPlayer)
+                    self.myPlayer.die()
                     break
                 self.myPlayer.show()
             elif choice == "0":
@@ -288,42 +288,42 @@ class Game:
         print("Your inventory:")
         number = 1
         print(" ")
-        if equipment_set['Armor'][Name] != "name":
-            print(f""" Armor: {equipment_set['Armor'][Name]}
-        +{equipment_set['Armor'][playerHp]} hp
-        +{equipment_set['Armor'][playerDEF]} def
+        if self.equipment_set['Armor'][Name] != "name":
+            print(f""" Armor: {self.equipment_set['Armor'][Name]}
+        +{self.equipment_set['Armor'][playerHp]} hp
+        +{self.equipment_set['Armor'][playerDEF]} def
         """)
-        elif equipment_set['Armor'][Name] == "name":
+        elif self.equipment_set['Armor'][Name] == "name":
             print(f""" Armor: none
         0 hp
         0 def
                     """)
-        if equipment_set['Weapon'][Name] != "name":
-            print(f""" Weapon: {equipment_set['Weapon'][Name]}
-        +{equipment_set['Weapon'][playerSTR]} str
-        +{equipment_set['Weapon'][playerDEF]} def
+        if self.equipment_set['Weapon'][Name] != "name":
+            print(f""" Weapon: {self.equipment_set['Weapon'][Name]}
+        +{self.equipment_set['Weapon'][playerSTR]} str
+        +{self.equipment_set['Weapon'][playerDEF]} def
         """)
-        elif equipment_set['Weapon'][Name] == "name":
+        elif self.equipment_set['Weapon'][Name] == "name":
             print(f""" Weapon: none
          0 str
          0 def
                     """)
-        if equipment_set['Magic stuff'][Name] != "name":
-            print(f""" Magic stuff: {equipment_set['Magic stuff'][Name]}
-        +{equipment_set['Magic stuff'][playerMP]} mp
+        if self.equipment_set['Magic stuff'][Name] != "name":
+            print(f""" Magic stuff: {self.equipment_set['Magic stuff'][Name]}
+        +{self.equipment_set['Magic stuff'][playerMP]} mp
         """)
-        elif equipment_set['Magic stuff'][Name] == "name":
+        elif self.equipment_set['Magic stuff'][Name] == "name":
             print(f""" Magic stuff: none
               0 mp
                     """)
-        if equipment_set['Artifact'][Name] != "name":
-            print(f""" Artifact: {equipment_set['Artifact'][Name]}
-        +{equipment_set['Artifact'][playerSTR]} str
-        +{equipment_set['Artifact'][playerDEF]} def
-        +{equipment_set['Artifact'][playerHp]} hp
-        +{equipment_set['Artifact'][playerMP]} mp
+        if self.equipment_set['Artifact'][Name] != "name":
+            print(f""" Artifact: {self.equipment_set['Artifact'][Name]}
+        +{self.equipment_set['Artifact'][playerSTR]} str
+        +{self.equipment_set['Artifact'][playerDEF]} def
+        +{self.equipment_set['Artifact'][playerHp]} hp
+        +{self.equipment_set['Artifact'][playerMP]} mp
         """)
-        elif equipment_set['Artifact'][Name] == "name":
+        elif self.equipment_set['Artifact'][Name] == "name":
             print(f""" Artifact: none
            0 str
            0 def
@@ -562,30 +562,30 @@ def shop():
                        'The sword of the former general']
             game.myPlayer.cash -= 50
             buff = random.randrange(5, 20)
-            equipment_set['Weapon'][Name] = random.choice(weapons)
-            equipment_set['Weapon'][playerSTR] = buff
-            game.myPlayer.maxDEF += equipment_set['Weapon'][playerDEF]
-            game.myPlayer.STR += equipment_set['Weapon'][playerSTR]
-            print(f" You've got: {equipment_set['Weapon'][Name]} And it will add you, {equipment_set['Weapon'][playerSTR]} strenght.")
+            game.equipment_set['Weapon'][Name] = random.choice(weapons)
+            game.equipment_set['Weapon'][playerSTR] = buff
+            game.myPlayer.maxDEF += game.equipment_set['Weapon'][playerDEF]
+            game.myPlayer.STR += game.equipment_set['Weapon'][playerSTR]
+            print(f" You've got: {game.equipment_set['Weapon'][Name]} And it will add you, {game.equipment_set['Weapon'][playerSTR]} strenght.")
         elif answer == "2":
             armor = ['Lether armor', 'Iron chain mail', 'Full iron armor', 'Armor of a fallen general']
             game.myPlayer.cash -= 50
             buff1 = random.randrange(5, 40)
             buff2 = random.randrange(5, 20)
-            equipment_set['Armor'][Name] = random.choice(armor)
-            equipment_set['Armor'][playerHp] = buff1
-            equipment_set['Armor'][playerDEF] = buff2
-            game.myPlayer.maxDEF += equipment_set['Armor'][playerDEF]
-            game.myPlayer.maxHP += equipment_set['Armor'][playerHp]
-            print(f" You've got: {equipment_set['Armor'][Name]} ; And it will add you, {equipment_set['Armor'][playerDEF]} defense and {equipment_set['Armor'][playerHp]} hp.")
+            game.equipment_set['Armor'][Name] = random.choice(armor)
+            game.equipment_set['Armor'][playerHp] = buff1
+            game.equipment_set['Armor'][playerDEF] = buff2
+            game.myPlayer.maxDEF += game.equipment_set['Armor'][playerDEF]
+            game.myPlayer.maxHP += game.equipment_set['Armor'][playerHp]
+            print(f" You've got: {game.equipment_set['Armor'][Name]} ; And it will add you, {game.equipment_set['Armor'][playerDEF]} defense and {game.equipment_set['Armor'][playerHp]} hp.")
         elif answer == "3":
             magic = ['The mana ring of the beast', "Midnight Demon's Bone Necklaces", ' ????????? ',
                      'The ring of the fallen general']
             game.myPlayer.cash -= 50
             buff = random.randrange(5, 40)
-            equipment_set['Magic stuff'][Name] = random.choice(magic)
+            game.equipment_set['Magic stuff'][Name] = random.choice(magic)
             equipment_set['Magic stuff'][playerMP] = buff
-            print(f" You've got: {equipment_set['Magic stuff'][Name]} ; And it will add you, {equipment_set['Magic stuff'][playerMP]} mana points.")
+            print(f" You've got: {game.equipment_set['Magic stuff'][Name]} ; And it will add you, {game.equipment_set['Magic stuff'][playerMP]} mana points.")
         elif answer == "4":
             if game.myPlayer.cash >= 150:
                 artifact = ['The bone of a colossal beast', "Midnight Demon's eye", ' The king grail', '']
@@ -594,51 +594,51 @@ def shop():
                 if choise == 1:
                     buff1 = random.randrange(15, 50)
                     buff2 = random.randrange(15, 50)
-                    equipment_set['Artifact'][Name] = random.choice(artifact)
-                    equipment_set['Artifact'][playerDEF] = buff1
-                    equipment_set['Artifact'][playerHp] = buff2
-                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
-                    game.myPlayer.maxHP += equipment_set['Artifact'][playerHp]
-                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerDEF]} defense and {equipment_set['Artifact'][playerHp]} hp.")
+                    game.equipment_set['Artifact'][Name] = random.choice(artifact)
+                    game.equipment_set['Artifact'][playerDEF] = buff1
+                    game.equipment_set['Artifact'][playerHp] = buff2
+                    game.myPlayer.maxDEF += game.equipment_set['Artifact'][playerDEF]
+                    game.myPlayer.maxHP += game.equipment_set['Artifact'][playerHp]
+                    print(f" You've got: {game.equipment_set['Artifact'][Name]} ; And it will add you, {game.equipment_set['Artifact'][playerDEF]} defense and {game.equipment_set['Artifact'][playerHp]} hp.")
                 elif choise == 2:
                     buff1 = random.randrange(15, 50)
                     buff2 = random.randrange(15, 50)
-                    equipment_set['Artifact'][Name] = random.choice(artifact)
-                    equipment_set['Artifact'][playerDEF] = buff1
-                    equipment_set['Artifact'][playerSTR] = buff2
-                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
-                    game.myPlayer.STR += equipment_set['Artifact'][playerSTR]
-                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerDEF]} defense and {equipment_set['Artifact'][playerSTR]} hp.")
+                    game.equipment_set['Artifact'][Name] = random.choice(artifact)
+                    game.equipment_set['Artifact'][playerDEF] = buff1
+                    game.equipment_set['Artifact'][playerSTR] = buff2
+                    game.myPlayer.maxDEF += game.equipment_set['Artifact'][playerDEF]
+                    game.myPlayer.STR += game.equipment_set['Artifact'][playerSTR]
+                    print(f" You've got: {game.equipment_set['Artifact'][Name]} ; And it will add you, {game.equipment_set['Artifact'][playerDEF]} defense and {game.equipment_set['Artifact'][playerSTR]} hp.")
                 elif choise == 3:
                     buff1 = random.randrange(15, 50)
                     buff2 = random.randrange(15, 50)
-                    equipment_set['Artifact'][Name] = random.choice(artifact)
-                    equipment_set['Artifact'][playerDEF] = buff1
-                    equipment_set['Artifact'][playerMP] = buff2
-                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
-                    game.myPlayer.maxMP += equipment_set['Artifact'][playerMP]
-                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerDEF]} defense and {equipment_set['Artifact'][playerMP]} hp.")
+                    game.equipment_set['Artifact'][Name] = random.choice(artifact)
+                    game.equipment_set['Artifact'][playerDEF] = buff1
+                    game.equipment_set['Artifact'][playerMP] = buff2
+                    game.myPlayer.maxDEF += game.equipment_set['Artifact'][playerDEF]
+                    game.myPlayer.maxMP += game.equipment_set['Artifact'][playerMP]
+                    print(f" You've got: {game.equipment_set['Artifact'][Name]} ; And it will add you, {game.equipment_set['Artifact'][playerDEF]} defense and {game.equipment_set['Artifact'][playerMP]} hp.")
                 elif choise == 4:
                     buff1 = random.randrange(15, 50)
                     buff2 = random.randrange(15, 50)
-                    equipment_set['Artifact'][Name] = random.choice(artifact)
-                    equipment_set['Artifact'][playerSTR] = buff1
-                    equipment_set['Artifact'][playerHp] = buff2
-                    game.myPlayer.STR += equipment_set['Artifact'][playerSTR]
-                    game.myPlayer.maxHP += equipment_set['Artifact'][playerHp]
-                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerSTR]} defense and {equipment_set['Artifact'][playerHp]} hp.")
+                    game.equipment_set['Artifact'][Name] = random.choice(artifact)
+                    game.equipment_set['Artifact'][playerSTR] = buff1
+                    game.equipment_set['Artifact'][playerHp] = buff2
+                    game.myPlayer.STR += game.equipment_set['Artifact'][playerSTR]
+                    game.myPlayer.maxHP += game.equipment_set['Artifact'][playerHp]
+                    print(f" You've got: {game.equipment_set['Artifact'][Name]} ; And it will add you, {game.equipment_set['Artifact'][playerSTR]} defense and {game.equipment_set['Artifact'][playerHp]} hp.")
                 elif choise == 5:
                     buff1 = random.randrange(15, 50)
                     buff2 = random.randrange(15, 50)
                     buff3 = random.randrange(15, 50)
-                    equipment_set['Artifact'][Name] = random.choice(artifact)
-                    equipment_set['Artifact'][playerSTR] = buff1
-                    equipment_set['Artifact'][playerHp] = buff2
-                    equipment_set['Artifact'][playerDEF] = buff3
-                    game.myPlayer.STR += equipment_set['Artifact'][playerSTR]
-                    game.myPlayer.maxHP += equipment_set['Artifact'][playerHp]
-                    game.myPlayer.maxDEF += equipment_set['Artifact'][playerDEF]
-                    print(f" You've got: {equipment_set['Artifact'][Name]} ; And it will add you, {equipment_set['Artifact'][playerSTR]} defense and {equipment_set['Artifact'][playerHp]} hp and {equipment_set['Artifact'][playerDEF]}.")
+                    game.equipment_set['Artifact'][Name] = random.choice(artifact)
+                    game.equipment_set['Artifact'][playerSTR] = buff1
+                    game.equipment_set['Artifact'][playerHp] = buff2
+                    game.equipment_set['Artifact'][playerDEF] = buff3
+                    game.myPlayer.STR += game.equipment_set['Artifact'][playerSTR]
+                    game.myPlayer.maxHP += game.equipment_set['Artifact'][playerHp]
+                    game.myPlayer.maxDEF += game.equipment_set['Artifact'][playerDEF]
+                    print(f" You've got: {game.equipment_set['Artifact'][Name]} ; And it will add you, {game.equipment_set['Artifact'][playerSTR]} defense and {game.equipment_set['Artifact'][playerHp]} hp and {game.equipment_set['Artifact'][playerDEF]}.")
             else:
                 print(" I'm sorry you don't have enough money")
         elif answer == "5":
@@ -690,7 +690,7 @@ def prompt():
             ask = input(" > ")
             if ask.lower() == "y":
                 with open('save_game.txt', 'wb') as save_file:
-                    pickle.dump((game.myPlayer, game.zonemap), save_file)
+                    pickle.dump((game.myPlayer, game.zonemap, game.equipment_set), save_file)
                 sys.exit()
             elif ask.lower() == "n":
                 print(" Okay, maybe next time!")
