@@ -492,6 +492,7 @@ def game_help(action):  # доделать
     ~  write "move" to move around the map
     ~  write "map" to see a map
     ~  write "purse" to se how much coins you have
+    ~  write "save" to save the progress
     ~  write "inventory" to se what do you have
     ~  write "stats" to look at your current stats 
     ~  write "quit" to exit the game
@@ -669,32 +670,26 @@ def prompt():
     print(" What would you like to do?")
     print(" ! print 'help' to see abilities\n")
     action = input(" > ")
-    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', "stats", "help", "map", "purse",
-                          "heal", 'inventory']
+    acceptable_actions = ['move', 'travel', 'quit', 'inspect', 'interact', 'look', 'stats', "help", 'map', 'purse',
+                          'heal', 'inventory', 'save']
     while action.lower() not in acceptable_actions:
         print(" Unknown action, try again.\n")
         action = input(" > ")
     if action.lower() == 'quit':
-        print(" Would you like to save the game Y/N?", "\n")
+        print(" You are sure you want to quit?(y/n)", "\n")
         ask = input(" > ")
         if ask.lower() == "y":
-            with open('save_game.txt', 'wb') as save_file:
-                pickle.dump((game.myPlayer, game.zonemap, game.equipment_set), save_file)
             sys.exit()
         elif ask.lower() == "n":
-            print(" Okay, maybe next time!")
-            sys.exit()
+            main_game_loop()
         else:
             print(" I don`t know such command please try again")
-            print(" Would you like to save the game Y/N?", "\n")
+            print(" You are sure you want to quit?", "\n")
             ask = input(" > ")
             if ask.lower() == "y":
-                with open('save_game.txt', 'wb') as save_file:
-                    pickle.dump((game.myPlayer, game.zonemap, game.equipment_set), save_file)
                 sys.exit()
             elif ask.lower() == "n":
-                print(" Okay, maybe next time!")
-                sys.exit()
+                main_game_loop()
     elif action.lower() in ['move', 'go', 'travel', 'walk']:
         game.myPlayer.move()
     elif action.lower() in ['examine', 'inspect', 'interact', 'look']:
@@ -711,6 +706,11 @@ def prompt():
         game_help(action.lower())
     elif action.lower() == "inventory":
         game.inventory_print()
+    elif action.lower() == "save":
+        with open('save_game.txt', 'wb') as save_file:
+            pickle.dump((game.myPlayer, game.zonemap, game.equipment_set), save_file)
+        print(" ")
+        print(" % Progress has been saved %")
 
 
 def load_game():

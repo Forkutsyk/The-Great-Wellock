@@ -14,7 +14,6 @@ class Quests:
         self.heal_use = 3
         self.knife_use = 2
 
-    # healer do not work , i dont know why
     def quest_a2(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
