@@ -181,6 +181,7 @@ zonemap = {
  where once every 50 years a fiery flower blooms with amazing healing properties.""",
         'SOLVED': False,
         'SOLVED1': False,
+        'SOLVED2': False,
         UP: "4",
         DOWN: "b4",
         LEFT: "c3",

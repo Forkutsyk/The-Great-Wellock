@@ -17,7 +17,11 @@ class Quests:
     def quest_a2(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
-            self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""", txt_only=True)
+            if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""", txt_only=True)
+            elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n  3.Assistant home""",
+                                        txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
         if response == '1' and self.parent.zonemap['a2']['SOLVED1'] is False:
@@ -173,6 +177,71 @@ class Quests:
                 self.parent.zonemap['a2']['SOLVED2'] = True
                 if self.parent.zonemap['a2']['SOLVED1'] is True:
                     self.parent.zonemap['a2']['SOLVED'] = True
+        elif response == '3' and self.parent.zonemap['a2']['SOLVED3'] is False and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            self.parent.text.system("""\n  -  Assistant abandoned home - \n""", txt_only=True)
+            self.parent.text.you("So, do you remember where is it ?\n")
+            self.parent.text.npc("Emmm, nope\n")
+            self.parent.text.you("Ok, lets find it\n")
+            tresure = False
+            while tresure is not True:
+                assistant_home = ['Bedroom', 'Back yard', 'Kitchen', 'Pantry']
+                treasure_place = random.choice(assistant_home)
+                self.parent.text.system("""  Where do you wanna to go?\n   1. Bedroom\n   2. Back yard\n  3. Kitchen\n  4. Pantry\n""",
+                                        txt_only=True)
+                treasure_search = input(" > ")
+                Bedroom = False
+                Back_yard = False
+                Kitchen = False
+                Pantry = False
+                if treasure_search == "1" and Bedroom is False:
+                    treasure_search1 = "Bedroom"
+                    if treasure_search1 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Bedroom = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                elif treasure_search == "2" and Back_yard is False:
+                    treasure_search2 = "Back yard"
+                    if treasure_search2 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Back_yard = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                elif treasure_search == "3" and Kitchen is False:
+                    treasure_search3 = "Kitchen"
+                    if treasure_search3 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Kitchen = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                elif treasure_search == "4" and Pantry is False:
+                    treasure_search4 = "Pantry"
+                    if treasure_search4 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Pantry = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                else:
+                    self.parent.text.you("We have seen here or wrong input")
+
+        elif response == '3' and self.parent.zonemap['a2']['SOLVED3'] is True and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go somewhere else')
         elif response == '1' and self.parent.zonemap['a2']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the Forest')
         elif response == '2' and self.parent.zonemap['a2']['SOLVED2'] is True:
@@ -285,12 +354,38 @@ class Quests:
         |  He would helps you in battles                      |
         |                                                     |
         #######################################################
-        |                +  Assistant-warrior                 |
+        |               +  Assistant-warrior                  |
         #######################################################\n""")
+
             self.parent.zonemap['a3']['ASISTANT-WARRIOR'] = True
             self.parent.zonemap['a3']['SOLVED2'] = True
             if self.parent.zonemap['a3']['SOLVED1'] is True:
                 self.parent.zonemap['a3']['SOLVED'] = True
+            self.parent.text.npc("Master, I have one question")
+            print("""
+
+                    #############################################################
+                    ~~~~~~           !   Memories of the past              ~~~~~~
+                    #############################################################
+                    |                                                           |
+                    | Before embarking on the path of a warrior, your assistant |
+                    | went through a lot. And all things related to the past    |
+                    | are hidden in the former house.                           |
+                    |                                                           |
+                    | The assistant asks you to go back there                   |   
+                    | and pick up something                                     |
+                    |                                                           |
+                    |  Reward: You can take all the money that is there         |                                     
+                    |                                                           |
+                    #############################################################
+                    |         1. Accept           |           2. Decline        |
+                    #############################################################\n""")
+            memories_of_past = input(" > ")
+            if memories_of_past == "1":
+                self.parent.text.you("Where is it ?")
+                self.parent.text.npc("Not far from here, in the west. In the town Sharandar")
+            elif memories_of_past == "2":
+                self.parent.text.you("I`m sorry but no, we have to save the kingdom")
         elif response == '2' and self.parent.zonemap['a3']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to Billie Jo tavern\n')
 
@@ -1286,6 +1381,7 @@ class Quests:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_b5(response)
 
+    # i need to add this  to quests b5
     def peepers_game(self):
         self.parent.text.system("To your surprise, you noticed a large group of people who were constantly shouting and laughing\n")
         self.parent.text.system(
@@ -1313,10 +1409,10 @@ class Quests:
             join_game = input(" > ")
             if join_game == "1":
                 self.parent.text.npc("In general, you sit in front of Tandibrad and you look into each other's eyes.\n Who can not stand and blinks, the loser. Tandibrad has already won 11 times in a row, can you win it?")
-                win_chanse = random.randint(1,100)
-                if win_chanse >= 85:
+                win_chanse = random.randint(1, 100)
+                if win_chanse > 85:
                     self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
-                    self.parent.text.npc("Hmm, interesting who will lose")
+                    self.parent.text.npc("Interesting who will lose....")
                     print("""
 
                                        #######################################################
@@ -1333,7 +1429,7 @@ class Quests:
                                        |           Congratulations you`ve won + 30 coins     |      
                                        #######################################################\n""")
                     self.parent.myPlayer.cash += 30
-                elif win_chanse >= 85:
+                elif win_chanse <= 85:
                     self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
                     self.parent.text.npc("Hmm, interesting who will lose")
                     self.parent.text.you("Ahhh I`ve lost. He is a strong opponent")
@@ -2553,21 +2649,411 @@ class Quests:
                                 self.parent.myPlayer.inventory.insert(7, 'Heal grass')
                                 i += 1
                             else:
-                                self.parent.text.system("It`s to heavy, i cant take anymore heal grass\n")
-
+                                self.parent.text.you("It`s to heavy, i cant take anymore heal grass\n")
                     elif 95 < found_chanse <= 100 and "Fiery flower" not in self.parent.myPlayer.inventory:
-                        self.parent.text.you("No way! I found fiery flower!\n")
+                        self.parent.text.you("No way! I found fiery flower! And strange jewelry \n")
+                        self.parent.myPlayer.inventory.pop(10)
+                        self.parent.myPlayer.inventory.insert(10, 'Strange Jewelery')
                         self.parent.myPlayer.inventory.pop(12)
                         self.parent.myPlayer.inventory.insert(12, 'Fiery flower')
                     else:
                         self.parent.text.you("Its not my day...\n")
                 elif sujestion == "end":
                     find_grass = False
-            self.parent.text.system("Not a bad place, I may come back here someday...\n")
+
+            #### STOLEN JEWELRY
+            if 'Strange Jewelery' in self.parent.myPlayer.inventory:
+                print(" ")
+                print("""
+        ###########################################################################################
+        ###########################################################################################
+        |                                                                                         |
+        |    !!!  Warning                                                                         |                    
+        |   !!! An unexpected quest. The result of this quest will show whether you will survive  |
+        |                                                                                         | 
+        ###########################################################################################
+        ###########################################################################################\n""")
+                self.parent.text.npc("Good afternoon, could you show me everything you have?\n", begin_txt="Royal guard")
+                self.parent.text.you("Why i should to do that ?\n")
+                self.parent.text.npc("We know it was you who stole the jewelry\n              Either you voluntarily show what you have, or we will immediately take you to the grate\n",
+                                        begin_txt="Royal guard")
+                self.parent.text.system(
+                    " Choose:\n  1. Run\n  2. Stay and show\n",
+                    txt_only=True)
+                jewelery_show = input(" > ")
+                if jewelery_show == '1':
+                    available_locations = ['Boar trail', 'Fairies cave', "Shepherd's columns", 'Foggy forest']
+                    guard_searches = random.choice(available_locations)
+                    self.parent.text.system(
+                        """You successfully escaped from the guard in heavy armor.
+         BUT You will be searched, so you need to hide somewhere for the night and then run away somewhere\n""")
+                    print("""
+
+            #######################################################
+            ~~~~~~  !  Quieter than water, lower than grass  ~~~~~~
+            #######################################################
+            |                                                     |
+            |   They want to accuse you of a crime you did not    |
+            |   commit. Choose a place where they will not find   |
+            |   you.                                              |
+            |                                                     |
+            |                                                     |
+            #######################################################
+            #######################################################\n""")
+                    self.parent.text.system(
+                        " Choose were do you wanna stay\n  1.Boar trail\n  2.Fairies cave\n  3.Shepherd's columns\n  4.Foggy forest\n",
+                        txt_only=True)
+                    hide_place = input(" > ")
+                    if hide_place == '1':
+                        your_place = 'Boar trail'
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                       /%/@&@%@&&%%###%
+                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                       /*%%&%%&@(((//////////////((@&%&#   
+                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+                      
+                      
+        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+            `888'     888      888  888       8        888      888  888   888    "     888      888 
+             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+                                                                                           
+                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                    elif hide_place == '2':
+                        your_place = 'Fairies cave'
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                                       /%/@&@%@&&%%###%
+                                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                       /*%%&%%&@(((//////////////((@&%&#   
+                                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                            `888'     888      888  888       8        888      888  888   888    "     888      888 
+                             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                    elif hide_place == '3':
+                        your_place = "Shepherd's columns"
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                                       /%/@&@%@&&%%###%
+                                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                       /*%%&%%&@(((//////////////((@&%&#   
+                                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                            `888'     888      888  888       8        888      888  888   888    "     888      888 
+                             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                    elif hide_place == '4':
+                        your_place = 'Foggy forest'
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                                       /%/@&@%@&&%%###%
+                                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                       /*%%&%%&@(((//////////////((@&%&#   
+                                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                            `888'     888      888  888       8        888      888  888   888    "     888      888 
+                             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                elif jewelery_show == '2':
+                    print("""
+                                                           /%/@&@%@&&%%###%
+                                                          @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                          ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                           &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                           ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                           %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                           (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                           /*%%&%%&@(((//////////////((@&%&#   
+                                                           *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                           (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                           %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                           #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                           (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                           (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                           /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                           %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                           ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                           #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                           #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                           (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                           %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                           %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                           ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                           /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                             &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                             &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                             &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                             &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                             &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                             &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                             &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                             &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                            .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                                 @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                    @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                         &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                           @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                          %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                            oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                             `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                              `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                               `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                                `888'     888      888  888       8        888      888  888   888    "     888      888 
+                                 888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                                o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                         You were convicted and executed for a crime you did not commit  \n""")
+                    sys.exit()
+                else:
+                    print("""
+                                                                               /%/@&@%@&&%%###%
+                                                                              @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                                              ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                                               &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                                               ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                                               %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                                               (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                                               /*%%&%%&@(((//////////////((@&%&#   
+                                                                               *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                                               (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                                               %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                                               #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                                               (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                                               (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                                               /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                                               %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                                               ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                                               #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                                               #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                                               (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                                               %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                                               %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                                               ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                                               /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                                                 &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                                                 &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                                                 &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                                                 &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                                                 &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                                                 &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                                                 &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                                                 &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                                                .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                                                     @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                                        @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                                             &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                                               @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                                              %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                                                oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                                                 `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                                                  `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                                                   `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                                                    `888'     888      888  888       8        888      888  888   888    "     888      888 
+                                                     888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                                                    o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                                             You were convicted and executed for a crime you did not commit  \n""")
+                    sys.exit()
+            if self.parent.zonemap['c4']['SOLVED2'] is False:
+                self.parent.text.system("Not a bad place, I may come back here someday...\n")
         elif player_choose == "3":
-            self.parent.text.system("Have a nice day !")
+            self.parent.text.system("Have a nice day !\n")
         elif player_choose == "1" and self.parent.zonemap['c4']['SOLVED1'] is True:
-            self.parent.text.system(' You have already passed this quest, try to go to town market')
+            self.parent.text.system(' You have already passed this quest, try to go to town market\n')
 
     def quest_c5(self):
 
