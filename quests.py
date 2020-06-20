@@ -13,6 +13,7 @@ class Quests:
         self.gold_quest_a4_1 = 0
         self.heal_use = 3
         self.knife_use = 2
+        self.dolls = 0
 
     def quest_a2(self, response=None):
         if not response:
@@ -787,7 +788,7 @@ class Quests:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_b1()
 
-    def quest_b2(self, response=None):
+    def quest_b2(self):
         def tasks():
             self.parent.text.npc(text="""First I want to check your stock of mana\n""", begin_txt='Gandalfux')
             self.parent.text.npc(text="""You have to use mana to stop these knives that I will throw at you\n""",
@@ -869,7 +870,7 @@ class Quests:
                 elif failed == 0:
                     self.parent.text.npc(text="""You failed\n""",
                                          begin_txt='Gandalfux')
-                    self.quest_b2(response)
+                    self.quest_b2()
                     break
             if failed != 0:
                 self.parent.text.npc(text="""Yo worked well. And now the last task!\n""", begin_txt='Gandalfux')
@@ -882,10 +883,6 @@ class Quests:
 
                 self.parent.text.you(text="""Ok lets start\n""")
                 self.parent.text.npc(text="""Gaudeamus igitur\n""", begin_txt='Gandalfux')
-                spell_1 = False
-                spell_2 = False
-                spell_3 = False
-                spell_4 = False
                 lev_spell_1 = input(" > ").lower()
                 if lev_spell_1 != "gaudeamus igitur":
                     self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
@@ -926,49 +923,286 @@ class Quests:
                                                      begin_txt='Gandalfux')
                                 self.parent.zonemap['a2']['SOLVED1'] = True
 
-        if not response:
+        def doll_fight():
+            while self.dolls != 0:
+                doll_moves = random.randint(1, 5)
+                if doll_moves == 1:
+                    self.parent.text.system("One of them wants to bite you, hit it well (write 'hit')\n")
+                    hit_doll = input(" > ")
+                    if hit_doll == 'hit':
+                        hit_dooll_chanse = random.randint(1, 10)
+                        if hit_dooll_chanse <= 8:
+                            self.parent.text.system("You hit so hard that it flew and crashed on ground\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        elif hit_dooll_chanse > 8:
+                            self.parent.text.system("Oh no you missed!\n")
+                            print(' ')
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she bit you( - 5 hp )\n")
+                        self.parent.myPlayer.HP -= 5
+                elif doll_moves == 2:
+                    self.parent.text.system("The doll attacks. Break it! (write 'break')\n")
+                    doll_break = input(" > ")
+                    if doll_break == 'break':
+                        doll_break_chanse = random.randint(1, 10)
+                        if doll_break_chanse <= 8:
+                            self.parent.text.system("Ok, minus one\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        else:
+                            self.parent.text.system("Oh no you missed!\n")
+                            print(' ')
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she atacks you( - 5 hp )\n")
+                        self.parent.myPlayer.HP -= 5
+                elif doll_moves == 3:
+                    self.parent.text.system("Where does the doll take a knife ?!?!? (write 'break')\n")
+                    doll_break = input(" > ")
+                    if doll_break == 'break':
+                        doll_break_chanse = random.randint(1, 10)
+                        if doll_break_chanse <= 8:
+                            self.parent.text.system("Ok, minus one, it was close\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        else:
+                            self.parent.text.system(
+                                "Oh no you missed and she managed to cut you! ( - 10 hp )\n")
+                            self.parent.myPlayer.HP -= 10
+                            print(' ')
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she managed to cut you! ( - 10 hp )\n")
+                        self.parent.myPlayer.HP -= 10
+                elif doll_moves == 4:
+                    self.parent.text.system("Hmm where is that doll ?!\n")
+                    self.parent.text.danger(" WRITE 'dodge'\n", txt_only=True)
+                    dodge = input(" > ")
+                    if dodge == 'dodge':
+                        dodge_chanse = random.randint(1, 100)
+                        if dodge_chanse < 90:
+                            self.parent.text.system(
+                                " You have managed to dodge and now broke the doll( write 'break' )\n")
+                            doll_break = input(" > ")
+                            if doll_break == 'break':
+                                doll_break_chanse = random.randint(1, 10)
+                                if doll_break_chanse <= 8:
+                                    self.parent.text.system("Ok, minus one\n")
+                                    self.dolls -= 1
+                                    if self.dolls != 0:
+                                        input(" There are still a couple left\n")
+                                    print(' ')
+                                else:
+                                    self.parent.text.system("Oh no you missed!\n")
+                                    print(' ')
+                            else:
+                                self.parent.text.system(
+                                    "There was nothing that you could do and she atacks you( - 5 hp )\n")
+                                self.parent.myPlayer.HP -= 5
+                        else:
+                            self.parent.text.danger("You have fail with dodging ( - 5 hp )\n",
+                                                    begin_txt="SYSTEM")
+                            self.parent.myPlayer.HP -= 5
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she attack you( - 5 hp )\n")
+                        self.parent.myPlayer.HP -= 5
+                elif doll_moves == 5:
+                    self.parent.text.you("This doll just stands there, maybe I shouldn't touch it ? (y/n)\n")
+                    doll_destiny = input(" > ")
+                    if doll_destiny == 'y':
+                        self.parent.text.danger(" WRITE 'dodge'\n", txt_only=True)
+                        dodge = input(" > ")
+                        if dodge == 'dodge':
+                            dodge_chanse = random.randint(1, 100)
+                            if dodge_chanse < 90:
+                                self.parent.text.system(
+                                    " You have managed to dodge and now broke the doll( write 'break' )\n")
+                                doll_break = input(" > ")
+                                if doll_break == 'break':
+                                    doll_break_chanse = random.randint(1, 10)
+                                    if doll_break_chanse <= 8:
+                                        self.parent.text.system("Ok, minus one\n")
+                                        self.dolls -= 1
+                                        if self.dolls != 0:
+                                            input(" There are still a couple left\n")
+                                        print(' ')
+                                    else:
+                                        self.parent.text.system("Oh no you missed!\n")
+                                        print(' ')
+                                else:
+                                    self.parent.text.system(
+                                        "There was nothing that you could do and she atacks you( - 5 hp )\n")
+                                    self.parent.myPlayer.HP -= 5
+                            else:
+                                self.parent.text.danger("You have fail with dodging ( - 5 hp )\n",
+                                                        begin_txt="SYSTEM")
+                                self.parent.myPlayer.HP -= 5
+                        else:
+                            self.parent.text.system(
+                                "There was nothing that you could do and she attack you( - 5 hp )\n")
+                            self.parent.myPlayer.HP -= 5
+                    elif doll_destiny == 'n':
+                        doll_break_chanse = random.randint(1, 10)
+                        if doll_break_chanse <= 8:
+                            self.parent.text.system("Ok, minus one\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        else:
+                            self.parent.text.system("Oh no you missed!\n")
+                            print(' ')
+        self.parent.text.system("""\n  -  Nezeris - \n""", txt_only=True)
+        self.parent.text.system(""" Where do you wanna go?\n  1.Go to find the master\n  2.City center\n""", txt_only=True)
+        player_choose = input(" > ")
+        if player_choose == '1' and self.parent.zonemap['b2']['SOLVED1'] is False:
             self.parent.text.system(text=""" Close to a castle you meet a mage\n""")
-            self.parent.text.npc(
-                text="""People and other creatures call me Gandalfux. I have power over white magic\n""",
-                begin_txt='Gandalfux')
+            self.parent.text.npc(text="""People and other creatures call me Gandalfux. I have power over white magic\n""",
+                                 begin_txt='Gandalfux')
             self.parent.text.you(text=f'Good day, I am {self.parent.myPlayer.name}\n      Can you learn me something new?\n')
             self.parent.text.npc(
                 text="""If you want me to teach you, you have to prove that you are worthy of it. You must successfully complete 2 of my tasks and not die\n""",
                 begin_txt='Gandalfux')
-        self.parent.text.system(
-            f" Choose answer\n  1. Yes, i'll do that\n  2. No, thanks\n", txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
-        if response in ('1', 'yes'):
-            self.parent.text.you(text="Yes\n")
-            tasks()
-            if self.parent.zonemap['a2']['SOLVED1'] is True:
-                self.parent.text.npc(text=f" Let go outside the town to the Gardens. I will teach you there\n",
-                                     begin_txt='Gandalfux')
-                self.parent.text.you(text="OK\n")
-                self.parent.text.system(
-                    text='....After several hours of training. You start to think that this might actually not wor to learn anything from him\n')
-                self.parent.text.system(f" Finally after many struggles you learn a new spell!\n", txt_only=True)
-                self.parent.text.system(text='Your can now use Fire Ball special spell\n')
-                self.parent.myPlayer.spells.append(self.parent.FireBall)
-                self.parent.zonemap['b2']['SOLVED'] = True
-                self.parent.text.system(
-                """
-                During training, you find out that Elminster is a former student of Gandelfux. He told you that 
-                the magician Elminster uses high-quality magic in his territory, which creates a barrier around the castle, 
-                and that without a special object (something like a map) it is almost impossible to get there.
-                Also, that the magician Elminster performed a ritual that incredibly increases his armor, so he advised to 
-                visit Cardcaster and find a secret treasure there.  There should be a staff that removes the effect of the ritual.
-                """, txt_only=True)
+            self.parent.text.system(
+                f" Choose answer\n  1. Yes, i'll do that\n  2. No, thanks\n", txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response in ('1', 'yes'):
+                self.parent.text.you(text="Yes\n")
+                tasks()
+                if self.parent.zonemap['a2']['SOLVED1'] is True:
+                    self.parent.text.npc(text=f" Let go outside the town to the Gardens. I will teach you there\n",
+                                         begin_txt='Gandalfux')
+                    self.parent.text.you(text="OK\n")
+                    self.parent.text.system(
+                        text='....After several hours of training. You start to think that this might actually not wor to learn anything from him\n')
+                    self.parent.text.system(f" Finally after many struggles you learn a new spell!\n", txt_only=True)
+                    self.parent.text.system(text='Your can now use Fire Ball special spell\n')
+                    self.parent.myPlayer.spells.append(self.parent.FireBall)
+                    self.parent.zonemap['b2']['SOLVED1'] = True
+                    if self.parent.zonemap['b2']['SOLVED2'] is True:
+                        self.parent.zonemap['b2']['SOLVED'] = True
+                    self.parent.text.system(
+                    """
+                    During training, you find out that Elminster is a former student of Gandelfux. He told you that 
+                    the magician Elminster uses high-quality magic in his territory, which creates a barrier around the castle, 
+                    and that without a special object (something like a map) it is almost impossible to get there.
+                    Also, that the magician Elminster performed a ritual that incredibly increases his armor, so he advised to 
+                    visit Cardcaster and find a secret treasure there.  There should be a staff that removes the effect of the ritual.
+                    """, txt_only=True)
+                else:
+                    self.parent.text.npc(text=f" Train your mana and than come back\n",
+                                         begin_txt='Gandalfux')
+            elif response in ('2', 'no'):
+                self.parent.text.you(text="No, I don't think it is a good idea\n")
+                self.parent.text.npc(text=f"Bye\n", begin_txt='Gandalfux')
             else:
-                self.parent.text.npc(text=f" Train your mana and than come back\n",
-                                     begin_txt='Gandalfux')
-        elif response in ('2', 'no'):
-            self.parent.text.you(text="No, I don't think it is a good idea\n")
-            self.parent.text.npc(text=f"Bye\n", begin_txt='Gandalfux')
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_b2(response)
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_b2()
+        if player_choose == '2' and self.parent.zonemap['b2']['SOLVED2'] is False:
+            self.parent.text.system(
+                """You have just entered the city, and already feel that something is wrong. 
+         Your feelings were confirmed when you heard the scream.
+         You started running and noticed 5 strange dolls attacking a woman.
+         You rushed to help the girl...\n""")
+            self.dolls = 5
+            doll_fight()
+            self.parent.text.npc("Hurray, you`ve done it !!\n")
+            self.parent.text.you("Hello, whats going on here ?\n")
+            print("""
+
+        #######################################################
+        ~~~~~~           !   Raccom druid ?!             ~~~~~~
+        #######################################################
+        |                                                     |
+        | A druid accidentally shapeshifted into a raccoon    |
+        | without being able to shift back, and is causing    |
+        | havoc in a nearby town. And these dolls are his     |
+        | creations, which he accidentally made as a raccoon. |
+        | Who knows what else he will do if he                |
+        | is not turned back.                                 |  
+        |                                                     |
+        |  Reward:  ???????                                   |
+        |                                                     |
+        #######################################################
+        |     1.Accept             |           2.Decline      |
+        #######################################################\n""")
+            player_choose = input(" > ")
+            if player_choose == "1":
+                druid_found = False
+                while druid_found is not True:
+                    self.parent.text.system(
+                        " Where should  i go ?\n  1. Lonely islet\n  2. Witch trail\n  3. Storm tower\n")
+                    road_choose = input(" > ")
+                    if road_choose == "1":
+                        self.parent.text.you("I should to look out (write 'look')\n")
+                        input(" > ")
+                        self.parent.text.you("Oh Lord, this place is just full of these dolls\n")
+                        self.dolls = 10
+                        doll_fight()
+                        self.parent.text.you("I have to look in other places\n")
+                    elif road_choose == "2":
+                        self.parent.text.you("I should to look out (write 'look')\n")
+                        input(" > ")
+                        self.parent.text.danger("Prepare to the batle !\n", txt_only=True)
+                        self.dolls = 3
+                        doll_fight()
+                        self.parent.text.you("Ok i found few dols, but where is the mage ?\n")
+                    elif road_choose == "3":
+                        self.parent.text.you("I should to look out (write 'look')\n")
+                        input(" > ")
+                        self.parent.text.you("There is nothing around the tower. Now i need to go carefully into the tower, maybe a magician there\n")
+                        self.parent.text.danger("The sound of a broken stick\n")
+                        self.parent.text.you("Oh no...\n")
+                        self.dolls = 5
+                        doll_fight()
+                        self.parent.text.system("Few hours ago....\n")
+                        self.parent.text.you("Ok, thats the last room\n")
+                        self.parent.text.system("You found a magician, he looks so cute :)\n")
+                        right_choose = False
+                        while right_choose is False:
+                            self.parent.text.system(
+                                "You found a spellbook , choose the spell to take of the magician spell:\n  1.Vita elevare\n  2.Igni infernals\n  3.Spiritus Attolere\n  4.Frost bolt\n")
+                            spell_choose = input(" > ")
+                            if spell_choose in ['1', '2', '4']:
+                                wrong_spell = ['rock', 'cat', 'chinchilla', 'sandwich with a mustache', 'What is this ?!?!', 'kiwi', 'kangaroo with salmon instead of head']
+                                self.parent.text.system(f"Oh no you used the wrong spell and turned the druid into{random.choice(wrong_spell)}\n")
+                            elif spell_choose == '3':
+                                print("""
+        
+                                        #######################################################
+                                        ~~~~~~           !   Raccoom druid ?!            ~~~~~~
+                                        #######################################################
+                                        |                                                     |
+                                        | You were able to get there in time, choose a        |
+                                        | spell and successfully disengage the druid.         |  
+                                        |                                                     |
+                                        |  Reward:  +100 coins                                |
+                                        |                                                     |
+                                        #######################################################
+                                        #######################################################\n""")
+                                self.parent.myPlayer.cash += 100
+                                self.parent.myPlayer.xp += 100
+                                self.parent.zonemap['b2']['SOLVED2'] = False
+                                if self.parent.zonemap['b2']['SOLVED1'] is True:
+                                    self.parent.zonemap['b2']['SOLVED'] = True
+                                right_choose = True
+                                druid_found = True
+            elif player_choose == "2":
+                self.parent.text.you("Meeeh...")
+        if player_choose == '2' and self.parent.zonemap['b2']['SOLVED1'] is True:
+            self.parent.text.system("You`ve nothing to do there")
+        if player_choose == '2' and self.parent.zonemap['b2']['SOLVED2'] is True:
+            self.parent.text.system("You`ve nothing to do there")
 
     def quest_b3(self):
         def auction():

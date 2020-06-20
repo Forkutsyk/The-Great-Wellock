@@ -277,6 +277,67 @@ class Game:
             self.fight()
             number_enemies -= 1
 
+    def quest_a0(self):
+        self.text.system("")
+        print("""
+
+                #######################################################
+                ~~~~~~        !   Start your adventure           ~~~~~~
+                #######################################################
+                |                                                     |
+                | You need to find out  little bit of information     |
+                | from the locals.                                    |  
+                |                                                     |
+                |  Ask 3 locals                                       |
+                |                                                     |
+                |    ! Write 'look' to find some locals and find      |
+                |      some info                                      |
+                |                                                     |
+                #######################################################
+                #######################################################\n""")
+        local = 1
+        while local != 4:
+            informator = input(" > ")
+            if informator == 'look' and local == 1:
+                self.text.system("""Not far from you noticed a stranger. 
+         You think you can get some info from him. 
+         Maybe you will know where you are and what i\n""", txt_only=True)
+                self.text.npc("""I'm a visitor myself, I don't know much.you are in the kingdom of Wellock. 
+         It consists of a total of 16 quarters,and we are now in the Docks .\n """)
+                self.text.you("Thank you, for that!\n")
+                self.text.npc("Your welcome\n")
+                local += 1
+            elif informator == 'look' and local == 2:
+                self.text.system(
+                    "You noticed a strange old man standing nearby. You didn't notice his face, but decided to question him.\n",
+                    txt_only=True)
+                self.text.npc("""Oh young man,After the young princess is kidnapped by the great magician Elminster,
+                the King is still looking for a brave hero who will save her from captivity.Recently things are 
+                going very badly in this kingdom. A lot has happened this year, who knows what awaits us in the future ...\n""")
+                input(" You > ")
+                print(" ### The old man just disappeared ###\n")
+                self.text.danger(
+                    f"Who knows, maybe the hero I've been waiting for so long is you...{self.myPlayer.name}, the {self.myPlayer.job}\n")
+                input(" You > ")
+                local += 1
+            elif informator == 'look' and local == 3:
+                self.text.system("""You are in a misunderstanding after the previous resident.
+            You noticed a young woman. Maybe she will explain everything to you.\n""")
+                self.text.npc("""Oh hi there, so things in our kingdom are really going not well. 
+                When moving between cities you can meet many monsters or thieves.
+                However, I have heard many legends about special magical items that can give the owner the opportunity to kill even the greatest magician. 
+                If someone gathered them all, he could save our kingdom from disaster\n""", begin_txt="Young women")
+                self.text.you("Thank you\n")
+                self.text.npc("You look tired. Here take, it's not a lot, but you can buy an apple or bread.\n",
+                                     begin_txt="Young women")
+                input(" YOU > ")
+                self.text.system(" ! You have found 10 coins\n", txt_only=True)
+                self.myPlayer.cash += 10
+                local += 1
+            else:
+                self.text.danger("Wrong input!", begin_txt="SYSTEM")
+                game.quest_a0()
+
     #### PRINTING
     def location_print(self):
         print('\n' + (" " + '#' * (4 + len(game.zonemap[self.myPlayer.location][ZONENAME]))))
@@ -404,7 +465,6 @@ def flee():
     else:
         print("You managed to escape, but you stayed in the same location")
         main_game_loop()
-
 
 ##### Title Screen ####
 def title_screen_selections():
@@ -780,7 +840,7 @@ def setup_game():
         game.myPlayer.STR = 45
         game.myPlayer.maxDEF = 15
         game.myPlayer.cash = 0
-        game.myPlayer.xp = 500
+        game.myPlayer.xp = 0
         game.myPlayer.spells = [game.FireSword, game.blizzard]
     if game.myPlayer.job == 'mage':
         game.myPlayer.STR = 15
@@ -788,7 +848,6 @@ def setup_game():
         game.myPlayer.HP = 70
         game.myPlayer.maxMP = 120
         game.myPlayer.MP = 120
-        game.myPlayer.maxDEF = 10
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
         game.myPlayer.xp = 0
@@ -805,45 +864,7 @@ def setup_game():
         game.myPlayer.spells = [game.bloodKing, game.DarkDaggerTechnique]
 
     #### INTRODUCTION
-
-    game.cut_scene.dialog = SYSTEM + "\n SYSTEM: " + END + "Welcome, " + player_name + " the " + player_class + "! " + "\n"
-    game.cut_scene.dialog_print005()
-    skip = input("\n\n\n To start playing press enter")
-    if skip == 's':
-        os.system('cls')
-        game.myPlayer.cash += 10
-        main_game_loop()
-    os.system('cls')
-    game.cut_scene.dialog = SYSTEM + """ 
-\n Not far from you noticed an old man. 
- You think you can get some info from him. 
- Maybe you will know where you are and what is happening here\n\n""" + END
-    print(game.cut_scene.dialog)
-
-    game.cut_scene.dialog = NPC + " Old man: " + END + """Oh young man, you are in the kingdom of Wellock. 
-          It consists of a total of 16 quarters, we are now in the Docks . 
-          After the young princess is kidnapped by the great magician Elminster,
-          the King is still looking for a brave hero who will save her from captivity
-          Recently things are going very badly in this kingdom 
-          A lot has happened this year, who knows what awaits us in the future ...     
-"""
-    game.cut_scene.dialog_print0025()
-    input(" You > ")
-    game.cut_scene.dialog = (
-            "\n" + NPC + " Old man: " + END + "And remember, on the way between the quarters you can meet a lot of monsters or robbers.\n" + "\n")
-    game.cut_scene.dialog_print0025()
-    print(" ### The old man just disappeared ###\n")
-    game.myPlayer.cash += 100
-    print(SYSTEM + " ! You have found 10 coins" + END)
-    game.cut_scene.dialog = (
-        DANGER + " Strange voice: " + END, "Who knows, maybe the hero I've been waiting for so long is you... ",
-        game.myPlayer.name, ", the ", game.myPlayer.job, "!\n")
-    game.cut_scene.dialog_print0025()
-    game.cut_scene.dialog = (SYSTEM + " System: " + END,
-                             "Good luck, I hope you enjoy the gameplay\n         If you don't die soon...\n         Hehehe.....\n")
-    game.cut_scene.dialog_print0025()
-    input(" You > ")
-
+    game.quest_a0()
     os.system('cls')
     print("")
     print(SYSTEM + " ###################################")
