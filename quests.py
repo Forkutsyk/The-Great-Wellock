@@ -1,6 +1,6 @@
+import os
 import random
 import sys
-import os
 import time
 
 roadswrongs = 1
@@ -13,12 +13,16 @@ class Quests:
         self.gold_quest_a4_1 = 0
         self.heal_use = 3
         self.knife_use = 2
+        self.dolls = 0
 
-    # healer do not work , i dont know why
     def quest_a2(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
-            self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""", txt_only=True)
+            if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""", txt_only=True)
+            elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n  3.Assistant home""",
+                                        txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
         if response == '1' and self.parent.zonemap['a2']['SOLVED1'] is False:
@@ -174,6 +178,71 @@ class Quests:
                 self.parent.zonemap['a2']['SOLVED2'] = True
                 if self.parent.zonemap['a2']['SOLVED1'] is True:
                     self.parent.zonemap['a2']['SOLVED'] = True
+        elif response == '3' and self.parent.zonemap['a2']['SOLVED3'] is False and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            self.parent.text.system("""\n  -  Assistant abandoned home - \n""", txt_only=True)
+            self.parent.text.you("So, do you remember where is it ?\n")
+            self.parent.text.npc("Emmm, nope\n")
+            self.parent.text.you("Ok, lets find it\n")
+            tresure = False
+            while tresure is not True:
+                assistant_home = ['Bedroom', 'Back yard', 'Kitchen', 'Pantry']
+                treasure_place = random.choice(assistant_home)
+                self.parent.text.system("""  Where do you wanna to go?\n   1. Bedroom\n   2. Back yard\n  3. Kitchen\n  4. Pantry\n""",
+                                        txt_only=True)
+                treasure_search = input(" > ")
+                Bedroom = False
+                Back_yard = False
+                Kitchen = False
+                Pantry = False
+                if treasure_search == "1" and Bedroom is False:
+                    treasure_search1 = "Bedroom"
+                    if treasure_search1 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Bedroom = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                elif treasure_search == "2" and Back_yard is False:
+                    treasure_search2 = "Back yard"
+                    if treasure_search2 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Back_yard = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                elif treasure_search == "3" and Kitchen is False:
+                    treasure_search3 = "Kitchen"
+                    if treasure_search3 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Kitchen = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                elif treasure_search == "4" and Pantry is False:
+                    treasure_search4 = "Pantry"
+                    if treasure_search4 == treasure_place:
+                        self.parent.text.npc("Yep, i found it!")
+                        self.parent.text.you("Great !")
+                        self.parent.myPlayer.cash += 100
+                        self.parent.myPlayer.xp += 100
+                        break
+                    else:
+                        Pantry = True
+                        self.parent.text.npc("Hmm, maybe in other place")
+                else:
+                    self.parent.text.you("We have seen here or wrong input")
+
+        elif response == '3' and self.parent.zonemap['a2']['SOLVED3'] is True and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go somewhere else')
         elif response == '1' and self.parent.zonemap['a2']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the Forest')
         elif response == '2' and self.parent.zonemap['a2']['SOLVED2'] is True:
@@ -286,12 +355,38 @@ class Quests:
         |  He would helps you in battles                      |
         |                                                     |
         #######################################################
-        |                +  Assistant-warrior                 |
+        |               +  Assistant-warrior                  |
         #######################################################\n""")
+
             self.parent.zonemap['a3']['ASISTANT-WARRIOR'] = True
             self.parent.zonemap['a3']['SOLVED2'] = True
             if self.parent.zonemap['a3']['SOLVED1'] is True:
                 self.parent.zonemap['a3']['SOLVED'] = True
+            self.parent.text.npc("Master, I have one question")
+            print("""
+
+                    #############################################################
+                    ~~~~~~           !   Memories of the past              ~~~~~~
+                    #############################################################
+                    |                                                           |
+                    | Before embarking on the path of a warrior, your assistant |
+                    | went through a lot. And all things related to the past    |
+                    | are hidden in the former house.                           |
+                    |                                                           |
+                    | The assistant asks you to go back there                   |   
+                    | and pick up something                                     |
+                    |                                                           |
+                    |  Reward: You can take all the money that is there         |                                     
+                    |                                                           |
+                    #############################################################
+                    |         1. Accept           |           2. Decline        |
+                    #############################################################\n""")
+            memories_of_past = input(" > ")
+            if memories_of_past == "1":
+                self.parent.text.you("Where is it ?")
+                self.parent.text.npc("Not far from here, in the west. In the town Sharandar")
+            elif memories_of_past == "2":
+                self.parent.text.you("I`m sorry but no, we have to save the kingdom")
         elif response == '2' and self.parent.zonemap['a3']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to Billie Jo tavern\n')
 
@@ -693,7 +788,7 @@ class Quests:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_b1()
 
-    def quest_b2(self, response=None):
+    def quest_b2(self):
         def tasks():
             self.parent.text.npc(text="""First I want to check your stock of mana\n""", begin_txt='Gandalfux')
             self.parent.text.npc(text="""You have to use mana to stop these knives that I will throw at you\n""",
@@ -775,7 +870,7 @@ class Quests:
                 elif failed == 0:
                     self.parent.text.npc(text="""You failed\n""",
                                          begin_txt='Gandalfux')
-                    self.quest_b2(response)
+                    self.quest_b2()
                     break
             if failed != 0:
                 self.parent.text.npc(text="""Yo worked well. And now the last task!\n""", begin_txt='Gandalfux')
@@ -788,10 +883,6 @@ class Quests:
 
                 self.parent.text.you(text="""Ok lets start\n""")
                 self.parent.text.npc(text="""Gaudeamus igitur\n""", begin_txt='Gandalfux')
-                spell_1 = False
-                spell_2 = False
-                spell_3 = False
-                spell_4 = False
                 lev_spell_1 = input(" > ").lower()
                 if lev_spell_1 != "gaudeamus igitur":
                     self.parent.text.danger('You cast the spell incorrectly and fell into the gorge\n', begin_txt='SYSTEM')
@@ -832,49 +923,286 @@ class Quests:
                                                      begin_txt='Gandalfux')
                                 self.parent.zonemap['a2']['SOLVED1'] = True
 
-        if not response:
+        def doll_fight():
+            while self.dolls != 0:
+                doll_moves = random.randint(1, 5)
+                if doll_moves == 1:
+                    self.parent.text.system("One of them wants to bite you, hit it well (write 'hit')\n")
+                    hit_doll = input(" > ")
+                    if hit_doll == 'hit':
+                        hit_dooll_chanse = random.randint(1, 10)
+                        if hit_dooll_chanse <= 8:
+                            self.parent.text.system("You hit so hard that it flew and crashed on ground\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        elif hit_dooll_chanse > 8:
+                            self.parent.text.system("Oh no you missed!\n")
+                            print(' ')
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she bit you( - 5 hp )\n")
+                        self.parent.myPlayer.HP -= 5
+                elif doll_moves == 2:
+                    self.parent.text.system("The doll attacks. Break it! (write 'break')\n")
+                    doll_break = input(" > ")
+                    if doll_break == 'break':
+                        doll_break_chanse = random.randint(1, 10)
+                        if doll_break_chanse <= 8:
+                            self.parent.text.system("Ok, minus one\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        else:
+                            self.parent.text.system("Oh no you missed!\n")
+                            print(' ')
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she atacks you( - 5 hp )\n")
+                        self.parent.myPlayer.HP -= 5
+                elif doll_moves == 3:
+                    self.parent.text.system("Where does the doll take a knife ?!?!? (write 'break')\n")
+                    doll_break = input(" > ")
+                    if doll_break == 'break':
+                        doll_break_chanse = random.randint(1, 10)
+                        if doll_break_chanse <= 8:
+                            self.parent.text.system("Ok, minus one, it was close\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        else:
+                            self.parent.text.system(
+                                "Oh no you missed and she managed to cut you! ( - 10 hp )\n")
+                            self.parent.myPlayer.HP -= 10
+                            print(' ')
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she managed to cut you! ( - 10 hp )\n")
+                        self.parent.myPlayer.HP -= 10
+                elif doll_moves == 4:
+                    self.parent.text.system("Hmm where is that doll ?!\n")
+                    self.parent.text.danger(" WRITE 'dodge'\n", txt_only=True)
+                    dodge = input(" > ")
+                    if dodge == 'dodge':
+                        dodge_chanse = random.randint(1, 100)
+                        if dodge_chanse < 90:
+                            self.parent.text.system(
+                                " You have managed to dodge and now broke the doll( write 'break' )\n")
+                            doll_break = input(" > ")
+                            if doll_break == 'break':
+                                doll_break_chanse = random.randint(1, 10)
+                                if doll_break_chanse <= 8:
+                                    self.parent.text.system("Ok, minus one\n")
+                                    self.dolls -= 1
+                                    if self.dolls != 0:
+                                        input(" There are still a couple left\n")
+                                    print(' ')
+                                else:
+                                    self.parent.text.system("Oh no you missed!\n")
+                                    print(' ')
+                            else:
+                                self.parent.text.system(
+                                    "There was nothing that you could do and she atacks you( - 5 hp )\n")
+                                self.parent.myPlayer.HP -= 5
+                        else:
+                            self.parent.text.danger("You have fail with dodging ( - 5 hp )\n",
+                                                    begin_txt="SYSTEM")
+                            self.parent.myPlayer.HP -= 5
+                    else:
+                        self.parent.text.system(
+                            "There was nothing that you could do and she attack you( - 5 hp )\n")
+                        self.parent.myPlayer.HP -= 5
+                elif doll_moves == 5:
+                    self.parent.text.you("This doll just stands there, maybe I shouldn't touch it ? (y/n)\n")
+                    doll_destiny = input(" > ")
+                    if doll_destiny == 'y':
+                        self.parent.text.danger(" WRITE 'dodge'\n", txt_only=True)
+                        dodge = input(" > ")
+                        if dodge == 'dodge':
+                            dodge_chanse = random.randint(1, 100)
+                            if dodge_chanse < 90:
+                                self.parent.text.system(
+                                    " You have managed to dodge and now broke the doll( write 'break' )\n")
+                                doll_break = input(" > ")
+                                if doll_break == 'break':
+                                    doll_break_chanse = random.randint(1, 10)
+                                    if doll_break_chanse <= 8:
+                                        self.parent.text.system("Ok, minus one\n")
+                                        self.dolls -= 1
+                                        if self.dolls != 0:
+                                            input(" There are still a couple left\n")
+                                        print(' ')
+                                    else:
+                                        self.parent.text.system("Oh no you missed!\n")
+                                        print(' ')
+                                else:
+                                    self.parent.text.system(
+                                        "There was nothing that you could do and she atacks you( - 5 hp )\n")
+                                    self.parent.myPlayer.HP -= 5
+                            else:
+                                self.parent.text.danger("You have fail with dodging ( - 5 hp )\n",
+                                                        begin_txt="SYSTEM")
+                                self.parent.myPlayer.HP -= 5
+                        else:
+                            self.parent.text.system(
+                                "There was nothing that you could do and she attack you( - 5 hp )\n")
+                            self.parent.myPlayer.HP -= 5
+                    elif doll_destiny == 'n':
+                        doll_break_chanse = random.randint(1, 10)
+                        if doll_break_chanse <= 8:
+                            self.parent.text.system("Ok, minus one\n")
+                            self.dolls -= 1
+                            if self.dolls != 0:
+                                input(" There are still a couple left\n")
+                            print(' ')
+                        else:
+                            self.parent.text.system("Oh no you missed!\n")
+                            print(' ')
+        self.parent.text.system("""\n  -  Nezeris - \n""", txt_only=True)
+        self.parent.text.system(""" Where do you wanna go?\n  1.Go to find the master\n  2.City center\n""", txt_only=True)
+        player_choose = input(" > ")
+        if player_choose == '1' and self.parent.zonemap['b2']['SOLVED1'] is False:
             self.parent.text.system(text=""" Close to a castle you meet a mage\n""")
-            self.parent.text.npc(
-                text="""People and other creatures call me Gandalfux. I have power over white magic\n""",
-                begin_txt='Gandalfux')
+            self.parent.text.npc(text="""People and other creatures call me Gandalfux. I have power over white magic\n""",
+                                 begin_txt='Gandalfux')
             self.parent.text.you(text=f'Good day, I am {self.parent.myPlayer.name}\n      Can you learn me something new?\n')
             self.parent.text.npc(
                 text="""If you want me to teach you, you have to prove that you are worthy of it. You must successfully complete 2 of my tasks and not die\n""",
                 begin_txt='Gandalfux')
-        self.parent.text.system(
-            f" Choose answer\n  1. Yes, i'll do that\n  2. No, thanks\n", txt_only=True)
-        response = input(" >  ")
-        response = str(response).lower()
-        if response in ('1', 'yes'):
-            self.parent.text.you(text="Yes\n")
-            tasks()
-            if self.parent.zonemap['a2']['SOLVED1'] is True:
-                self.parent.text.npc(text=f" Let go outside the town to the Gardens. I will teach you there\n",
-                                     begin_txt='Gandalfux')
-                self.parent.text.you(text="OK\n")
-                self.parent.text.system(
-                    text='....After several hours of training. You start to think that this might actually not wor to learn anything from him\n')
-                self.parent.text.system(f" Finally after many struggles you learn a new spell!\n", txt_only=True)
-                self.parent.text.system(text='Your can now use Fire Ball special spell\n')
-                self.parent.myPlayer.spells.append(self.parent.FireBall)
-                self.parent.zonemap['b2']['SOLVED'] = True
-                self.parent.text.system(
-                """
-                During training, you find out that Elminster is a former student of Gandelfux. He told you that 
-                the magician Elminster uses high-quality magic in his territory, which creates a barrier around the castle, 
-                and that without a special object (something like a map) it is almost impossible to get there.
-                Also, that the magician Elminster performed a ritual that incredibly increases his armor, so he advised to 
-                visit Cardcaster and find a secret treasure there.  There should be a staff that removes the effect of the ritual.
-                """, txt_only=True)
+            self.parent.text.system(
+                f" Choose answer\n  1. Yes, i'll do that\n  2. No, thanks\n", txt_only=True)
+            response = input(" >  ")
+            response = str(response).lower()
+            if response in ('1', 'yes'):
+                self.parent.text.you(text="Yes\n")
+                tasks()
+                if self.parent.zonemap['a2']['SOLVED1'] is True:
+                    self.parent.text.npc(text=f" Let go outside the town to the Gardens. I will teach you there\n",
+                                         begin_txt='Gandalfux')
+                    self.parent.text.you(text="OK\n")
+                    self.parent.text.system(
+                        text='....After several hours of training. You start to think that this might actually not wor to learn anything from him\n')
+                    self.parent.text.system(f" Finally after many struggles you learn a new spell!\n", txt_only=True)
+                    self.parent.text.system(text='Your can now use Fire Ball special spell\n')
+                    self.parent.myPlayer.spells.append(self.parent.FireBall)
+                    self.parent.zonemap['b2']['SOLVED1'] = True
+                    if self.parent.zonemap['b2']['SOLVED2'] is True:
+                        self.parent.zonemap['b2']['SOLVED'] = True
+                    self.parent.text.system(
+                    """
+                    During training, you find out that Elminster is a former student of Gandelfux. He told you that 
+                    the magician Elminster uses high-quality magic in his territory, which creates a barrier around the castle, 
+                    and that without a special object (something like a map) it is almost impossible to get there.
+                    Also, that the magician Elminster performed a ritual that incredibly increases his armor, so he advised to 
+                    visit Cardcaster and find a secret treasure there.  There should be a staff that removes the effect of the ritual.
+                    """, txt_only=True)
+                else:
+                    self.parent.text.npc(text=f" Train your mana and than come back\n",
+                                         begin_txt='Gandalfux')
+            elif response in ('2', 'no'):
+                self.parent.text.you(text="No, I don't think it is a good idea\n")
+                self.parent.text.npc(text=f"Bye\n", begin_txt='Gandalfux')
             else:
-                self.parent.text.npc(text=f" Train your mana and than come back\n",
-                                     begin_txt='Gandalfux')
-        elif response in ('2', 'no'):
-            self.parent.text.you(text="No, I don't think it is a good idea\n")
-            self.parent.text.npc(text=f"Bye\n", begin_txt='Gandalfux')
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_b2(response)
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                self.quest_b2()
+        if player_choose == '2' and self.parent.zonemap['b2']['SOLVED2'] is False:
+            self.parent.text.system(
+                """You have just entered the city, and already feel that something is wrong. 
+         Your feelings were confirmed when you heard the scream.
+         You started running and noticed 5 strange dolls attacking a woman.
+         You rushed to help the girl...\n""")
+            self.dolls = 5
+            doll_fight()
+            self.parent.text.npc("Hurray, you`ve done it !!\n")
+            self.parent.text.you("Hello, whats going on here ?\n")
+            print("""
+
+        #######################################################
+        ~~~~~~           !   Raccom druid ?!             ~~~~~~
+        #######################################################
+        |                                                     |
+        | A druid accidentally shapeshifted into a raccoon    |
+        | without being able to shift back, and is causing    |
+        | havoc in a nearby town. And these dolls are his     |
+        | creations, which he accidentally made as a raccoon. |
+        | Who knows what else he will do if he                |
+        | is not turned back.                                 |  
+        |                                                     |
+        |  Reward:  ???????                                   |
+        |                                                     |
+        #######################################################
+        |     1.Accept             |           2.Decline      |
+        #######################################################\n""")
+            player_choose = input(" > ")
+            if player_choose == "1":
+                druid_found = False
+                while druid_found is not True:
+                    self.parent.text.system(
+                        " Where should  i go ?\n  1. Lonely islet\n  2. Witch trail\n  3. Storm tower\n")
+                    road_choose = input(" > ")
+                    if road_choose == "1":
+                        self.parent.text.you("I should to look out (write 'look')\n")
+                        input(" > ")
+                        self.parent.text.you("Oh Lord, this place is just full of these dolls\n")
+                        self.dolls = 10
+                        doll_fight()
+                        self.parent.text.you("I have to look in other places\n")
+                    elif road_choose == "2":
+                        self.parent.text.you("I should to look out (write 'look')\n")
+                        input(" > ")
+                        self.parent.text.danger("Prepare to the batle !\n", txt_only=True)
+                        self.dolls = 3
+                        doll_fight()
+                        self.parent.text.you("Ok i found few dols, but where is the mage ?\n")
+                    elif road_choose == "3":
+                        self.parent.text.you("I should to look out (write 'look')\n")
+                        input(" > ")
+                        self.parent.text.you("There is nothing around the tower. Now i need to go carefully into the tower, maybe a magician there\n")
+                        self.parent.text.danger("The sound of a broken stick\n")
+                        self.parent.text.you("Oh no...\n")
+                        self.dolls = 5
+                        doll_fight()
+                        self.parent.text.system("Few hours ago....\n")
+                        self.parent.text.you("Ok, thats the last room\n")
+                        self.parent.text.system("You found a magician, he looks so cute :)\n")
+                        right_choose = False
+                        while right_choose is False:
+                            self.parent.text.system(
+                                "You found a spellbook , choose the spell to take of the magician spell:\n  1.Vita elevare\n  2.Igni infernals\n  3.Spiritus Attolere\n  4.Frost bolt\n")
+                            spell_choose = input(" > ")
+                            if spell_choose in ['1', '2', '4']:
+                                wrong_spell = ['rock', 'cat', 'chinchilla', 'sandwich with a mustache', 'What is this ?!?!', 'kiwi', 'kangaroo with salmon instead of head']
+                                self.parent.text.system(f"Oh no you used the wrong spell and turned the druid into{random.choice(wrong_spell)}\n")
+                            elif spell_choose == '3':
+                                print("""
+        
+                                        #######################################################
+                                        ~~~~~~           !   Raccoom druid ?!            ~~~~~~
+                                        #######################################################
+                                        |                                                     |
+                                        | You were able to get there in time, choose a        |
+                                        | spell and successfully disengage the druid.         |  
+                                        |                                                     |
+                                        |  Reward:  +100 coins                                |
+                                        |                                                     |
+                                        #######################################################
+                                        #######################################################\n""")
+                                self.parent.myPlayer.cash += 100
+                                self.parent.myPlayer.xp += 100
+                                self.parent.zonemap['b2']['SOLVED2'] = False
+                                if self.parent.zonemap['b2']['SOLVED1'] is True:
+                                    self.parent.zonemap['b2']['SOLVED'] = True
+                                right_choose = True
+                                druid_found = True
+            elif player_choose == "2":
+                self.parent.text.you("Meeeh...")
+        if player_choose == '2' and self.parent.zonemap['b2']['SOLVED1'] is True:
+            self.parent.text.system("You`ve nothing to do there")
+        if player_choose == '2' and self.parent.zonemap['b2']['SOLVED2'] is True:
+            self.parent.text.system("You`ve nothing to do there")
 
     def quest_b3(self):
         def auction():
@@ -1281,6 +1609,76 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b5()
+        elif response == '2':
+            self.parent.text.system("Pff i don't need this")
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            self.quest_b5(response)
+
+    # i need to add this  to quests b5
+    def peepers_game(self):
+        self.parent.text.system("To your surprise, you noticed a large group of people who were constantly shouting and laughing\n")
+        self.parent.text.system(
+            " Do you want to come and find out what happened there?\n  1.Yes\n  2.Nope\n",txt_only=True)
+        group_of_people = input(" > ")
+        if group_of_people == "1":
+            self.parent.text.you("Lest1s see...")
+            self.parent.text.system("You have noticed a strange situation, people are playing peepers with a one-eyed dwarf")
+            self.parent.text.npc("Hey everybody look another player has come")
+            print("""
+
+                    #######################################################
+                    ~~~~~~          !  Champion in peepers           ~~~~~~
+                    #######################################################
+                    |                                                     |
+                    |    You were offered to play peepers with            |
+                    |     a one-eyed gnome. What answer will you give?    |
+                    |                                                     |
+                    |  Reward:  30 coins                                  |
+                    |                                                     |
+                    #######################################################
+                    #######################################################\n""")
+            self.parent.text.system(
+                " Choose how you answer\n  1.Hmm, what are the rules\n 2.No, i just come to see\n", txt_only=True)
+            join_game = input(" > ")
+            if join_game == "1":
+                self.parent.text.npc("In general, you sit in front of Tandibrad and you look into each other's eyes.\n Who can not stand and blinks, the loser. Tandibrad has already won 11 times in a row, can you win it?")
+                win_chanse = random.randint(1, 100)
+                if win_chanse > 85:
+                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
+                    self.parent.text.npc("Interesting who will lose....")
+                    print("""
+
+                                       #######################################################
+                                       ~~~~~~          !  Champion in peepers           ~~~~~~
+                                       #######################################################
+                                       |                       Done                          |
+                                       |    You were offered to play peepers with            |
+                                       |     a one-eyed gnome.                               |
+                                       |      You won !!! Now you are the current champion   |
+                                       |                                                     |
+                                       |  Reward:  30 coins                                  |
+                                       |                                                     |
+                                       #######################################################
+                                       |           Congratulations you`ve won + 30 coins     |      
+                                       #######################################################\n""")
+                    self.parent.myPlayer.cash += 30
+                elif win_chanse <= 85:
+                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
+                    self.parent.text.npc("Hmm, interesting who will lose")
+                    self.parent.text.you("Ahhh I`ve lost. He is a strong opponent")
+            elif join_game == "2":
+                self.parent.text.npc("Oh well okay...")
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                peepers_game()
+        elif group_of_people == "2":
+            self.parent.text.you("Meeeeh")
+            self.parent.text.you("You`ve continued your journey!")
+        else:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            peepers_game()
+    # i need to add this ^ to quests b5
 
     def quest_c1(self):
         print(" ")
@@ -2046,11 +2444,9 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_c2()
 
-    def quest_c3(self, response=None):
-        if not response:
-            print(' ')
-            self.parent.text.system(
-                text=""" - Welcome to the Well of Dragons -\n""")
+    def quest_c3(self):
+        print(' ')
+        self.parent.text.system(text=""" - Welcome to the Well of Dragons -\n""")
         self.parent.text.system(
             " Choose one of the below answers\n  1. Go to tavern\n  2. Go to town market\n  3. Get out\n", txt_only=True)
         response = input(" >  ")
@@ -2112,8 +2508,226 @@ class Quests:
                 self.parent.text.you(" I do not hurt animals. Even dangerous ones\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_c3(response_2)
-        elif response == '2':
+                self.quest_c3()
+        elif response == '2' and self.parent.zonemap['c3']['SOLVED2'] is False:
+            self.parent.text.npc("Good afternoon, young man, did you know that you were cursed?\n",begin_txt="Shona")
+            self.parent.text.you("Whaaaat !?!?\n")
+            self.parent.text.npc("If you do not remove this curse, you may die soon\n", begin_txt="Shona")
+            self.parent.text.you("And how do I take it off\n")
+            self.parent.text.npc("Play one game with me, if you manage to win, I will help you for free. However, if you lose you will have to pay for help 50 coins\n", begin_txt="Shona")
+            print("""
+            
+                                #######################################################
+                                ~~~~~~              !  Gambler                   ~~~~~~
+                                #######################################################
+                                |                                                     |
+                                |    You know you're cursed. Do you want to play      |
+                                |    with Shona so she can take it of the curse       |
+                                |    for free?                                        |
+                                |                                                     |
+                                |  Reward:  Shona will take off the curse for free    |
+                                |                                                     |
+                                #######################################################
+                                |         1. Yes           |         2. Nope          |
+                                #######################################################\n""")
+            player_choise = input(" > ")
+            if player_choise == "1":
+                self.parent.text.npc("""The rules are simple. We will play the times.I drag a card then you drag a card.
+        Bigger card win. Whoever wins 2 attempts wins 
+        When you would be ready, press enter\n""",begin_txt="Shona")
+                input(" > ")
+                self.parent.text.you("Allright, lets get it\n")
+                attempts = 3
+                you = 0
+                shon = 0
+                while attempts != 0:
+                    if shon >= 2:
+                        self.parent.text.npc("Hurray i have won\n", begin_txt="Shona")
+                        self.parent.text.npc("So if you want to take off this curse, pay 50 \n", begin_txt="Shona")
+                        self.parent.text.system(
+                            " Choose \n  1. Pay to take off the curse\n  2. Do not pay\n",
+                            txt_only=True)
+                        curse_choose = input(" > ")
+                        if curse_choose == '1':
+                            self.parent.myPlayer.cash -= 50
+                            self.parent.text.system("You have been deceived, by the thief\n")
+                            self.parent.zonemap['c3']['SOLVED2'] = True
+                            break
+                        elif curse_choose == '2':
+                            self.parent.text.you("Nooope\n")
+                            break
+                    elif you == 2:
+                        self.parent.text.npc("WHAT !?\n",begin_txt="Shona")
+                        self.parent.text.you("Hurray i have won\n")
+                        self.parent.text.you("So do what you promised\n")
+                        self.parent.text.npc("Do you seriously believe this ??\n", begin_txt="Shona")
+                        self.parent.text.system("  1.Either you pay me what you promised or I call a guard\n  2.Get out of here while you can\n",txt_only=True)
+                        robber_fate = input(" > ")
+                        if robber_fate == '1':
+                            self.parent.text.npc("Okay, I just wanted to play with someone\n", begin_txt="Shona")
+                            self.parent.myPlayer.cash += 50
+                            self.parent.myPlayer.xp += 50
+                            self.parent.zonemap['c3']['SOLVED2'] = True
+                            break
+                        elif robber_fate == '2':
+                            self.parent.text.npc("Okay, just don't call them", begin_txt="Shona")
+                            self.parent.myPlayer.xp += 100
+                            self.parent.zonemap['c3']['SOLVED2'] = True
+                            break
+                    elif shon <= 2:
+                        cards = ['6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', 'Joker']
+                        your_card = random.choice(cards)
+                        if your_card == 'Joker':
+                            cards.pop(9)
+                        shon_card = random.choice(cards)
+                        print(f" ~ You`ve get {your_card}\n")
+                        print(f" ~ Shon gets {shon_card}\n")
+                        if your_card == '6':
+                            if shon_card == '6':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            elif shon_card == 'A':
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '7':
+                            if shon_card == '6':
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '7':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '8':
+                            if shon_card in ['6', '7']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '8':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '9':
+                            if shon_card in ['6', '7', '8']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '9':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == '10':
+                            if shon_card in ['6', '7', '8', '9']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == '10':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'J':
+                            if shon_card in ['6', '7', '8', '9', '10']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'J':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'Q':
+                            if shon_card in ['6', '7', '8', '9', '10', 'J']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'Q':
+                                self.parent.text.system("You got the same cards\n")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'K':
+                            if shon_card in ['6', '7', '8', '9', '10', 'J', 'Q']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'K':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'K':
+                            if shon_card in ['6', '7', '8', '9', '10', 'J', 'Q']:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                            elif shon_card == 'K':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            else:
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                        elif your_card == 'A':
+                            if shon_card == 'A':
+                                self.parent.text.system("You got the same cards\n")
+                                input("To play next one press Enter")
+                            elif shon_card == 'Joker':
+                                self.parent.text.system("Shon won this attempt\n")
+                                input("To play next one press Enter")
+                                shon += 1
+                                attempts -= 1
+                            else:
+                                self.parent.text.system("You won this attempt\n")
+                                input("To play next one press Enter")
+                                attempts -= 1
+                                you += 1
+                        else:
+                            self.parent.text.system("You won this attempt\n")
+                            input("To play next one press Enter")
+                            attempts -= 1
+                            you += 1
+                            cards.insert(9, 'Joker')
+        elif response == '2' and self.parent.zonemap['c3']['SOLVED2'] is True:
             # TOWN MARKET
             self.parent.text.you(" Hmmm, I'm hungry. Let's buy something to eat\n")
             self.parent.text.system(
@@ -2146,14 +2760,14 @@ class Quests:
                     self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_c3(response_3)
+                self.quest_c3()
         elif response == "3":
-            self.parent.text.system("Have a nice day !")
-        if response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
-            self.parent.text.system(' You have already passed this quest, try to go to town market')
+            self.parent.text.system("Have a nice day !\n")
+        elif response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to town market\n')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_c3(response)
+            self.quest_c3()
 
     def quest_c4(self, response=None):
         if not response:
@@ -2269,21 +2883,411 @@ class Quests:
                                 self.parent.myPlayer.inventory.insert(7, 'Heal grass')
                                 i += 1
                             else:
-                                self.parent.text.system("It`s to heavy, i cant take anymore heal grass\n")
-
+                                self.parent.text.you("It`s to heavy, i cant take anymore heal grass\n")
                     elif 95 < found_chanse <= 100 and "Fiery flower" not in self.parent.myPlayer.inventory:
-                        self.parent.text.you("No way! I found fiery flower!\n")
+                        self.parent.text.you("No way! I found fiery flower! And strange jewelry \n")
+                        self.parent.myPlayer.inventory.pop(10)
+                        self.parent.myPlayer.inventory.insert(10, 'Strange Jewelery')
                         self.parent.myPlayer.inventory.pop(12)
                         self.parent.myPlayer.inventory.insert(12, 'Fiery flower')
                     else:
                         self.parent.text.you("Its not my day...\n")
                 elif sujestion == "end":
                     find_grass = False
-            self.parent.text.system("Not a bad place, I may come back here someday...\n")
+
+            #### STOLEN JEWELRY
+            if 'Strange Jewelery' in self.parent.myPlayer.inventory:
+                print(" ")
+                print("""
+        ###########################################################################################
+        ###########################################################################################
+        |                                                                                         |
+        |    !!!  Warning                                                                         |                    
+        |   !!! An unexpected quest. The result of this quest will show whether you will survive  |
+        |                                                                                         | 
+        ###########################################################################################
+        ###########################################################################################\n""")
+                self.parent.text.npc("Good afternoon, could you show me everything you have?\n", begin_txt="Royal guard")
+                self.parent.text.you("Why i should to do that ?\n")
+                self.parent.text.npc("We know it was you who stole the jewelry\n              Either you voluntarily show what you have, or we will immediately take you to the grate\n",
+                                        begin_txt="Royal guard")
+                self.parent.text.system(
+                    " Choose:\n  1. Run\n  2. Stay and show\n",
+                    txt_only=True)
+                jewelery_show = input(" > ")
+                if jewelery_show == '1':
+                    available_locations = ['Boar trail', 'Fairies cave', "Shepherd's columns", 'Foggy forest']
+                    guard_searches = random.choice(available_locations)
+                    self.parent.text.system(
+                        """You successfully escaped from the guard in heavy armor.
+         BUT You will be searched, so you need to hide somewhere for the night and then run away somewhere\n""")
+                    print("""
+
+            #######################################################
+            ~~~~~~  !  Quieter than water, lower than grass  ~~~~~~
+            #######################################################
+            |                                                     |
+            |   They want to accuse you of a crime you did not    |
+            |   commit. Choose a place where they will not find   |
+            |   you.                                              |
+            |                                                     |
+            |                                                     |
+            #######################################################
+            #######################################################\n""")
+                    self.parent.text.system(
+                        " Choose were do you wanna stay\n  1.Boar trail\n  2.Fairies cave\n  3.Shepherd's columns\n  4.Foggy forest\n",
+                        txt_only=True)
+                    hide_place = input(" > ")
+                    if hide_place == '1':
+                        your_place = 'Boar trail'
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                       /%/@&@%@&&%%###%
+                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                       /*%%&%%&@(((//////////////((@&%&#   
+                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+                      
+                      
+        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+            `888'     888      888  888       8        888      888  888   888    "     888      888 
+             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+                                                                                           
+                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                    elif hide_place == '2':
+                        your_place = 'Fairies cave'
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                                       /%/@&@%@&&%%###%
+                                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                       /*%%&%%&@(((//////////////((@&%&#   
+                                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                            `888'     888      888  888       8        888      888  888   888    "     888      888 
+                             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                    elif hide_place == '3':
+                        your_place = "Shepherd's columns"
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                                       /%/@&@%@&&%%###%
+                                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                       /*%%&%%&@(((//////////////((@&%&#   
+                                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                            `888'     888      888  888       8        888      888  888   888    "     888      888 
+                             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                    elif hide_place == '4':
+                        your_place = 'Foggy forest'
+                        if your_place == guard_searches:
+                            self.parent.text.danger("They founded you\n", begin_txt="SYSTEM")
+                            print("""
+                                                       /%/@&@%@&&%%###%
+                                                      @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                      ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                       &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                       ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                       %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                       (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                       /*%%&%%&@(((//////////////((@&%&#   
+                                                       *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                       (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                       %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                       #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                       (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                       (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                       /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                       %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                       ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                       #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                       #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                       (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                       %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                       %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                       ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                       /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                         &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                         &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                         &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                         &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                         &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                         &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                         &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                         &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                        .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                             @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                     &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                       @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                      %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                        oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                         `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                          `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                           `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                            `888'     888      888  888       8        888      888  888   888    "     888      888 
+                             888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                            o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                     You were convicted and executed for a crime you did not commit  \n""")
+                            sys.exit()
+                        else:
+                            self.parent.myPlayer.inventory.pop(10)
+                            self.parent.myPlayer.inventory.insert(10, '-')
+                            self.parent.zonemap['c4']['SOLVED2'] = True
+                            self.parent.text.system("You successfully waited for the night. The guards must have thought that you lost, and been killed by wild beasts\n")
+                elif jewelery_show == '2':
+                    print("""
+                                                           /%/@&@%@&&%%###%
+                                                          @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                          ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                           &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                           ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                           %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                           (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                           /*%%&%%&@(((//////////////((@&%&#   
+                                                           *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                           (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                           %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                           #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                           (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                           (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                           /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                           %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                           ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                           #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                           #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                           (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                           %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                           %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                           ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                           /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                             &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                             &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                             &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                             &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                             &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                             &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                             &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                             &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                            .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                                 @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                    @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                         &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                           @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                          %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                            oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                             `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                              `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                               `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                                `888'     888      888  888       8        888      888  888   888    "     888      888 
+                                 888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                                o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                         You were convicted and executed for a crime you did not commit  \n""")
+                    sys.exit()
+                else:
+                    print("""
+                                                                               /%/@&@%@&&%%###%
+                                                                              @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                                              ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                                               &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                                               ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                                               %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                                               (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                                               /*%%&%%&@(((//////////////((@&%&#   
+                                                                               *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                                               (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                                               %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                                               #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                                               (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                                               (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                                               /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                                               %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                                               ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                                               #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                                               #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                                               (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                                               %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                                               %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                                               ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                                               /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                                                 &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                                                 &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                                                 &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                                                 &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                                                 &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                                                 &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                                                 &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                                                 &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                                                .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                                                     @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                                        @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                                             &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                                               @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                                              %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                                                oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                                                 `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                                                  `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                                                   `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                                                    `888'     888      888  888       8        888      888  888   888    "     888      888 
+                                                     888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                                                    o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                                             You were convicted and executed for a crime you did not commit  \n""")
+                    sys.exit()
+            if self.parent.zonemap['c4']['SOLVED2'] is False:
+                self.parent.text.system("Not a bad place, I may come back here someday...\n")
         elif player_choose == "3":
-            self.parent.text.system("Have a nice day !")
+            self.parent.text.system("Have a nice day !\n")
         elif player_choose == "1" and self.parent.zonemap['c4']['SOLVED1'] is True:
-            self.parent.text.system(' You have already passed this quest, try to go to town market')
+            self.parent.text.system(' You have already passed this quest, try to go to town market\n')
 
     def quest_c5(self):
 

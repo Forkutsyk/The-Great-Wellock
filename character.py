@@ -207,7 +207,6 @@ class Player:
     def show(self):
         print(self.name, " I have left:", self.HP, "hp. ", "\n")
 
-    # here again false
     def heal(self):
         print(self.parent.zonemap['a2']['ASISTANT-HEALER'])
         if self.parent.zonemap['a2']['ASISTANT-HEALER'] is False:
