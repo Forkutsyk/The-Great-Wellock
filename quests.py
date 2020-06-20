@@ -15,6 +15,25 @@ class Quests:
         self.knife_use = 2
         self.dolls = 0
 
+    def list_actions(self, quest_dict):
+        self.parent.text.system("""Choose your action\n""", txt_only=True)
+        i = 1
+        for quest_desc, quest in quest_dict.items():
+            self.parent.text.system(f"{i}. {quest_desc}\n", txt_only=True)
+            i += 1
+        self.parent.text.system(f"{i}. Do nothing\n", txt_only=True)
+        quests_mapped = {str(x[0] + 1): x[1] for x in enumerate(quest_dict.values())}
+        response = input(" >  ")
+        response = str(response).lower()
+        try:
+            if str(i) == response:
+                return
+            quest_func = quests_mapped.get(response)
+            quest_func()
+        except Exception as e:
+            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+            self.list_actions(quest_dict)
+
     #### CAT HERO a2 quest
     def safe_cat(self):
         self.parent.text.npc("Oh, no Princess come down, please\n", begin_txt="Little girl")
@@ -1763,91 +1782,324 @@ class Quests:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_b4()
 
-    def quest_b5(self, response=None, action=False):
-        if not action:
+    def quest_b5(self):
+        def labyrinth(response=None):
             if not response:
-                self.parent.text.system(text=""" When you walk to market in the morning you see on a wall a pinned leaflet\n""")
-                self.parent.text.system(text=""" It looks like local miller looks for an employee\n""")
-                self.parent.text.system(text=""" This could be an occasion for quick money\n""")
-                print("""
-                #######################################################
-                ~~~~~~~~       !   Work for the day            ~~~~~~~~
-                #######################################################
-                |                                                     |
-                |  You have found booklet about a job                 |  
-                |  Do you want to take on this job?                   |
-                |                                                     |
-                |  Reward:  ????????????????                          |
-                |                                                     |
-                #######################################################
-                |     1.Go to miller       |           2.Go away      |
-                #######################################################\n""")
-                response = input(" >  ")
-                response = str(response).lower()
-        if response == '1':
-            if not action:
-                self.parent.text.you(text=f"Hey, I am {self.parent.myPlayer.name}, I saw you job offer\n")
-                self.parent.text.npc(text=f"Hi there\n", begin_txt='Miller')
-                self.parent.text.npc(text=f"Great, how can I help you?\n", begin_txt='Miller')
-            self.parent.text.system(
-                f" Choose option\n  1. Can you tell me more about the job?\n  2. How long would I work?\n  3. How much am I going to earn?\n  4. OK, I want start working\n  5. I have to go\n", txt_only=True)
+                self.parent.text.system(
+                    text=""" There is a famous Maze in this location. You will be well remembered if you make it to go through all of it!\n""")
+            print("""
+                        #######################################################
+                        ~~~~~~~~       !       The Maze                ~~~~~~~~
+                        #######################################################
+                        |                                                     |
+                        |                     ENTER THE MAZE                  |  
+                        |                                                     |
+                        |                                                     |
+                        |  Reward:  50                                        |
+                        |                                                     |
+                        #######################################################
+                        |     1.Agree       |             2.Decline           |
+                        #######################################################\n""")
             response = input(" >  ")
             response = str(response).lower()
             if response == '1':
-                self.parent.text.you(text=f"Can you tell me more about the job?\n")
-                self.parent.text.npc(text=f"I am looking for a man that can help me carrying my flour to my clients\n", begin_txt='Miller')
-                self.quest_b5('1', True)
+                self.parent.text.system(text=""" The labyrinth starts here\nYou can go left, right or forward\n""")
+                correct = 0.
+                while correct < 3.:
+                    correct = random.randint(1, 3)
+                    self.parent.text.system(text=""" Choose direction to go\n1. Left\n2. Right\n3. Forward\n""")
+                    response = input(" >  ")
+                    response = str(response).lower()
+                    if response in ('1', 'left'):
+                        if correct == 1:
+                            self.parent.text.system(text=""" Good, you are moving in good direction\n""")
+                            correct += 1.
+                        else:
+                            self.parent.text.system(text=""" You are losing time going this way\n""")
+                            correct -= 0.1
+                    elif response in ('2', 'right'):
+                        if correct == 2:
+                            self.parent.text.system(text=""" Good, you are moving in good direction\n""")
+                            correct += 1.
+                        else:
+                            self.parent.text.system(text=""" You are losing time going this way\n""")
+                            correct -= 0.1
+                    elif response in ('3', 'forward'):
+                        if correct == 3:
+                            self.parent.text.system(text=""" Good, you are moving in good direction\n""")
+                            correct += 1.
+                        else:
+                            self.parent.text.system(text=""" You are losing time going this way\n""")
+                            correct -= 0.1
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        find_place_to_sleep(response)
+                    if correct >= 3.:
+                        self.parent.text.system(
+                            text=""" You approach the end of the Maze. Lucky you :) The are no many people to do it\n Those that loat, died in the Labyrinth\n""")
+                        self.parent.myPlayer.cash += 50
+                        self.parent.myPlayer.xp += 100
             elif response == '2':
-                self.parent.text.you(text=f"2. How long would I work?\n")
-                self.parent.text.npc(text=f"Only today. Until dawn\n", begin_txt='Miller')
-                self.quest_b5('1', True)
-            elif response == '3':
-                self.parent.text.you(text=f"How much am I going to earn?\n")
-                self.parent.text.npc(text=f"100 coins paid after job\n", begin_txt='Miller')
-                self.quest_b5('1', True)
-            elif response == '4':
-                self.parent.text.you(text=f"OK, I want start working!\n")
-                self.parent.text.npc(text=f"Wonderfull! We can start straight away!\n", begin_txt='Miller')
-                self.parent.text.system(text=""" After whole day of work you get paid by the miller. Also he lets you sleep in his mill so can recover a bit\n""")
-                self.parent.myPlayer.cash += 100
-                self.parent.myPlayer.HP += 25
-                if self.parent.myPlayer.HP > self.parent.myPlayer.maxMP:
-                    self.parent.myPlayer.HP = self.parent.myPlayer.maxMP
-                    print("""
-            #######################################################
-            ~~~~~~~~       !   Work for the day            ~~~~~~~~
-            #######################################################
-            |                     DONE                            |
-            |  You have found booklet about a job                 |  
-            |                                                     |
-            |   You have worked hard and earned a reward          |
-            |                                                     |
-            #######################################################
-            |                   + 100 coins                       |
-            #######################################################\n""")
-                self.parent.zonemap['b5']['SOLVED'] = True
-            elif response == '5':
-                self.parent.text.you(text=f"I have to go\n")
-                self.parent.text.npc(text=f"Bye bye\n", begin_txt='Miller')
+                self.parent.text.system(text=""" You decide to postpone this attraction\n""")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_b5()
-        elif response == '2':
-            self.parent.text.system("Pff i don't need this")
-        else:
-            self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            self.quest_b5(response)
+                find_place_to_sleep(response)
 
-    # i need to add this  to quests b5
+        def find_place_to_sleep(response=None):
+            if not response:
+                self.parent.text.system(
+                    text=""" Any available to sleep places are quite far from you. You have to choose well because will not have no time to go to different place\n""")
+            self.parent.text.system(
+                text="""\n1. Tavern 'Baal'\n2. Tavern 'Sishish\n3. Try to sleep on the street\n4. Do not sleep\n""")
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1' or response == '2':
+                self.parent.text.system(text=""" Unfortunately they have no free places. You lose 20HP\n""")
+                self.parent.myPlayer.HP -= 20
+            elif response == '3':
+                self.parent.text.system(
+                    text=""" You sleep on the streets. You lose 20HP but you also find 20 coins\n""")
+                self.parent.myPlayer.HP -= 20
+                self.parent.myPlayer.cash += 20
+            elif response == '4':
+                self.parent.text.system(
+                    text=""" You do not sleep all night. You lose 20HP but you also become stronger (maxHP + 20)\n""")
+                self.parent.myPlayer.HP -= 20
+                self.parent.myPlayer.maxHP += 20
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                find_place_to_sleep(response)
+
+        def courrier_task(response=None):
+            if not response:
+                self.parent.text.system(
+                    text=""" You step into an old chateau\n""")
+                self.parent.text.npc(text=f"Welcome {self.parent.myPlayer.name}!\n", begin_txt='Vaegirn the Weak')
+                self.parent.text.you(text='Hi! How are y..\n')
+                self.parent.text.npc(
+                    text=f"Excesue me but today I am really busy. Could you please help me with something?\n",
+                    begin_txt='Vaegirn the Weak')
+                self.parent.text.you(text='Umm, what do you mean?\n')
+                self.parent.text.npc(
+                    text=f"I urgently need to deliver this letter to my brother today. He lives in southern part of the city\n",
+                    begin_txt='Vaegirn the Weak')
+            print("""
+            #######################################################
+            ~~~~~~~~       !       Deliver message         ~~~~~~~~
+            #######################################################
+            |                                                     |
+            |  Vaegirn the Weak  ask to deliver message to his    |  
+            |  brother                                            |
+            |                                                     |
+            |  Reward:  60                                        |
+            |                                                     |
+            #######################################################
+            |     1.Agree       |             2.Decline           |
+            #######################################################\n""")
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.you(text=f"I will help you\n")
+                self.parent.text.npc(
+                    text=f"Thank you my friend. And remember the password - Cunidas Koehern. My brother will ask for it\n",
+                    begin_txt='Vaegirn the Weak')
+                self.parent.text.system(text=""" You spend the afternoon walking the whole city\n""")
+                self.parent.text.npc(text=f"THE PASSWORD!!!!\n", begin_txt='Beagirn the Weak')
+                self.parent.text.you(text=""" OK it is..:\n""")
+                self.parent.text.system(text=""" Provide the password\n""")
+                response = input(" >  ")
+                response = str(response).lower()
+                if response == 'cunidas koehern':
+                    self.parent.text.you(text=f"Cunidas Koehern\n")
+                    self.parent.text.npc(
+                        text=f"Good. Now, give the letter and BYE!\n",
+                        begin_txt='Baegirn the Weak')
+                    self.parent.myPlayer.cash += 60
+                    self.parent.myPlayer.xp += 100
+                else:
+                    self.parent.text.you(text=f"{response}\n")
+                    self.parent.text.npc(
+                        text=f"Go away!\n",
+                        begin_txt='Baegirn the Weak')
+                    self.parent.text.system(text=""" You lost\n""")
+            elif response == '2':
+                self.parent.text.you(text=f"Maybe next time\n")
+                self.parent.text.npc(text=f"See you next time!\n", begin_txt='Willy Bam')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                courrier_task(response)
+
+        def play_blackjack(response=None):
+            if not response:
+                self.parent.text.system(
+                    text=""" While going through city you hear some loud people from crowdy place\n""")
+                self.parent.text.system(text=""" The emblem above says 'Goat's Head'\n""")
+                self.parent.text.system(text=""" When you walk in it turns out this is a hazard games place\n""")
+                self.parent.text.npc(text=f"Hay! Welcome a fortuner. Are you willing to play a Blackjack?\n",
+                                     begin_txt='Willy Bam')
+            print("""
+            #######################################################
+            ~~~~~~~~       !       Play Blackjack          ~~~~~~~~
+            #######################################################
+            |                                                     |
+            |  You are offered to play Blackjack                  |  
+            |  Do you want to do it?                              |
+            |                                                     |
+            |  Reward:  30                                        |
+            |                                                     |
+            #######################################################
+            |     1.Agree       |             2.Decline           |
+            #######################################################\n""")
+            response = input(" >  ")
+            response = str(response).lower()
+            if response == '1':
+                self.parent.text.you(text=f"Yeah sure\n")
+                self.parent.text.npc(
+                    text=f"You have 1 chance. If you win you make the money\n",
+                    begin_txt='Willy Bam')
+                all_points = 0
+                while True:
+                    self.parent.text.system(' Press ENTER to take another card')
+                    input('')
+                    card = random.randint(2, 11)
+                    all_points += card
+                    self.parent.text.npc(text=f"Your card gives you {card} points. You now have {all_points}\n",
+                                         begin_txt='Willy Bam')
+                    if all_points == 21:
+                        self.parent.text.npc(text=f"You won with 21 points!\n", begin_txt='Willy Bam')
+                        self.parent.myPlayer.cash += 30
+                        self.parent.myPlayer.xp += 100
+                        break
+                    elif all_points > 21:
+                        self.parent.text.npc(text=f"You lost!\n", begin_txt='Willy Bam')
+                        break
+                    self.parent.text.system(text=""" Next action\n1. Take another card\n2. Hold\n""")
+                    response = input(" >  ")
+                    response = str(response).lower()
+                    if response == '1':
+                        continue
+                    elif response == '2':
+                        willy_points = random.randint(12, 26)
+                        if all_points > willy_points:
+                            self.parent.text.npc(text=f"I have in total {willy_points} points\n",
+                                                 begin_txt='Willy Bam')
+                            self.parent.text.npc(text=f"You won!\n", begin_txt='Willy Bam')
+                            self.parent.myPlayer.cash += 30
+                            self.parent.myPlayer.xp += 100
+                            break
+                        else:
+                            self.parent.text.npc(text=f"I have in total {willy_points} points\n",
+                                                 begin_txt='Willy Bam')
+                            self.parent.text.npc(text=f"You lost!\n", begin_txt='Willy Bam')
+                            break
+                    else:
+                        self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                        play_blackjack(response)
+            elif response == '2':
+                self.parent.text.you(text=f"Maybe next time\n")
+                self.parent.text.npc(text=f"Loser!\n", begin_txt='Willy Bam')
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                play_blackjack(response)
+
+        def local_market(response=None, action=False):
+            if not action:
+                if not response:
+                    self.parent.text.system(
+                        text=""" When you walk to market in the morning you see on a wall a pinned leaflet\n""")
+                    self.parent.text.system(text=""" It looks like local miller looks for an employee\n""")
+                    self.parent.text.system(text=""" This could be an occasion for quick money\n""")
+                    print("""
+                    #######################################################
+                    ~~~~~~~~       !   Work for the day            ~~~~~~~~
+                    #######################################################
+                    |                                                     |
+                    |  You have found booklet about a job                 |  
+                    |  Do you want to take on this job?                   |
+                    |                                                     |
+                    |  Reward:  ????????????????                          |
+                    |                                                     |
+                    #######################################################
+                    |     1.Go to miller       |           2.Go away      |
+                    #######################################################\n""")
+                    response = input(" >  ")
+                    response = str(response).lower()
+            if response == '1':
+                if not action:
+                    self.parent.text.you(text=f"Hey, I am {self.parent.myPlayer.name}, I saw you job offer\n")
+                    self.parent.text.npc(text=f"Hi there\n", begin_txt='Miller')
+                    self.parent.text.npc(text=f"Great, how can I help you?\n", begin_txt='Miller')
+                self.parent.text.system(
+                    f" Choose option\n  1. Can you tell me more about the job?\n  2. How long would I work?\n  3. How much am I going to earn?\n  4. OK, I want start working\n  5. I have to go\n",
+                    txt_only=True)
+                response = input(" >  ")
+                response = str(response).lower()
+                if response == '1':
+                    self.parent.text.you(text=f"Can you tell me more about the job?\n")
+                    self.parent.text.npc(
+                        text=f"I am looking for a man that can help me carrying my flour to my clients\n",
+                        begin_txt='Miller')
+                    local_market('1', True)
+                elif response == '2':
+                    self.parent.text.you(text=f"2. How long would I work?\n")
+                    self.parent.text.npc(text=f"Only today. Until dawn\n", begin_txt='Miller')
+                    local_market('1', True)
+                elif response == '3':
+                    self.parent.text.you(text=f"How much am I going to earn?\n")
+                    self.parent.text.npc(text=f"100 coins paid after job\n", begin_txt='Miller')
+                    local_market('1', True)
+                elif response == '4':
+                    self.parent.text.you(text=f"OK, I want start working!\n")
+                    self.parent.text.npc(text=f"Wonderfull! We can start straight away!\n", begin_txt='Miller')
+                    self.parent.text.system(
+                        text=""" After whole day of work you get paid by the miller. Also he lets you sleep in his mill so can recover a bit\n""")
+                    self.parent.myPlayer.cash += 100
+                    self.parent.myPlayer.HP += 25
+                    if self.parent.myPlayer.HP > self.parent.myPlayer.maxMP:
+                        self.parent.myPlayer.HP = self.parent.myPlayer.maxMP
+                        print("""
+                #######################################################
+                ~~~~~~~~       !   Work for the day            ~~~~~~~~
+                #######################################################
+                |                     DONE                            |
+                |  You have found booklet about a job                 |  
+                |                                                     |
+                |   You have worked hard and earned a reward          |
+                |                                                     |
+                #######################################################
+                |                   + 100 coins                       |
+                #######################################################\n""")
+                elif response == '5':
+                    self.parent.text.you(text=f"I have to go\n")
+                    self.parent.text.npc(text=f"Bye bye\n", begin_txt='Miller')
+                else:
+                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                    local_market()
+            elif response == '2':
+                self.parent.text.system("Pff i don't need this")
+            else:
+                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                local_market(response)
+
+        actions = {'Go to your your friend Vaegirn the Weak': courrier_task,
+                   'Move to northside of the town': play_blackjack,
+                   'Go to local market': local_market,
+                   'Go to town tavern': self.peepers_game,
+                   'Step into The Maze': labyrinth,
+                   'Find place to sleep': find_place_to_sleep}
+        self.list_actions(actions)
+
     def peepers_game(self):
-        self.parent.text.system("To your surprise, you noticed a large group of people who were constantly shouting and laughing\n")
         self.parent.text.system(
-            " Do you want to come and find out what happened there?\n  1.Yes\n  2.Nope\n",txt_only=True)
+            "To your surprise, you noticed a large group of people who were constantly shouting and laughing\n")
+        self.parent.text.system(
+            " Do you want to come and find out what happened there?\n  1.Yes\n  2.Nope\n", txt_only=True)
         group_of_people = input(" > ")
         if group_of_people == "1":
-            self.parent.text.you("Lest1s see...")
-            self.parent.text.system("You have noticed a strange situation, people are playing peepers with a one-eyed dwarf")
-            self.parent.text.npc("Hey everybody look another player has come")
+            self.parent.text.you("Lest1s see...\n")
+            self.parent.text.system(
+                "You have noticed a strange situation, people are playing peepers with a one-eyed dwarf\n")
+            self.parent.text.npc("Hey everybody look another player has come\n")
             print("""
 
                     #######################################################
@@ -1865,11 +2117,12 @@ class Quests:
                 " Choose how you answer\n  1.Hmm, what are the rules\n 2.No, i just come to see\n", txt_only=True)
             join_game = input(" > ")
             if join_game == "1":
-                self.parent.text.npc("In general, you sit in front of Tandibrad and you look into each other's eyes.\n Who can not stand and blinks, the loser. Tandibrad has already won 11 times in a row, can you win it?")
+                self.parent.text.npc(
+                    "In general, you sit in front of Tandibrad and you look into each other's eyes.\n Who can not stand and blinks, the loser. Tandibrad has already won 11 times in a row, can you win it?")
                 win_chanse = random.randint(1, 100)
                 if win_chanse > 85:
-                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
-                    self.parent.text.npc("Interesting who will lose....")
+                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.\n")
+                    self.parent.text.npc("Interesting who will lose....\n")
                     print("""
 
                                        #######################################################
@@ -1887,21 +2140,20 @@ class Quests:
                                        #######################################################\n""")
                     self.parent.myPlayer.cash += 30
                 elif win_chanse <= 85:
-                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.")
-                    self.parent.text.npc("Hmm, interesting who will lose")
-                    self.parent.text.you("Ahhh I`ve lost. He is a strong opponent")
+                    self.parent.text.npc("Hmm, strangely, they have been looking at each other for so long.\n")
+                    self.parent.text.npc("Hmm, interesting who will lose\n")
+                    self.parent.text.you("Ahhh I`ve lost. He is a strong opponent\n")
             elif join_game == "2":
-                self.parent.text.npc("Oh well okay...")
+                self.parent.text.npc("Oh well okay...\n")
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                peepers_game()
+                self.peepers_game()
         elif group_of_people == "2":
-            self.parent.text.you("Meeeeh")
-            self.parent.text.you("You`ve continued your journey!")
+            self.parent.text.you("Meeeeh\n")
+            self.parent.text.you("You`ve continued your journey!\n")
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-            peepers_game()
-    # i need to add this ^ to quests b5
+            self.peepers_game()
 
     def quest_c1(self):
         print(" ")
