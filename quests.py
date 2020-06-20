@@ -15,6 +15,34 @@ class Quests:
         self.knife_use = 2
         self.dolls = 0
 
+    #### CAT HERO a2 quest
+    def safe_cat(self):
+        self.parent.text.npc("Oh, no Princess come down, please\n", begin_txt="Little girl")
+        self.parent.text.you("Hi do you need help?\n")
+        print("""
+
+                            #######################################################
+                            ~~~~~~               !  Cat hero                 ~~~~~~
+                            #######################################################
+                            |                                                     |
+                            |    The little girl's cat is stuck in a tree.        |
+                            |    Help her get the cat.                            |
+                            |                                                     |
+                            #######################################################
+                            #######################################################\n""")
+        salvation = False
+        while salvation is not True:
+            cat_hero = input(" Write 'climb' to try to climb a tree\n")
+            if cat_hero == 'climb':
+                cat_chanse = random.randint(1, 10)
+                if cat_chanse > 8:
+                    self.parent.text.system("You managed to climb a tree and save a cat\n")
+                    salvation = True
+                elif cat_chanse <= 8:
+                    self.parent.text.system("Unfortunately you did not manage to climb, try again\n")
+            else:
+                self.parent.text.danger("Wrong input!\n", begin_txt="SYSTEM")
+
     def quest_a2(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
@@ -42,6 +70,7 @@ class Quests:
                         self.parent.myPlayer.cash += 25
                         self.parent.myPlayer.xp += 100
                         self.parent.zonemap['a2']['SOLVED1'] = True
+                        self.safe_cat()
                         if self.parent.zonemap['a2']['SOLVED2'] is True:
                             self.parent.zonemap['a2']['SOLVED'] = True
                     else:
@@ -51,6 +80,7 @@ class Quests:
                     self.parent.text.system(" You don't have enough money\n")
             elif response in ('no', '2'):
                 self.parent.text.you(text="Maybe next time\n")
+                self.safe_cat()
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_a2(response)
@@ -1373,7 +1403,7 @@ class Quests:
     def quest_b4(self):
         self.parent.text.system("\n  - Welcome to Cardcaster -\n", txt_only=True)
         self.parent.text.npc("This is a charming city known for its smithies. If there would problems, do not worry, contact the guards.\n", begin_txt='Town Guardian')
-        self.parent.text.system(""" You can go to:\n  1.Abandoned forge\n  2.Mysterious gorge\n""",txt_only=True)
+        self.parent.text.system(""" You can go to:\n  1.Abandoned forge\n  2.Mysterious gorge\n  3.Quest board\n""",txt_only=True)
         answer = input(" > ")
         print(" ")
 
@@ -1532,6 +1562,199 @@ class Quests:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_b4()
 
+        #### Quest board b4
+        elif answer == '3' and self.parent.zonemap['b4']['SOLVED3'] is False:
+            self.parent.text.system("  _-_ AVAILABLE QUESTS _-_ \n", txt_only=True)
+            self.parent.text.system("   1. Defender of order\n   2. Carrot Lord \n   3.\n", txt_only=True)
+            quest_choise = input(" > ")
+            if quest_choise == "1":
+                print("""
+
+                        ##############################################################
+                        ~~~~~~~~~~          !  Defender of order            ~~~~~~~~~~ 
+                        ##############################################################
+                        |                                                            |
+                        | 4 witches accused of using dark magic will be tried today. |
+                        | An adventurer is needed who will follow the order during   |
+                        | the trial. And in case of an emergency to be able to       |
+                        | withstand the dark magic of the middle level.              |
+                        | Requirement:  adventurer at least 5 lvl                    |
+                        |                                                            |
+                        |  Reward:  100 coins                                        |
+                        |                                                            |
+                        ##############################################################
+                        |     1.Accept                   |         2.Decline         |
+                        ##############################################################\n""")
+                order_defender = input(" > ")
+                if order_defender == "1":
+                    self.parent.text.you("Hello, I would like to take this quest\n")
+                    self.parent.text.npc("So of course, please tell me your name, class and level\n")
+                    input(" Name: ")
+                    input(" Class: ")
+                    input(" Level: ")
+                    if self.parent.myPlayer.level >= 5:
+                        self.parent.text.npc('All right, you suit us\n')
+                        self.parent.text.system("  - A couple of hours later - \n",txt_only=True)
+                        witch = 0
+                        self.parent.text.npc(f"Today we have to decide the fate of 4 witches\n")
+                        while witch != 4:
+                            witch_name = ['Zelda', 'Katrin', 'Beatrix', 'Cordelia', 'Evanora', 'Locasta', 'Jinx', 'Trixie', 'Freya', 'Evanora', 'Allegra']
+                            self.parent.text.npc(f"Mrs.{random.choice(witch_name)}, you are suspected of using black magic\n")
+                            witch_behavior = random.randint(1, 100)
+                            if witch_behavior < 85:
+                                witch += 1
+                                self.parent.text.system(" The trial was successful\n", txt_only=True)
+                                if witch != 4:
+                                    self.parent.text.npc("Conduct the next\n")
+                                    input(" Input'Enter'")
+                                elif witch == 4:
+                                    self.parent.text.npc("It was the last\n")
+                                    print("""
+
+            ##############################################################
+            ~~~~~~~~~~          !  Defender of order            ~~~~~~~~~~ 
+            ##############################################################
+            |                         DONE                               |
+            |     You have successfully completed the quest              |
+            |                                                            |
+            |                                                            |
+            ##############################################################
+            |                       + 100 coins                          |
+            ##############################################################\n""")
+                            if 85 <= witch_behavior <= 100:
+                                self.parent.text.you("She is behaving very suspiciously (check it by typing 'check')\n")
+                                check = input(' > ')
+                                witch_check = random.randint(1, 3)
+                                if check == "check" and witch_check == 1:
+                                    self.parent.text.you("This witch is safe\n")
+                                    witch += 1
+                                    self.parent.text.system(" The trial was successful", txt_only=True)
+                                    if witch != 4:
+                                        self.parent.text.npc("Conduct the next\n")
+                                        input(" Input'Enter'")
+                                    elif witch == 4:
+                                        self.parent.text.npc("It was the last\n")
+                                        print("""
+
+            ##############################################################
+            ~~~~~~~~~~          !  Defender of order            ~~~~~~~~~~ 
+            ##############################################################
+            |                         DONE                               |
+            |     You have successfully completed the quest              |
+            |                                                            |
+            |                                                            |
+            ##############################################################
+            |                       + 100 coins                          |
+            ##############################################################\n""")
+                                elif check == "check" and witch_check == 2:
+                                    self.parent.text.system("She had a magic wand with her, but you confiscated it in time")
+                                    witch += 1
+                                    self.parent.text.system(" The trial was successful", txt_only=True)
+                                    if witch != 4:
+                                        self.parent.text.npc("Conduct the next\n")
+                                        input(" Input'Enter'")
+                                    elif witch == 4:
+                                        self.parent.text.npc("It was the last\n")
+                                        print("""
+
+            ##############################################################
+            ~~~~~~~~~~          !  Defender of order            ~~~~~~~~~~ 
+            ##############################################################
+            |                         DONE                               |
+            |     You have successfully completed the quest              |
+            |                                                            |
+            |                                                            |
+            ##############################################################
+            |                       + 100 coins                          |
+            ##############################################################\n""")
+                                elif check == "check" and witch_check == 3:
+                                    self.parent.text.system("She had a magic wand with her and attacked the judge\n")
+                                    self.parent.witch_fight()
+                                    witch += 1
+                                    self.parent.text.system(" The trial is ended", txt_only=True)
+                                    if witch != 4:
+                                        self.parent.text.npc("Conduct the next\n")
+                                        input(" Input'Enter'")
+                                    elif witch == 4:
+                                        self.parent.text.npc("It was the last\n")
+                                        print("""
+
+            ##############################################################
+            ~~~~~~~~~~          !  Defender of order            ~~~~~~~~~~ 
+            ##############################################################
+            |                         DONE                               |
+            |     You have successfully completed the quest              |
+            |                                                            |
+            |                                                            |
+            ##############################################################
+            |                       + 100 coins                          |
+            ##############################################################\n""")
+                else:
+                    self.parent.text.you("Mehhh")
+            elif quest_choise == "2":
+                print("""
+
+        ##############################################################
+        ~~~~~~~~~~           !  Carrot Lord                 ~~~~~~~~~~ 
+        ##############################################################
+        |                                                            |
+        | The ancient family, known as the "carrot lords", is        |
+        | currently in a difficult position. They need adventurers   |
+        | who will agree to harvest for a small fee.                 |
+        | Requirement:  adventurer with at least 45 strenghth        |
+        |                                                            |
+        |  Reward:  25 coins                                         |
+        |                                                            |
+        ##############################################################
+        |     1.Accept                   |         2.Decline         |
+        ##############################################################\n""")
+                carrot_lord = input(" > ")
+                if carrot_lord == "1":
+                    self.parent.text.you("Hello, I would like to take this quest\n")
+                    self.parent.text.npc("So of course, please tell me your name, class and strength\n")
+                    input(" Name: ")
+                    input(" Class: ")
+                    input(" Level: ")
+                    if self.parent.myPlayer.STR >= 45:
+                        self.parent.text.npc('All right, you suit us\n')
+                        self.parent.text.system("  - A couple of hours later - \n", txt_only=True)
+                        self.parent.text.npc("""Okay, you have to collect 20 carrots. But be careful, because sometimes you can get Dramagora, 
+                        then you need to use this magic staff. Because if you don't burn it, it can poison you.""")
+                        carrot = 0
+                        while carrot != 20:
+                            self.parent.text.system("write 'dig'", txt_only=True)
+                            carrot_take = input(" > ")
+                            carrot_chanse = random.randint(1, 100)
+                            if carrot_take == 'dig':
+                                if carrot_chanse < 75:
+                                    self.parent.text.system("You find one!")
+                                    carrot += 1
+                                    input(" press 'Enter'")
+                                elif 75 <= carrot_chanse < 90:
+                                    self.parent.text.system("You found rotten carrot")
+                                elif 90 <= carrot_chanse < 101:
+                                    self.parent.text.system("You'he get Dramagor! Use the staff (write 'fire')")
+                                    killed = False
+                                    while killed is not True:
+                                        dramagor = input(" > ")
+                                        if dramagor == 'fire':
+                                            kill_chanse = random.randint(1, 10)
+                                            if kill_chanse < 10:
+                                                self.parent.text.system("You successfully burned Dramagor!")
+                                                killed = True
+                                            elif kill_chanse > 9:
+                                                self.parent.text.system("You missed (- 50 hp )")
+                                                self.parent.myPlayer.hp -= 50
+                                        else:
+                                            self.parent.text.system("You failed (- 50 hp )")
+                                            self.parent.myPlayer.hp -= 50
+                            else:
+                                self.parent.text.danger("Wrong input !", begin_txt="SYSTEM")
+                else:
+                    self.parent.text.you("Mehhh")
+
+        elif answer == "3" and self.parent.zonemap['b4']['SOLVED3'] is True:
+            self.parent.text.system(' You have already passed all quests')
         elif answer == "1" and self.parent.zonemap['b4']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the gorge')
         elif answer == "2" and self.parent.zonemap['b4']['SOLVED2'] is True:
