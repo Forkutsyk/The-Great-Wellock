@@ -70,7 +70,7 @@ zonemap = {
         DOWN: "a0",
         LEFT: "a2",
         RIGHT: "a4"
-    },
+    },# done 3
     'a4': {
         ZONENAME: 'Dwarven Valley',
         DESCRIPTION: """ Dwarven Valley, has been corrupted by dwarves from the Hammerstone dig up black ice, 
@@ -108,6 +108,7 @@ zonemap = {
         DESCRIPTION: " The city is known for its powerful magicians ",
         'SOLVED': False,
         'SOLVED1': False,
+        'SOLVED2': False,
         UP: "c2",
         DOWN: "a2",
         LEFT: "b1",
@@ -169,6 +170,7 @@ zonemap = {
         DESCRIPTION: " This valley was once a nest of dragons",
         'SOLVED': False,
         'SOLVED1': False,
+        'SOLVED2': False,
         UP: "4",
         DOWN: "b3",
         LEFT: "c2",
@@ -180,6 +182,7 @@ zonemap = {
  where once every 50 years a fiery flower blooms with amazing healing properties.""",
         'SOLVED': False,
         'SOLVED1': False,
+        'SOLVED2': False,
         UP: "4",
         DOWN: "b4",
         LEFT: "c3",
