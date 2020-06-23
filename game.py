@@ -133,6 +133,14 @@ class Game:
                     self.myPlayer.die()
                     break
                 self.myPlayer.show()
+                if self.zonemap['a5']['STRANGE_GOBLIN'] is True:
+                    self.text.npc("Ouch!", begin_txt="Strange goblin")
+                    self.zonemap['a5']['STRANGE_GOBLIN_HP'] -= 10
+                    print(self.zonemap['a5']['STRANGE_GOBLIN_HP'])
+                    if self.zonemap['a5']['STRANGE_GOBLIN_HP'] < 0:
+                        self.text.danger("Goblin is dead", begin_txt="SYSTEM")
+                        self.zonemap['a5']['STRANGE_GOBLIN'] = False
+
             elif choice == "2":
                 self.myPlayer.heal()
                 self.myPlayer.show()
@@ -350,6 +358,17 @@ class Game:
         self.myEnemy.STR = 70
         self.text.danger("You don't understand anything...\n")
         self.fight()
+
+    def frog_fight(self):
+        self.myEnemy.name = 'Huge frog'
+        self.myEnemy.job = 'animal'
+        self.myEnemy.HP = 120
+        self.myEnemy.MP = 0
+        self.myEnemy.maxDEF = 2
+        self.myEnemy.STR = 80
+        self.text.danger("Krogh...\n")
+        self.fight()
+
 
     #### PRINTING
     def location_print(self):

@@ -68,10 +68,13 @@ class Quests:
     def quest_a2(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
-            if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False:
-                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""", txt_only=True)
+            if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False and self.parent.zonemap['a5']['STRANGE_GOBLIN'] is False:
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""",txt_only=True)
             elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
                 self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n  3.Assistant home""",
+                                        txt_only=True)
+            elif self.parent.zonemap['a5']['STRANGE_GOBLIN'] is True:
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n   *. Richman`s house\n""",
                                         txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
@@ -292,6 +295,15 @@ class Quests:
                         self.parent.text.npc("Hmm, maybe in other place")
                 else:
                     self.parent.text.you("We have seen here or wrong input")
+        elif response == "*" and self.parent.zonemap['a2']['SOLVED4'] is False and self.parent.zonemap['a5']['STRANGE_GOBLIN'] is True:
+            self.parent.text.npc("Thank you very much, I will ask my master to thank you enough\n", begin_txt="Strange goblin")
+            self.parent.text.system('You have received 150 coins as well as a beautiful sword with a damage of 30\n')
+### Crashes here
+            self.parent.equipment_set['Weapon'][Name] = "The sword of Count Binelwald"
+            self.parent.equipment_set['Weapon'][playerSTR] = 30
+            self.parent.equipment_set['Weapon'][playerDEF] = 8
+            self.parent.myPlayer.maxDEF += self.parent.equipment_set['Weapon'][playerDEF]
+            self.parent.myPlayer.STR += self.parent.equipment_set['Weapon'][playerSTR]
 
         elif response == '3' and self.parent.zonemap['a2']['SOLVED3'] is True and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
             self.parent.text.system(' You have already passed this quest, try to go somewhere else')
@@ -300,10 +312,62 @@ class Quests:
         elif response == '2' and self.parent.zonemap['a2']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the Ruins')
 
+    def stolen_pocket(self):
+        self.parent.text.danger("A teenager has just run near you. He stole one of your wallets.")
+        print("""
+
+        #######################################################
+        ~~~~~~           !   Little thief                ~~~~~~
+        #######################################################
+        |                                                     |
+        |  You can let him go and lose half your money.       |  
+        |  Or try to catch him if you fast enough.            |
+        |                                                     |
+        #######################################################
+        |     1. Let him go         |        2. RUN!!         |
+        #######################################################\n""")
+        little_thief = input(" > ")
+        if little_thief == "1":
+            self.parent.text.you("Meeeh, i`ll find him in another time\n")
+            self.parent.myPlayer.cash -= (self.parent.myPlayer.cash / 2)
+        elif little_thief == "2":
+            self.parent.text.you("Hey you ! Stop immediately!!\n")
+            thrief_catch = False
+            self.parent.text.system("Write run and then press Enter till you not catch the thief\n", txt_only=True)
+            while thrief_catch is not True:
+                thief_run = random.randint(8, 15)
+                your_run = 0
+                thief_run_out = random.randint(0, 100)
+                run = input(" > ")
+                if your_run == thief_run:
+                    self.parent.text.system("Congratulations, you have catched him !\n")
+                    thrief_catch = True
+                    self.parent.text.system("What do you wanna to do with him ?\n 1.Let him go\n 2.Take to the guard\n", txt_only=True)
+                    decision = input(" > ")
+                    if decision == "1":
+                        self.parent.text.system("You let him go")
+                        self.parent.myPlayer.xp += 50
+                    elif decision == "2":
+                        self.parent.text.system("You gave it to the guards and received a small reward.")
+                        self.parent.myPlayer.cash += 50
+                    else:
+                        self.parent.text.system("You let him go")
+                        self.parent.myPlayer.xp += 50
+                elif thief_run_out > 80:
+                    self.parent.text.system("You did not managed to catch him. You have lost hlf of your coins\n")
+                    self.parent.myPlayer.cash -= (self.parent.myPlayer.cash / 2)
+                    break
+                elif run == 'run':
+                    print("Don't stop, keep running")
+                    your_run += 1
+        else:
+            self.parent.text.you("Meeeh, i`ll find him in another time\n")
+            self.parent.myPlayer.cash -= (self.parent.myPlayer.cash / 2)
+
     def quest_a3(self, response=None):
         if not response:
             self.parent.text.system("""\n  -  House of a Thousand Faces - \n""", txt_only=True)
-            self.parent.text.system(""" You can go to:\n  1. Billie Jo Tavern\n  2. Local informant\n""", txt_only=True)
+            self.parent.text.system(""" You can go to:\n  1. Billie Jo Tavern\n  2. Local informant\n  3. Gallows tower\n""", txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
         if response == '1' and self.parent.zonemap['a3']['SOLVED1'] is False:
@@ -353,8 +417,6 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_a3(response)
-        elif response == '1' and self.parent.zonemap['a3']['SOLVED1'] is True:
-            self.parent.text.system(' You have already passed this quest, try to go to Local informant')
         elif response == '2' and "Warrior medicine" not in self.parent.myPlayer.inventory and self.parent.zonemap['a3']['SOLVED2'] is False:
             self.parent.text.npc("Khe khe...\n")
             self.parent.text.system("You noticed a man lying on the ground\n")
@@ -439,8 +501,67 @@ class Quests:
                 self.parent.text.npc("Not far from here, in the west. In the town Sharandar")
             elif memories_of_past == "2":
                 self.parent.text.you("I`m sorry but no, we have to save the kingdom")
+        elif response == '3' and self.parent.zonemap['a3']['SOLVED3'] is False:
+            self.parent.text.npc("Hi buddy, I see you are as adventurous as we are. We have an offer for you.\n", begin_txt="group of adventurers")
+            print("""
+        #######################################################
+        ~~~~~~           !  Adventure time              ~~~~~~
+        #######################################################
+        |                                                     |
+        | We received a quest for reconnaissance. We were     |
+        | given this map, but we can't decipher it. If you    |
+        | decipher it for us, we are ready to share the       |
+        | rewards with you                                    |
+        |                                                     |  
+        | Rewards: Defense pousion + 45 coins                 |
+        |                                                     |
+        #######################################################
+        |         1.Accept         |         2.Decline        |
+        #######################################################\n""")
+            adventure_time = input(" > ")
+            if adventure_time == "1":
+                self.parent.text.npc("Here is the map... We managed to translate 'go straight to'\n", begin_txt="group of adventurers")
+                a = """
+                
+        I think it is elfish so:
+    Ÿ - ma      Ħ- s        Į - h
+    Ŧ - a       Ǿ - tha     ŵ - r 
+    Ĳ - ja      Ĥ - yar     Đ - kir
+    ŗ - ran     ſ - fer     ă - fu
+    ĵ - lop     Ŀ - yor     ů - da\n"""
+                print(a)
+                self.parent.text.system("You have to translate this part 'ĦĮŦŗůŵ' (You have one atempt, or thay go somewhere else)\n")
+                translate = input(" > ").lower()
+                if translate == "sharandar":
+                    self.parent.text.npc("Oh seriously it so close ?!", begin_txt="group of adventurers")
+                    print("""
+           #######################################################
+           ~~~~~~           !  Adventure time              ~~~~~~
+           #######################################################
+           |                      DONE                           |
+           | We received a quest for reconnaissance. We were     |
+           | given this map, but we can't decipher it. If you    |
+           | decipher it for us, we are ready to share the       |
+           | rewards with you                                    |
+           |                                                     |  
+           | Rewards: Defense pousion + 45 coins                 |
+           |                                                     |
+           #######################################################
+           |     + Defense pousion            + 45 coins         |
+           #######################################################\n""")
+                    self.parent.myPlayer.maxDEF += 10
+                    self.parent.myPlayer.cash += 45
+                    self.parent.zonemap['a3']['SOLVED3'] = True
+                    self.stolen_pocket()
+                else:
+                    self.parent.text.npc("You think we are idiots, we will ask someone else....", begin_txt="group of adventurers")
+
+        elif response == '1' and self.parent.zonemap['a3']['SOLVED1'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go to Local informant')
         elif response == '2' and self.parent.zonemap['a3']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to Billie Jo tavern\n')
+        elif response == '3' and self.parent.zonemap['a3']['SOLVED3'] is True:
+            self.parent.text.system(' You have already passed this quest\n')
 
     def quest_a4(self):
         def tavern():
@@ -570,7 +691,7 @@ class Quests:
         print(' ')
         self.parent.text.system(
             text=""" - Welcome to Icespire Peak -\n""")
-        self.parent.text.system(""" You can go to:\n  1.Stable\n  2.Black ice mines\n""",txt_only=True)
+        self.parent.text.system(""" You can go to:\n  1. Stable\n  2. Black ice mines\n  3. ! Philanthropist\n  4. Suburb\n""",txt_only=True)
         answer = input(" > ")
         print(" ")
 
@@ -714,16 +835,135 @@ class Quests:
                     self.parent.text.npc("Did you`ve done what i was asking for ?\n", begin_txt="Old woman")
                 elif self.shopping_done is True:
                     self.parent.text.npc("Oh thank you, young man. You're so kind. Here are your reward.\n", begin_txt="Old woman")
-                    self.parent.text.system(" You`ve get the poution wich will rise your maxMp")
+                    self.parent.text.system(" You`ve get the poution wich will rise your maxMp\n")
                     self.parent.myPlayer.xp += 25
                     self.parent.myPlayer.maxMP += 20
+                    self.parent.myPlayer.inventory.pop(3)
+                    self.parent.zonemap['a5']['SOLVED3'] = True
+
+        # Believe or not
+        elif answer == "4" and self.parent.zonemap['a5']['SOLVED4'] is False:
+            self.parent.text.system("You are riding in a cart to the suburbs\n")
+            print("""
+
+                #############################################################
+                ~~~~~~             !   Believe or not 1/2              ~~~~~~
+                #############################################################
+                |                                                           |
+                | A goblin in noble clothes crashes through the window and  |
+                | rolls over the ground. The symbol of the king’s guard is  |
+                | embroidered on his half-cape. As he gets up, he panics    |
+                | and looks around, fixing his eyes on you. “The            |
+                |  Goat-Riders are coming! Please, hide me!”                |
+                |                                                           |
+                |                                                           |
+                #############################################################
+                |         1. Hide            |        2. Do not hide        |
+                #############################################################\n""")
+            belive_or_not1 = input(" > ")
+            if belive_or_not1 == "1":
+                self.parent.text.you("Ok, come here:\n")
+                guard_check_if = random.randint(1, 3)
+                self.parent.text.system(" 1. Give a hood and hide among the passengers\n 2. Сover him with backpacks\n 3. Put it in a bag and say it's a grain\n", txt_only=True)
+                they_check = int(input(" > "))
+                if they_check not in [1, 2, 3]:
+                    self.parent.text.system("Wrong input!\n")
+                elif they_check != guard_check_if:
+                    self.parent.text.npc("Hello, haven't you seen the goblin in the meantime\n", begin_txt="A man in armor")
+                    self.parent.text.you("Nope\n")
+                    self.parent.text.system("Some time earlier...\n")
+                    self.parent.text.npc("Oh thanks god you believed me ! I would like to reward you for this, but for this I need to get to Sharandar.\n", begin_txt="Strange goblin")
+                    print("""
+    
+                    #############################################################
+                    ~~~~~~             !   Belive or not 2/2               ~~~~~~
+                    #############################################################
+                    |                                                           |
+                    | The goblin asks you to take him to Charandar to thank you |
+                    | for your deed. Do you want to believe him?                |
+                    |                                                           |
+                    #############################################################
+                    |   1. Take him to Sharandar  |  2. Continue your journey   |
+                    #############################################################\n""")
+                    belive_or_not2 = input(" > ")
+                    if belive_or_not2 == "1":
+                        self.parent.text.npc("Great, lets go !", begin_txt="Strange goblin")
+                        self.parent.zonemap['a5']['STRANGE_GOBLIN'] = True
+                        self.parent.zonemap['a5']['SOLVED4'] = True
+                    elif belive_or_not2 == '2':
+                        self.parent.text.npc("Oh I understand. No problem, have a good trip.", begin_txt="Strange goblin")
+                elif they_check == guard_check_if:
+                    self.parent.text.npc("Hello, haven't you seen the goblin in the meantime\n",
+                                         begin_txt="A man in armor")
+                    self.parent.text.you("Nope")
+                    self.parent.text.npc("Ok, i have to check if he didn`t hide in your cart\n",
+                                         begin_txt="A man in armor")
+                    self.parent.text.system("They found the goblin and took you into custody with goblin\n")
+                    print("""
+                                                               /%/@&@%@&&%%###%
+                                                              @%%&%%&%@@%%&&&%&%%&&@%%##%%&%%&%%%.    
+                                                              ((@@%&%&@&%%%&&%&#%&&%&%@&&&&%%%#&% 
+                                                               &%&&&%%%@.  ..  /(% .  .. @@@&%&#%  
+                                                               ((&&%%%%@.  ..  &(&/.  .. @@@&%&&#   
+                                                               %(%%%&%%@ ..  .#&(%. ..  .@%&%&&@/
+                                                               (@%%%&&&&#((((((((/(((((((##@%&&%,  
+                                                               /*%%&%%&@(((//////////////((@&%&#   
+                                                               *(%%&&%&@#####((((((((((((#@@%#&% 
+                                                               (#&%%&&&@%%%%%%%###### .. &@@%%%%  
+                                                               %(%%%&%%@%%%%%%%%.  .  .. &@@%%%%  
+                                                               #(%%#&&%@###  ..  .. ..  .@@&%%&%
+                                                               (@&%%&%&@.  ..  ..  .  .. &@@%%&&    
+                                                               (/&&%&%%@.  ..  .   .  .. @@@%%%%   
+                                                               /%&&%%%%@ ..  ..  .. ..  .&@&%%&#
+                                                               %/&%#%%&@.  ..  ..  .  .. %@@%%#%    
+                                                               ##%%#%%&@.  ..  ..  .  .. &@&%%#%    
+                                                               #(%&%%&&@ ..  ..  .. ..  .&@&%%&%
+                                                               #(&@&&%@@.  ..  ..  .  .. &@&#%&#  
+                                                               (%@@&&%&@.  ..  .   .  .. @@&%%#%   
+                                                               %*&&%&&&@ ..  ..  .. ..  .@@&%%#%
+                                                               %(%%%&%%@.  ..  ..  .  .. @@@#%%%  
+                                                               ###&&&&&@.  ..  ..  .  .. @&&%%%% 
+                                                               /(%&&&&&@ ..  ..  .. ..   &&@&&%%
+                                                                 &&%&&&@.  ..  ..  .  .. @@@%%&% 
+                                                                 &&&&&&@.  ..  .   .  .. &&@%&&%    
+                                                                 &&%%%&% ..  ..  .. ..  %@@@&&%%
+                                                                 &&%%%%#&& ..  ..  .  ..@@@@%%%%   
+                                                                 &&&%%&%&  ..  ..  .  ..#@@@%&%& 
+                                                                 &&&%%%&&&.  ..  .. ..,(%@@@&%&%
+                                                                 &&&%&%&&&&@.  ..  /*&&%&@@@&&&%  
+                                                                 &%&%%&@&&&&%&&&&&%%&%.,#%@%&%&%  
+                                                                .&&&%%#@.,,,&@&&&&%%%,,,*@@@&%@%,
+                                     @                      ###&@@@.,//&@@&&&@@&&@&@@&@%&@#(,*****    
+                                        @&.   .  ......,..#%#&@#@@&&@@&@@&%%&&&@@@&&&&@@%%#&#%%@#,
+                                             &@............###&@@@&@&&@@@&@&&%@@@%@%@@%###((//,,,.
+                                               @@,,,,,,,,,(##@@&@&@&@@@@####(((((((////****,,*,.,,    
+                                              %@@&&&&&@#(/((////////**/************,,*,,,,..,,....  
+
+
+                                oooooo   oooo   .oooooo.   ooooo     ooo      oooooooooo.   ooooo oooooooooooo oooooooooo.   
+                                 `888.   .8'   d8P'  `Y8b  `888'     `8'      `888'   `Y8b  `888' `888'     `8 `888'   `Y8b  
+                                  `888. .8'   888      888  888       8        888      888  888   888          888      888 
+                                   `888.8'    888      888  888       8        888      888  888   888oooo8     888      888 
+                                    `888'     888      888  888       8        888      888  888   888    "     888      888 
+                                     888      `88b    d88'  `88.    .8'        888     d88'  888   888       o  888     d88' 
+                                    o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
+
+                                             You were convicted and executed for a crime you did not commit  \n""")
+                    sys.exit()
+            elif belive_or_not1 == "2":
+                self.parent.text.you("I`m sorry... He is here !\n")
+                self.parent.text.npc("Thank you, good man!\n")
+                self.parent.text.system("You have got 30 coins\n")
+                self.parent.myPlayer.cash += 30
 
         elif answer == "1" and self.parent.zonemap['a5']['SOLVED1'] is True:
-            self.parent.text.system(' You have already passed this quest, try to go to the mine')
+            self.parent.text.system(' You have already passed this quest, try to go to the mine\n')
         elif answer == "2" and self.parent.zonemap['a5']['SOLVED2'] is True:
-            self.parent.text.system(' You have already passed this quest, try to go to the stable')
+            self.parent.text.system(' You have already passed this quest, try to go to the stable\n')
         elif answer == "3" and self.parent.zonemap['a5']['SOLVED3'] is True:
-            self.parent.text.system(' You have already passed this quest')
+            self.parent.text.system(' You have already passed this quest\n')
+        elif answer == "4" and self.parent.zonemap['a5']['SOLVED4'] is True:
+            self.parent.text.system(' You have already passed this quest\n')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_a5()
@@ -2374,6 +2614,67 @@ class Quests:
 
     def quest_c1(self):
         print(" ")
+        def fishman_help():
+            print("""
+                ###############################################
+                ~~~~~~        ! Fishaman salvation       ~~~~~~
+                ###############################################
+                |                                             |
+                | While passing by a lake, you hear a deep    |
+                | bellowing noise, only to see a fisherman    |
+                | trapped by a giant frog. He calls for help. |
+                |                                             |
+                |                                             |
+                ###############################################
+                |     1.Accept          |        2.Decline    |
+                ###############################################\n""")
+            fishman_salvation = input(" > ")
+            if fishman_salvation == '1':
+                self.parent.text.npc("HEEELLP !!\n\n")
+                self.parent.text.system(" 1.Kill the frog\n 2.Stop and think little bit\n", txt_only=True)
+                decision1 = input(" > ")
+                if decision1 == "1":
+                    self.parent.text.system("You successfully killed a frog, but you accidentally hit fishman. And he died of blood poisoning\n")
+                elif decision1 == "2":
+                    self.parent.text.system(" You decide to throw a stone at a frog to try to knock it out\n")
+                    tries = 0
+                    while tries != 3:
+                        if tries != 3:
+                            throwing = input(" Write 'throw' to throw a stone > ").lower()
+                        if throwing == "throw":
+                            knock_out_chance = random.randint(0, 100)
+                            if knock_out_chance <= 60:
+                                self.parent.text.system("You are lucky to knock out a frog with a stone, now try to get out the fishman out\n")
+                                input(" Write help > ")
+                                get_out_chance = random.randint(0, 100)
+                                if get_out_chance < 5:
+                                    self.parent.text.system("Oh no the frog get up and eated fishman, and try to kill you\n")
+                                    self.parent.frog_fight()
+                                    break
+                                elif get_out_chance > 5:
+                                    print("""
+                ###############################################
+                ~~~~~~        ! Fishaman salvation       ~~~~~~
+                ###############################################
+                |                   DONE                      |
+                | While passing by a lake, you hear a deep    |
+                | bellowing noise, only to see a fisherman    |
+                | trapped by a giant frog. He calls for help. |
+                |                                             |
+                |                                             |
+                ###############################################
+                |                  + 35 coins                 |
+                ###############################################\n""")
+                                    self.parent.myPlayer.cash += 35
+                                    self.parent.myPlayer.xp += 50
+                                    break
+                            elif knock_out_chance > 60:
+                                self.parent.text.system("You missed, try again\n")
+                                tries += 1
+                        else:
+                            self.parent.text.danger("Wrong input !", begin_txt="SYSTEM")
+            elif fishman_salvation == '2':
+                self.parent.text.you("Mehhh\n")
         tryies_part1 = 0
         tryies_part2 = 0
         tryies_part3 = 0
@@ -2721,7 +3022,6 @@ class Quests:
                         self.parent.myPlayer.inventory.insert(1, 'Throwing knife')
                         self.parent.myPlayer.inventory.insert(2, 'Throwing knife')
                         self.parent.zonemap['c1']['SOLVED1'] = True
-
                         places -= 1
                         if fisherman1 > fisherman2 and fisherman1 > fisherman3:
                             self.parent.text.system(f"Second place is: {fisherman1}\n")
@@ -2729,27 +3029,33 @@ class Quests:
                             if fisherman2 > fisherman3:
                                 self.parent.text.system(f"Third place is: {fisherman2}\n")
                                 places -= 1
+                                fishman_help()
                             elif fisherman3 > fisherman2:
                                 self.parent.text.system(f"Third place is: {fisherman3}\n")
                                 places -= 1
+                                fishman_help()
                         elif fisherman2 > fisherman1 and fisherman2 > fisherman3:
                             self.parent.text.system(f"Second result is: {fisherman2}\n")
                             places -= 1
                             if fisherman1 > fisherman3:
                                 self.parent.text.system(f"Third place is: {fisherman1}\n")
                                 places -= 1
+                                fishman_help()
                             elif fisherman3 > fisherman1:
                                 self.parent.text.system(f"Third place is: {fisherman3}\n")
                                 places -= 1
+                                fishman_help()
                         elif fisherman3 > fisherman1 and fisherman3 > fisherman2:
                             self.parent.text.system(f"Second place is: {fisherman3}\n")
                             places -= 1
                             if fisherman1 > fisherman2:
                                 self.parent.text.system(f"Third place is: {fisherman1}\n")
                                 places -= 1
+                                fishman_help()
                             elif fisherman2 > fisherman1:
                                 self.parent.text.system(f"Third place is: {fisherman2}\n")
                                 places -= 1
+                                fishman_help()
         elif player_choise1 == "2":
             print("""
         #######################################################
@@ -3527,38 +3833,38 @@ class Quests:
             if "Shopping list" in self.parent.myPlayer.inventory:
                 self.parent.text.you("Ok i have to buy :")
                 self.parent.text.system("""
-                      - Potatoes( 1-2 kg)
-                      - Сarrots ( 5 pieces )
-                      - Litle bit of meat
-                      - x10 eggs\n""", txt_only=True)
+  - Potatoes( 1-2 kg)
+  - Сarrots ( 5 pieces )
+  - Litle bit of meat
+  - x10 eggs\n""", txt_only=True)
                 shopings = False
                 grocery = False
                 meat = False
                 milk = False
                 while shopings is not True:
-                    self.parent.text.you("Where i go first")
-                    print("""
-  1. Grocery section
-  2. Meat section
-  3. Milk and anoth. section
-                    """)
-                    section_choose = input(" > ")
+                    if grocery is False or meat is False or milk is False:
+                        self.parent.text.you("Where i go first\n")
+                        print("""
+      1. Grocery section
+      2. Meat section
+      3. Milk and anoth. section
+                        """)
+                        section_choose = input(" > ")
                     if grocery is True and meat is True and milk is True:
-                        self.parent.text.you("Alreight thats all")
-                        self.parent.myPlayer.inventory.pop(3)
+                        self.parent.text.you("Alreight thats all\n")
                         shopings = True
                         self.shopping_done = True
                     elif section_choose == '1':
-                        print()
+                        self.parent.text.system("You have bought a potato and carrot\n")
                         grocery = True
                     elif section_choose == '2':
-                        print()
+                        self.parent.text.system("You have bought a meat\n")
                         meat = True
                     elif section_choose == '3':
-                        print("")
+                        self.parent.text.system("You have bought a milk\n")
                         milk = True
                     else:
-                        self.parent.text.danger("Wrong input !", begin_txt="SYSTEM")
+                        self.parent.text.danger("Wrong input !\n", begin_txt="SYSTEM")
             elif "Shopping list" not in self.parent.myPlayer.inventory:
                 self.parent.text.you(" Hmmm, I'm hungry. Let's buy something to eat\n")
                 self.parent.text.system(
