@@ -16,6 +16,7 @@ DESCRIPTION = 'description'
 SOLVED = 'SOLVED'
 UNDERQUEST1 = 'SOLVED1'
 UNDERQUEST2 = 'SOLVED2'
+UNDERQUEST3 = 'SOLVED3'
 UP = 'up', 'north'
 DOWN = 'down', 'south'
 LEFT = 'left', 'west'
@@ -71,7 +72,7 @@ zonemap = {
         DOWN: "a0",
         LEFT: "a2",
         RIGHT: "a4"
-    },# done 3
+    },
     'a4': {
         ZONENAME: 'Dwarven Valley',
         DESCRIPTION: """ Dwarven Valley, has been corrupted by dwarves from the Hammerstone dig up black ice, 
@@ -90,6 +91,7 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
         UP: "b5",
         DOWN: "1",
         LEFT: "a4",
@@ -151,6 +153,7 @@ zonemap = {
         DESCRIPTION: " The city is surrounded by dense forest ",
         'SOLVED': False,
         'SOLVED1': False,
+        'SOLVED2': False,
         UP: "4",
         DOWN: "b1",
         LEFT: "2",

@@ -14,6 +14,9 @@ class Quests:
         self.heal_use = 3
         self.knife_use = 2
         self.dolls = 0
+        self.tutorial_brother_help1 = False
+        self.tutorial_brother_help2 = False
+        self.shopping_done = False
 
     def list_actions(self, quest_dict):
         self.parent.text.system("""Choose your action\n""", txt_only=True)
@@ -676,10 +679,51 @@ class Quests:
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 self.quest_a5()
+
+        ## Philanthropist
+        elif answer == "3" and self.parent.zonemap['a5']['SOLVED3'] is False:
+            if "Shopping list" not in self.parent.myPlayer.inventory:
+                self.parent.text.npc(" Good morning, young man, could i ask you for a help\n", begin_txt="Old woman")
+                print("""
+    
+                #############################################################
+                ~~~~~~              !   Philanthropist                 ~~~~~~
+                #############################################################
+                |                                                           |
+                |  Grandma asked you for help. Will you agree to perform    |
+                |  boring tasks?                                            |
+                |                                                           |
+                #############################################################
+                |         1. Accept           |           2. Decline        |
+                #############################################################\n""")
+                philanthropist = input(" > ")
+                if philanthropist == '1':
+                    self.parent.text.npc("I need to buy some products, but I feel very bad, here is a list of products:\n", begin_txt="Old woman")
+                    self.parent.text.system("""
+      - Potatoes( 1-2 kg)
+      - Сarrots ( 5 pieces )
+      - Litle bit of meat
+      - x10 eggs\n""", txt_only=True)
+                    self.parent.myPlayer.inventory.pop(3)
+                    self.parent.myPlayer.inventory.insert(3, "Shopping list")
+                    self.parent.text.you("Where is the nearest market?\n")
+                    self.parent.text.npc("Its in 'The Well of Dragons'\n", begin_txt="Old woman")
+                    self.parent.text.you(" I`ll be right back !\n")
+            elif "Shopping list" in self.parent.myPlayer.inventory:
+                if self.shopping_done is False:
+                    self.parent.text.npc("Did you`ve done what i was asking for ?\n", begin_txt="Old woman")
+                elif self.shopping_done is True:
+                    self.parent.text.npc("Oh thank you, young man. You're so kind. Here are your reward.\n", begin_txt="Old woman")
+                    self.parent.text.system(" You`ve get the poution wich will rise your maxMp")
+                    self.parent.myPlayer.xp += 25
+                    self.parent.myPlayer.maxMP += 20
+
         elif answer == "1" and self.parent.zonemap['a5']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the mine')
         elif answer == "2" and self.parent.zonemap['a5']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the stable')
+        elif answer == "3" and self.parent.zonemap['a5']['SOLVED3'] is True:
+            self.parent.text.system(' You have already passed this quest')
         else:
             self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
             self.quest_a5()
@@ -700,6 +744,7 @@ class Quests:
             self.parent.text.you("Heh where did this old man send me?\n")
             self.parent.text.you("There is literally nothing here...\n")
             self.parent.text.you("I'd better go back to him and tell him everything I think about him\n")
+
         def waterfall_quest():
             self.parent.text.system("""\n  - Waterfall of life and death  - \n""", txt_only=True)
             self.parent.text.system(text=""" Try to look out, maybe you find something interesting...(write look)\n""")
@@ -1426,6 +1471,146 @@ class Quests:
         answer = input(" > ")
         print(" ")
 
+        def brother_help1():
+            print("""
+
+                                ##############################################################
+                                ~~~~~~~~~~           !  Brother help                ~~~~~~~~~~ 
+                                ##############################################################
+                                |                                                            |
+                                | I received a letter from my brother that he needed help.   |
+                                | He lives on a separate small island in the middle of       |
+                                | a local lake.                                              |
+                                | Requirement:  adventurer at least 5 lvl                    |
+                                |                                                            |
+                                |  Reward:  80 coins                                         |
+                                |                                                            |
+                                ##############################################################
+                                ##############################################################\n""")
+
+            self.parent.text.you("Hello, I would like to take this quest\n")
+            self.parent.text.npc("So of course, please tell me your name, class and level\n", begin_txt="Dragar")
+            input(" Name: ")
+            input(" Class: ")
+            input(" Level: ")
+            if self.parent.myPlayer.level >= 5:
+
+                print("""
+
+                                ##############################################################
+                                ~~~~~~~~~~           !  Brother help 1/3            ~~~~~~~~~~ 
+                                ##############################################################
+                                |                                                            |
+                                |  You have to make a boat to cross the lake. Go to my       |
+                                |  colleague in Willowwood and make a boat, he will give     |
+                                |  you instruments and materials to you,  just pass that     |
+                                |  "I from Dragar".                                          |
+                                |                                                            |
+                                |  Reward:  50 coins                                         |
+                                |                                                            |
+                                |  ! To complete the main task you must complete this task   |
+                                ##############################################################
+                                |         1. Accept          |          2. Decline           |
+                                ##############################################################\n""")
+                brother_help1 = input(" > ")
+                if brother_help1 == "1":
+                    self.parent.text.you(" Ok, i will do that !\n")
+                    self.parent.text.npc("Great i will be waiting you with a boat\n", begin_txt="Dragar")
+                    self.tutorial_brother_help1 = True
+                else:
+                    self.parent.text.you("Meeeeh\n")
+
+        def brother_help2():
+            print("""  
+             DONE:
+       ~ Brother help 1/3 ~""")
+            print("""
+
+                                ##############################################################
+                                ~~~~~~~~~~           !  Brother help 2/3            ~~~~~~~~~~ 
+                                ##############################################################
+                                |                                                            |
+                                | You have successfully built a boat. Now you can finally    |
+                                | swim and save my brother. Cross the lake and follow my     |
+                                | brother's instructions. Come back with a report to me.     |
+                                |                                                            |
+                                |                                                            |
+                                ##############################################################
+                                ##############################################################\n""")
+            boat_swim = input(" Do you wanna to continue (y/n) > ")
+            if boat_swim == 'y':
+                self.parent.text.system("You managed to successfully cross the lake, write 'look' to find Dragar`s brother\n")
+                input(" > ")
+                self.parent.text.system("You found a small house and a man sitting on the porch\n")
+                self.parent.text.you("Hello, I'm from your brother, do you need help?\n")
+                print("""
+    
+                                ##############################################################
+                                ~~~~~~~~~~           !  Brother help 3/3            ~~~~~~~~~~ 
+                                ##############################################################
+                                |                                                            |
+                                |  Recently there was a storm that scared my flock of sheep. |
+                                |  Because of this, they scattered throughout the island. If |
+                                |  I don't find them soon, they can be killed by local       |
+                                |  predators.                                                |
+                                |  Task: Find 50 sheeps jn the island                        |
+                                |                                                            |
+                                ##############################################################
+                                ##############################################################\n""")
+                self.parent.text.you("Maybe you know the places where they can be, or a map at least ?\n")
+                self.parent.text.npc("You can go to:\n", begin_txt="Dralorn")
+                ships = 0
+                while ships != 51:
+                    if ships != 50:
+                        self.parent.text.system(" 1.Dim peak\n 2.Light wasteland\n 3.Shepherd plains\n 4.Sunset highlands\n 5.Red mounds\n", txt_only=True)
+                        place_choose = input(" > ")
+                    if place_choose in ['1', '2', '3', '4', '5']:
+                        sheeps_found = random.randint(0, 11)
+                        if ships == 50:
+                            print(" ")
+                            self.parent.text.you("Hello there, i found all sheeps.\n")
+                            print("""
+    
+                                    ##############################################################
+                                    ~~~~~~~~~~           !  Brother help 3/3            ~~~~~~~~~~ 
+                                    ##############################################################
+                                    |                           DONE                             |
+                                    |  Recently there was a storm that scared my flock of sheep. |
+                                    |  Because of this, they scattered throughout the island. If |
+                                    |  I don't find them soon, they can be killed by local       |
+                                    |  predators.                                                |
+                                    |  Task: Find 50 sheeps jn the island                        |
+                                    |                                                            |
+                                    ##############################################################
+                                    |                         +150 coins                         |
+                                    ##############################################################\n""")
+                            self.parent.text.npc("So fast ?! My brother found strong man to help me\n       You deserve an great award\n", begin_txt="Dralorn")
+                            self.parent.myPlayer.xp += 150
+                            self.parent.myPlayer.cash += 150
+                            self.parent.text.you("Your brother asked to tell everything that happened, maybe you want to convey something\n")
+                            self.parent.text.npc(
+                                "Just tell him 'My beer is tastier than yours'\n",
+                                begin_txt="Dralorn")
+                            input(" Write 'cross' to cross the lake")
+                            break
+
+                        if sheeps_found == 0:
+                            self.parent.text.system("You found a couple of sheep but they all ran away from you\n")
+                        else:
+                            ran_away = random.randint(1, 3)
+                            if ran_away > sheeps_found:
+                                ran_away = 0
+                            self.parent.text.system(f"You found {sheeps_found} of sheep but {ran_away} of them ran away from you\n")
+                            sheeps_found -= ran_away
+                            ships += sheeps_found
+                            print(ships)
+                            if ships > 50:
+                                ships = 50
+            elif boat_swim == 'n':
+                self.parent.text.you("Meeeh")
+            else:
+                self.parent.text.danger("Wrong input!\n", begin_txt="SYSTEM")
+
         def p_choise():
             self.parent.text.system(' What do you wanna to do:\n           1.Try to get out and teach manners, this guy\n           2.Just give up and die\n')
             answer_1 = input(" > ")
@@ -1584,7 +1769,7 @@ class Quests:
         #### Quest board b4
         elif answer == '3' and self.parent.zonemap['b4']['SOLVED3'] is False:
             self.parent.text.system("  _-_ AVAILABLE QUESTS _-_ \n", txt_only=True)
-            self.parent.text.system("   1. Defender of order\n   2. Carrot Lord \n   3.\n", txt_only=True)
+            self.parent.text.system("   1. Defender of order\n   2. Carrot Lord \n   3. Brother help\n", txt_only=True)
             quest_choise = input(" > ")
             if quest_choise == "1":
                 print("""
@@ -1771,6 +1956,38 @@ class Quests:
                                 self.parent.text.danger("Wrong input !", begin_txt="SYSTEM")
                 else:
                     self.parent.text.you("Mehhh")
+            elif quest_choise == "3" and self.tutorial_brother_help1 is False:
+                if 'Boat' not in self.parent.myPlayer.inventory:
+                    brother_help1()
+                elif 'Boat' in self.parent.myPlayer.inventory:
+                    brother_help2()
+                    self.parent.text.system("You managed to successfully cross the lake\n")
+                    self.parent.text.npc("Tell me, is my brother all right?\n", begin_txt="Dragar")
+                    self.parent.text.system(" Talk for 20 minutes\n", txt_only=True)
+                    self.parent.text.you("Oh and he handed you something")
+                    key_words = False
+                    while key_words is not True:
+                        password = input(" > ").lower()
+                        if password not in ['my', 'beer', 'is', 'tastier', 'than', 'yours']:
+                            self.parent.text.npc("No way i do not belive you", begin_txt="Dragar")
+                        elif password in ['my', 'beer', 'is', 'tastier', 'than', 'yours']:
+                            print("""
+
+                    ##############################################################
+                    ~~~~~~~~~~           !  Brother help 2/3            ~~~~~~~~~~ 
+                    ##############################################################
+                    |                          DONE                              |
+                    |   Cross the lake and follow my brother's instructions.     |
+                    |   Come back with a report to me.                           |
+                    |                                                            |
+                    ##############################################################
+                    |                        + 50 coins                          |
+                    ##############################################################\n""")
+                            self.parent.myPlayer.cash += 50
+                            key_words = True
+            elif quest_choise == "3" and self.tutorial_brother_help1 is True:
+                if self.tutorial_brother_help2 is False:
+                    self.parent.text.npc("Did you made the boat? Don't come back until you won`t make the boat",begin_txt="Dragar")
 
         elif answer == "3" and self.parent.zonemap['b4']['SOLVED3'] is True:
             self.parent.text.system(' You have already passed all quests')
@@ -2157,9 +2374,12 @@ class Quests:
 
     def quest_c1(self):
         print(" ")
+        tryies_part1 = 0
+        tryies_part2 = 0
+        tryies_part3 = 0
         self.parent.text.system("""\n  -  Wyllowwood - \n""", txt_only=True)
         print(' ')
-        self.parent.text.system(""" You can go to:\n  1. Wyllowwood lake\n  2. Spellshop\n""",txt_only=True)
+        self.parent.text.system(""" You can go to:\n  1. Wyllowwood lake\n  2. Spellshop\n  3. Dragar colleague\n""",txt_only=True)
         player_choise1 = input(" > ")
         if player_choise1 == "1" and self.parent.zonemap['c1']['SOLVED1'] is False:
 
@@ -2595,8 +2815,108 @@ class Quests:
                         i -= 1
                 if 'Heal grass' not in self.parent.myPlayer.inventory:
                     self.parent.text.you("I dont have anything...")
+        elif player_choise1 == "3" and self.parent.zonemap['c1']['SOLVED2'] is False:
+            self.parent.text.npc("What do you want ?\n", 'Gomer')
+            brother_help = input(" > ").lower()
+            if brother_help in ['dragar', 'from', 'i', 'come', 'brothers']:
+                self.parent.text.npc("Oh yes, yes , i have heard . I`ll give you all what do you need\n", begin_txt="Gomer")
+                boat = False
+                frame = False
+                cladding = False
+                oars = False
+                while boat is not True:
+                    if frame is False or cladding is False or oars is False :
+                        self.parent.text.you("Ok i have 1. Frame 2. Cladding 3. Oars\n      Whats i will be doing now ?\n")
+                        part_choose = input(" > ")
+                    if frame is True and cladding is True and oars is True:
+                        boat = True
+                        self.parent.zonemap['c1']['SOLVED2'] = True
+                        self.tutorial_brother_help1 = False
+                        self.parent.text.you(" Ok, i`ve done this!\n")
+                        self.parent.myPlayer.inventory.pop(10)
+                        self.parent.myPlayer.inventory.insert(10, 'Boat')
+                        self.parent.text.npc("Good luck young man !\n",
+                                             begin_txt="Gomer")
+                    elif part_choose == "1" and frame is False:
+                        construct_chase = random.randint(1, 100)
+                        if construct_chase >= 65:
+                            tryies_part1 += 1
+                            self.parent.text.you(f"Ok i`ve done this part , and even from the {tryies_part1} attempt\n")
+                            frame = True
+                        elif construct_chase < 65:
+                            tryies_part1 += 1
+                            self.parent.text.you(f"The try number {tryies_part1} ,is failed!\n")
+                            exit_choose = input(" Do you wanna 1.try again or 2.give up (1 or 2) > ")
+                            if exit_choose == '1':
+                                self.parent.text.you("I`ll try again !\n")
+                            elif exit_choose == '2':
+                                self.parent.text.you("Mehh\n")
+                                break
+                            else:
+                                self.parent.text.danger("Wrong input", begin_txt="SYSTEM")
+                                exit_choose = input("Do you wanna 1.try again or 2.give up (1 or 2) > ")
+                                if exit_choose == '1':
+                                    self.parent.text.you("I`ll try again !")
+                                elif exit_choose == '2':
+                                    self.parent.text.you("Mehh")
+                    elif part_choose == "2" and cladding is False:
+                        construct_chase = random.randint(1, 100)
+                        if construct_chase >= 65:
+                            tryies_part2 += 1
+                            self.parent.text.you(f"Ok i`ve done this part , and even from the {tryies_part2} attempt\n")
+                            cladding = True
+                        elif construct_chase < 65:
+                            tryies_part2 += 1
+                            self.parent.text.you(f"The try number {tryies_part2} ,is failed!\n")
+                            exit_choose = input(" Do you wanna 1.try again or 2.give up (1 or 2) > ")
+                            if exit_choose == '1':
+                                self.parent.text.you("I`ll try again !\n")
+                            elif exit_choose == '2':
+                                self.parent.text.you("Mehh\n")
+                                break
+                            else:
+                                self.parent.text.danger("Wrong input", begin_txt="SYSTEM")
+                                exit_choose = input(" Do you wanna 1.try again or 2.give up (1 or 2) > ")
+                                if exit_choose == '1':
+                                    self.parent.text.you("I`ll try again !")
+                                elif exit_choose == '2':
+                                    self.parent.text.you("Mehh")
+                    elif part_choose == "3" and oars is False:
+                        construct_chase = random.randint(1, 100)
+                        if construct_chase >= 65:
+                            tryies_part3 += 1
+                            self.parent.text.you(f"Ok i`ve done this part , and even from the {tryies_part3} attempt\n")
+                            oars = True
+                        elif construct_chase < 65:
+                            tryies_part3 += 1
+                            self.parent.text.you(f"The try number {tryies_part3} ,is failed!\n")
+                            exit_choose = input("Do you wanna 1.try again or 2.give up (1 or 2) > ")
+                            if exit_choose == '1':
+                                self.parent.text.you("I`ll try again !\n")
+                            elif exit_choose == '2':
+                                self.parent.text.you("Mehh\n")
+                                break
+                            else:
+                                self.parent.text.danger("Wrong input", begin_txt="SYSTEM")
+                                exit_choose = input("Do you wanna 1.try again or 2.give up (1 or 2) > ")
+                                if exit_choose == '1':
+                                    self.parent.text.you("I`ll try again !")
+                                elif exit_choose == '2':
+                                    self.parent.text.you("Mehh")
+
+                    elif part_choose == "1" and frame is True:
+                        self.parent.text.system(" You`ve done this part\n")
+                    elif part_choose == "2" and cladding is True:
+                        self.parent.text.system(" You`ve done this part\n")
+                    elif part_choose == "3" and oars is False:
+                        self.parent.text.system(" You`ve done this part\n")
+                    else:
+                        self.parent.text.system("Wrong input")
+
         elif player_choise1 == "1" and self.parent.zonemap['c1']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the spellshop if you have something to refactor')
+        elif player_choise1 == "3" and self.parent.zonemap['c1']['SOLVED2'] is True:
+            self.parent.text.system(' You have already passed this quest')
 
     def quest_c2(self):
         def chicken_find():
@@ -3204,40 +3524,77 @@ class Quests:
                             cards.insert(9, 'Joker')
         elif response == '2' and self.parent.zonemap['c3']['SOLVED2'] is True:
             # TOWN MARKET
-            self.parent.text.you(" Hmmm, I'm hungry. Let's buy something to eat\n")
-            self.parent.text.system(
-                " Choose one of the below answers\n 1. Buy an apple - 10 coins (+10HP)\n 2. Buy a piece of cake - 18 coins (+30HP)\n 3. Buy a bread - 25 coins (+50HP)\n 4. Buy piece of dried meat - 50 coins (+100HP)\n", txt_only=True)
-            response_3 = input(" >  ")
-            response_3 = str(response_3).lower()
-            if response_3 == '1' and self.parent.myPlayer.cash >= 10:
-                self.parent.text.system("You eat an apple\n", txt_only=True)
-                self.parent.myPlayer.HP += 10
-                self.parent.myPlayer.cash -= 10
-                if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
-                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
-            elif response_3 == '2' and self.parent.myPlayer.cash >= 18:
-                self.parent.text.system("You eat a piece of cake\n", txt_only=True)
-                self.parent.myPlayer.HP += 30
-                self.parent.myPlayer.cash -= 18
-                if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
-                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
-            elif response_3 == '3' and self.parent.myPlayer.cash >= 25:
-                self.parent.text.system("You eat a bread\n", txt_only=True)
-                self.parent.myPlayer.HP += 50
-                self.parent.myPlayer.cash -= 25
-                if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
-                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
-            elif response_3 == '4' and self.parent.myPlayer.cash >= 50:
-                self.parent.text.system("You eat a piece of dried meat\n", txt_only=True)
-                self.parent.myPlayer.HP += 100
-                self.parent.myPlayer.cash -= 50
-                if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
-                    self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
-            else:
-                self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
-                self.quest_c3()
+            if "Shopping list" in self.parent.myPlayer.inventory:
+                self.parent.text.you("Ok i have to buy :")
+                self.parent.text.system("""
+                      - Potatoes( 1-2 kg)
+                      - Сarrots ( 5 pieces )
+                      - Litle bit of meat
+                      - x10 eggs\n""", txt_only=True)
+                shopings = False
+                grocery = False
+                meat = False
+                milk = False
+                while shopings is not True:
+                    self.parent.text.you("Where i go first")
+                    print("""
+  1. Grocery section
+  2. Meat section
+  3. Milk and anoth. section
+                    """)
+                    section_choose = input(" > ")
+                    if grocery is True and meat is True and milk is True:
+                        self.parent.text.you("Alreight thats all")
+                        self.parent.myPlayer.inventory.pop(3)
+                        shopings = True
+                        self.shopping_done = True
+                    elif section_choose == '1':
+                        print()
+                        grocery = True
+                    elif section_choose == '2':
+                        print()
+                        meat = True
+                    elif section_choose == '3':
+                        print("")
+                        milk = True
+                    else:
+                        self.parent.text.danger("Wrong input !", begin_txt="SYSTEM")
+            elif "Shopping list" not in self.parent.myPlayer.inventory:
+                self.parent.text.you(" Hmmm, I'm hungry. Let's buy something to eat\n")
+                self.parent.text.system(
+                    " Choose one of the below answers\n 1. Buy an apple - 10 coins (+10HP)\n 2. Buy a piece of cake - 18 coins (+30HP)\n 3. Buy a bread - 25 coins (+50HP)\n 4. Buy piece of dried meat - 50 coins (+100HP)\n", txt_only=True)
+                response_3 = input(" >  ")
+                response_3 = str(response_3).lower()
+                if response_3 == '1' and self.parent.myPlayer.cash >= 10:
+                    self.parent.text.system("You eat an apple\n", txt_only=True)
+                    self.parent.myPlayer.HP += 10
+                    self.parent.myPlayer.cash -= 10
+                    if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
+                        self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                elif response_3 == '2' and self.parent.myPlayer.cash >= 18:
+                    self.parent.text.system("You eat a piece of cake\n", txt_only=True)
+                    self.parent.myPlayer.HP += 30
+                    self.parent.myPlayer.cash -= 18
+                    if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
+                        self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                elif response_3 == '3' and self.parent.myPlayer.cash >= 25:
+                    self.parent.text.system("You eat a bread\n", txt_only=True)
+                    self.parent.myPlayer.HP += 50
+                    self.parent.myPlayer.cash -= 25
+                    if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
+                        self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                elif response_3 == '4' and self.parent.myPlayer.cash >= 50:
+                    self.parent.text.system("You eat a piece of dried meat\n", txt_only=True)
+                    self.parent.myPlayer.HP += 100
+                    self.parent.myPlayer.cash -= 50
+                    if self.parent.myPlayer.HP > self.parent.myPlayer.maxHP:
+                        self.parent.myPlayer.HP = self.parent.myPlayer.maxHP
+                else:
+                    self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
+                    self.quest_c3()
         elif response == "3":
             self.parent.text.system("Have a nice day !\n")
+
         elif response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to town market\n')
         else:

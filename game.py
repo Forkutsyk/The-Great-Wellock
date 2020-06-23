@@ -302,8 +302,9 @@ class Game:
                 self.text.system("""  Not far from you noticed a stranger. 
   You think you can get some info from him. 
   Maybe you will know where you are and what is going on\n""", txt_only=True)
+                print(" ")
                 self.text.npc("""I'm a visitor myself, I don't know much.you are in the kingdom of Wellock. 
-           It consists of a total of 16 quarters,and we are now in the Docks .\n """)
+           It consists of a total of 16 quarters,and we are now in the Docks .\n""")
                 self.text.you("Thank you, for that!\n")
                 self.text.npc("Your welcome\n")
                 local += 1
@@ -336,8 +337,9 @@ class Game:
                 self.myPlayer.cash += 10
                 local += 1
             else:
-                self.text.danger("Wrong input!", begin_txt="SYSTEM")
+                self.text.danger("Wrong input!\n", begin_txt="SYSTEM")
                 game.quest_a0()
+                break
 
     def witch_fight(self):
         self.myEnemy.name = 'Angry witch'
