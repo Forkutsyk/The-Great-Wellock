@@ -22,6 +22,8 @@ DOWN = 'down', 'south'
 LEFT = 'left', 'west'
 RIGHT = 'right', 'east'
 HOME = 'HOME'
+SMALL_STONE = 'Small_stone_number'
+HUGE_STONE = 'Huge_stone_number'
 ASISTANT1 = 'ASISTANT-HEALER'
 ASISTANT2 = 'ASISTANT-WARRIOR'
 
@@ -56,6 +58,7 @@ zonemap = {
         'SOLVED2': False,
         'SOLVED3': False,
         'SOLVED4': False,
+        'SOLVED5': False,
         'ASISTANT-HEALER': False,
         UP: "b2",
         DOWN: "1",
@@ -181,6 +184,8 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
+        'Ring_of_Deth': False,
         UP: "4",
         DOWN: "b3",
         LEFT: "c2",
@@ -193,6 +198,9 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
+        "Small_stone_number": 0,
+        "Huge_stone_number": 0,
         UP: "4",
         DOWN: "b4",
         LEFT: "c3",

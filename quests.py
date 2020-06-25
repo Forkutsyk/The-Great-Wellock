@@ -69,12 +69,12 @@ class Quests:
         if not response:
             self.parent.text.system("""\n  -  Sharandar - \n""", txt_only=True)
             if self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is False and self.parent.zonemap['a5']['STRANGE_GOBLIN'] is False:
-                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest \n""",txt_only=True)
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n   3. Fish store\n""",txt_only=True)
             elif self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
-                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n  3.Assistant home""",
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n   3.Fish store\n   4.Assistant home\n""",
                                         txt_only=True)
             elif self.parent.zonemap['a5']['STRANGE_GOBLIN'] is True:
-                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n   *. Richman`s house\n""",
+                self.parent.text.system("""  You can go to:\n   1. Old Sharandar Ruins\n   2. The Farthest Forest\n   3.Fish store\n   *. Richman`s house\n""",
                                         txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
@@ -233,7 +233,7 @@ class Quests:
                 self.parent.zonemap['a2']['SOLVED2'] = True
                 if self.parent.zonemap['a2']['SOLVED1'] is True:
                     self.parent.zonemap['a2']['SOLVED'] = True
-        elif response == '3' and self.parent.zonemap['a2']['SOLVED3'] is False and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+        elif response == '4' and self.parent.zonemap['a2']['SOLVED3'] is False and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
             self.parent.text.system("""\n  -  Assistant abandoned home - \n""", txt_only=True)
             self.parent.text.you("So, do you remember where is it ?\n")
             self.parent.text.npc("Emmm, nope\n")
@@ -295,6 +295,71 @@ class Quests:
                         self.parent.text.npc("Hmm, maybe in other place")
                 else:
                     self.parent.text.you("We have seen here or wrong input")
+        elif response == '3' and self.parent.zonemap['a2']['SOLVED5'] is False:
+            self.parent.text.you("I`m sorry how much will cost this two?\n")
+            self.parent.text.npc("Hey, hey, are you an adventurer, yes? We have a work for you\n")
+            print("""
+
+                    #######################################################
+                    ~~~~~~   !  Am I on the side of good or evil?    ~~~~~~
+                    #######################################################
+                    |                                                     |
+                    | Let's just say I have big problems. And those       |
+                    | people who are looking for me can harm my brother.  |
+                    | My brother doesn't know anything about it, so I     |
+                    | need you to kidnap him and bring him to me.         |
+                    |                                                     |  
+                    #######################################################
+                    |     1.Accept             |         2.Decline        |
+                    #######################################################\n""")
+            good_evil = input(" > ")
+            if good_evil == "1":
+                self.parent.text.npc("Great, i`ll show you where he can be now\n")
+                self.parent.text.system("A little later...\n")
+                self.parent.text.system(" You have to look out to find him( write 'look')\n", txt_only=True)
+                input(" > ")
+                self.parent.text.you("Ok , i see him. What should i do ?\n")
+                print(" ")
+                self.parent.text.system("  1.Kidnap him\n  2.To tell him everything\n  3.Ask him whether he has a brother\n", txt_only=True)
+                boy_destiny = input(" > ")
+                if boy_destiny in ['1', '3']:
+                    self.parent.text.system("You still decided to kidnap him\n")
+                    kidnap_chance = random.randint(0, 100)
+                    if kidnap_chance <= 90:
+                        self.parent.text.system(
+                            "You successfully kidnapped a guy, what would you like to tell him?\n")
+                        self.parent.text.system(
+                            "  1. I am from your brother\n  2. I`ll sell you to pirates\n  3. Say him that its a joke..\n",
+                            txt_only=True)
+                        say_to_boy = input(" > ")
+                        if say_to_boy == "1":
+                            self.parent.text.system("""A few minutes later, you find out that his older brother has crossed the road to the head of the dark clan, 
+         and so they will have to flee the kingdom. And so that his younger brother would not be sought, 
+                        he asked someone he did not know to kidnap younger brother.\n""")
+                            print("""
+
+                    #######################################################
+                    ~~~~~~   !  Am I on the side of good or evil?    ~~~~~~
+                    #######################################################
+                    |                                                     |
+                    | You did a good deed. However, they had no way to    |
+                    | thank you so they give you a potion of strength that|
+                    | increased your strength by 10                      |
+                    |                                                     |  
+                    #######################################################
+                    #######################################################\n""")
+                            self.parent.zonemap['a2']['SOLVED5'] = True
+                            self.parent.myPlayer.STR += 10
+                        elif say_to_boy in ["3", "2"]:
+                            self.parent.text.npc("What ?!\n")
+                            self.parent.text.npc("He bit you, and hide among the people.")
+                            self.parent.text.danger("You missed him", txt_only=True)
+                    else:
+                        self.parent.text.danger("You didn`t managed to kidnap the boy !")
+                else:
+                    self.parent.text.system("At the same moment, you were attacked by a mercenary. The boy was killed during the battle, and you managed to escape.")
+            else:
+                self.parent.text.you("Mehh")
         elif response == "*" and self.parent.zonemap['a2']['SOLVED4'] is False and self.parent.zonemap['a5']['STRANGE_GOBLIN'] is True:
             self.parent.text.npc("Thank you very much, I will ask my master to thank you enough\n", begin_txt="Strange goblin")
             self.parent.text.system('You have received 150 coins as well as a beautiful sword with a damage of 30\n')
@@ -305,7 +370,9 @@ class Quests:
             self.parent.myPlayer.maxDEF += self.parent.equipment_set['Weapon'][playerDEF]
             self.parent.myPlayer.STR += self.parent.equipment_set['Weapon'][playerSTR]
 
-        elif response == '3' and self.parent.zonemap['a2']['SOLVED3'] is True and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
+        elif response == '3' and self.parent.zonemap['a2']['SOLVED5'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go somewhere else')
+        elif response == '4' and self.parent.zonemap['a2']['SOLVED3'] is True and self.parent.zonemap['a3']['ASISTANT-WARRIOR'] is True:
             self.parent.text.system(' You have already passed this quest, try to go somewhere else')
         elif response == '1' and self.parent.zonemap['a2']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the Forest')
@@ -691,7 +758,7 @@ class Quests:
         print(' ')
         self.parent.text.system(
             text=""" - Welcome to Icespire Peak -\n""")
-        self.parent.text.system(""" You can go to:\n  1. Stable\n  2. Black ice mines\n  3. ! Philanthropist\n  4. Suburb\n""",txt_only=True)
+        self.parent.text.system(""" You can go to:\n  1. Stable\n  2. Black ice mines\n  3. ! Philanthropist\n  4. Suburb\n  5. Calvin the barbarian\n""",txt_only=True)
         answer = input(" > ")
         print(" ")
 
@@ -955,6 +1022,29 @@ class Quests:
                 self.parent.text.npc("Thank you, good man!\n")
                 self.parent.text.system("You have got 30 coins\n")
                 self.parent.myPlayer.cash += 30
+
+        elif answer == "5" and self.parent.zonemap['c3']['Ring_of_Deth'] is False:
+            self.parent.text.you("At the moment I have nothing to tell him")
+        elif answer == "5" and self.parent.zonemap['c3']['Ring_of_Deth'] is True:
+            self.parent.text.you("Greeting, I heard that your sword can cut even the strongest magic ores?\n")
+            self.parent.text.npc("Yes, it is\n", begin_txt="Calvin")
+            self.parent.text.you("I don`t belive, can you demonstrate it ? I have this ring no one has even managed to scratch it yet\n")
+            self.parent.text.npc("i`ll destroy it !\n", begin_txt="Calvin")
+            print("""
+
+            ########################################################
+            ~~~~~~          !  Stronger than walnut           ~~~~~~
+            ########################################################
+            |                                                      |
+            |  You managed to break this ring ....                 |
+            |                                                      |
+            |  Reward:  39 coins                                   |
+            |                                                      |
+            ########################################################
+            ########################################################\n""")
+            self.parent.myPlayer.cash += 39
+            self.parent.myPlayer.xp += 50
+            self.parent.zonemap['c3']['Ring_of_Deth'] = False
 
         elif answer == "1" and self.parent.zonemap['a5']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the mine\n')
@@ -3549,7 +3639,7 @@ class Quests:
         print(' ')
         self.parent.text.system(text=""" - Welcome to the Well of Dragons -\n""")
         self.parent.text.system(
-            " Choose one of the below answers\n  1. Go to tavern\n  2. Go to town market\n  3. Get out\n", txt_only=True)
+            " Choose where you wanna go? \n  1. Go to tavern\n  2. Go to town market\n  3. House of the Sage\n  4. Get out\n", txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
         if response == '1' and self.parent.zonemap['c3']['SOLVED1'] is False:
@@ -3898,9 +3988,48 @@ class Quests:
                 else:
                     self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                     self.quest_c3()
-        elif response == "3":
-            self.parent.text.system("Have a nice day !\n")
+        elif response == '3' and self.parent.zonemap['c3']['SOLVED3'] is False:
+            self.parent.text.you("Good evening !\n")
+            self.parent.text.npc("You come here for him ?!?!\n", begin_txt="Sage")
+            self.parent.text.you("What ?!\n")
+            self.parent.text.npc("I know you came for him, I will not let anyone take him!\n", begin_txt="Sage")
+            self.parent.text.system("The sage atacks you!\n")
+            self.parent.text.you("Please calm down, I assure you I did not come for your son ...\n")
+            self.parent.text.npc("What?? Son ? I never had a son or a daughter\n", begin_txt="Sage")
+            self.parent.text.you("Then who are you so bravely defending?\n")
+            self.parent.text.npc("""Not who but what... I've been trying to destroy this ring my whole life. 
+       It gives the owner indescribable power, but sucks all the life force out of him in 2-3 days.\n""", begin_txt="Sage")
+            print("""
 
+                    ########################################################
+                    ~~~~~~          !  Stronger than walnut           ~~~~~~
+                    ########################################################
+                    |                                                      |
+                    | This man tried all his life to destroy this magical  |
+                    | object, but when he did not succeed, he decided to   |
+                    | take it with him to the coffin. Help him destroy him |
+                    | so that he can die with peace of mind.               |
+                    |                                                      |
+                    |  Reward:  ????????                                   |
+                    |                                                      |
+                    ########################################################
+                    |     1.Accept             |         2.Decline         |
+                    ########################################################\n""")
+            stronger_than_walnut = input(" > ")
+            if stronger_than_walnut == '1':
+                self.parent.text.npc("Do you seriously do that for me ?\n", begin_txt="Sage")
+                self.parent.text.you("Yep\n")
+                self.parent.text.npc("But how are you going to destroy it?\n", begin_txt="Sage")
+                self.parent.text.you("I know that on  Icespire Peak is a warrior whose sword can cut down reality, so I think this ring will not be a problem for him\n")
+                self.parent.zonemap['c3']['Ring_of_Deth'] = True
+            elif stronger_than_walnut == '2':
+                self.parent.text.you("Meeeh\n")
+            else:
+                self.parent.text.you("Meeeh\n")
+        elif response == "4":
+            self.parent.text.system("Have a nice day !\n")
+        elif response == '3' and self.parent.zonemap['c3']['SOLVED3'] is False:
+            self.parent.text.system(' You have already passed this quest\n')
         elif response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to town market\n')
         else:
@@ -3911,8 +4040,8 @@ class Quests:
         if not response:
             print(' ')
             self.parent.text.system(
-                text=""" - Welcome to the Yarlford -\n""")
-            self.parent.text.system(""" You can go to:\n  1. City center\n  2. Grass meadow\n  3. Get out\n""", txt_only=True)
+                text="""    - Welcome to the Yarlford -\n""")
+            self.parent.text.system(""" You can go to:\n  1. City center\n  2. Grass meadow\n  3. Guild of sculptors\n  4. Stonemason\n  5. Get out\n""", txt_only=True)
         player_choose = input(" > ")
         if player_choose == "1" and self.parent.zonemap['c4']['SOLVED1'] is False:
             self.parent.text.system(text=""" You meet a funny person on your way\n""")
@@ -4422,8 +4551,106 @@ class Quests:
                     sys.exit()
             if self.parent.zonemap['c4']['SOLVED2'] is False:
                 self.parent.text.system("Not a bad place, I may come back here someday...\n")
-        elif player_choose == "3":
+        elif player_choose == "3" and self.parent.zonemap['c4']['SOLVED3'] is False:
+            if self.parent.zonemap['c4']["Small_stone_number"] == 0 and self.parent.zonemap['c4']["Huge_stone_number"] == 0:
+                self.parent.text.system(" -  Guild of sculptors  -  \n",txt_only=True)
+                self.parent.text.npc("Greetings my friend!\n", begin_txt="The head of the guild")
+                self.parent.text.you("Listen, we've heard of your adventures. And we will also have a small request to you.\n", begin_txt="Head of supplies")
+                print("""
+                        ########################################################################
+                        ~~~~~~~~~   !  Give me a pickaxe and I'll dig up the mountain  ~~~~~~~~~
+                        ########################################################################
+                        |                                                                      |
+                        |  Recently we have problems with the supply of good materials for     |
+                        |  our great masters. If you would get us 5 medium-sized stones and    | 
+                        |  1 huge stone, you would get a great reward.                         |  
+                        |  Task: You need to go to the stonemason and get 5 medium and 1       |
+                        |  huge stone.                                                         |
+                        |                                                                      |
+                        |  Reward:  ????????                                                   |
+                        |                                                                      |
+                        ########################################################################
+                        |             1.Accept             |           2.Decline               |
+                        ########################################################################\n""")
+                decision = input(" > ")
+                if decision == "1":
+                    self.parent.text.you(
+                        "Great, the stonemason is nearby just come back when you`ve done all work\n",
+                        begin_txt="Head of supplies")
+                elif decision == "2":
+                    self.parent.text.you("Meeh\n")
+                else:
+                    self.parent.text.you(
+                        "I will consider it like a consent, the stonemason is nearby just come back when you`ve done all work\n",
+                        begin_txt="Head of supplies")
+            elif self.parent.zonemap['c4']["Small_stone_number"] > 0 or self.parent.zonemap['c4']["Huge_stone_number"] > 0:
+                if self.parent.zonemap['c4']["Small_stone_number"] < 5:
+                    self.parent.text.npc("You have to get at least 5 medium stones\n", begin_txt="Head of supplies")
+                elif self.parent.zonemap['c4']["Small_stone_number"] >= 5:
+                    self.parent.text.npc("Great and now we will count your reward\n", begin_txt="Head of supplies")
+                    counting = False
+                    cash = 50
+                    standart = 5
+                    your_result = self.parent.zonemap['c4']["Small_stone_number"]
+                    while counting is not True:
+                        if your_result == standart:
+                            if self.parent.zonemap['c4']["Huge_stone_number"] > 0:
+                                self.parent.text.npc("Wow it`s unreal!\n",
+                                                     begin_txt="Head of supplies")
+                                self.parent.text.system("You get 150 coins and this armor\n")
+                                self.parent.myPlayer.cash += 150
+                                self.parent.myPlayer.xp += 200
+                                counting = True
+                            else:
+                                self.parent.text.npc(f"Ok,in general you`ll get {cash}coins\n",
+                                                     begin_txt="Head of supplies")
+                                self.parent.myPlayer.cash = cash
+                                self.parent.myPlayer.xp += 200
+                                if self.parent.zonemap['c4']["Huge_stone_number"] == 101:
+                                    self.parent.text.system("For the huge one you get 150 coins and this armor\n")
+                                counting = True
+                        elif your_result > standart:
+                            if 0 < self.parent.zonemap['c4']["Huge_stone_number"] < 100 :
+                                cash += 150
+                                self.parent.zonemap['c4']["Huge_stone_number"] = 101
+                            else:
+                                cash += 25
+                                standart += 1
+        elif player_choose == "4" and self.parent.zonemap['c4']['SOLVED3'] is False:
+            self.parent.text.npc("Greetings my friend, if tou come to work write 'dig' and if you wanna stop write 'end'\n", begin_txt="Owner of Stonemason")
+            self.parent.text.system(" Size dimension:\n  1. 10-100сm small\n  2.101-200 medium\n  3. 201+ huge\n",txt_only=True)
+            player_ends = False
+            while player_ends is not True:
+                start_work = input()
+                chanse = random.randint(0,100)
+                if start_work == 'end':
+                    self.parent.text.npc(
+                        f"{self.parent.myPlayer.name} good luck you !\n",
+                        begin_txt="Owner of Stonemason")
+                    break
+                elif start_work != 'dig':
+                    self.parent.text.danger("Wrong input !\n", begin_txt="SYSTEM")
+                elif start_work == 'dig':
+                    if chanse <= 70:
+                        random_size = random.randint(10,100)
+                        self.parent.text.npc(
+                            f"Ehhh {random_size}cm, small one, it`s rubbish !\n",
+                            begin_txt="Owner of Stonemason")
+                    elif 71 <= chanse < 99:
+                        random_size = random.randint(101, 200)
+                        self.parent.text.npc(
+                            f"Hmmm {random_size}cm, medium one. This one will already cost something !\n",
+                            begin_txt="Owner of Stonemason")
+                        self.parent.zonemap['c4']["Small_stone_number"] += 1
+                    elif chanse >= 99:
+                        random_size = random.randint(201, 600)
+                        self.parent.text.npc(
+                            f"Holly molly {random_size}cm, It`s huge one.  This one will cost a looot, it`s a treasure\n",
+                            begin_txt="Owner of Stonemason")
+                        self.parent.zonemap['c4']["Huge_stone_number"] += 1
+        elif player_choose == "5":
             self.parent.text.system("Have a nice day !\n")
+
         elif player_choose == "1" and self.parent.zonemap['c4']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to town market\n')
 
