@@ -304,8 +304,8 @@ class Quests:
                     ~~~~~~   !  Am I on the side of good or evil?    ~~~~~~
                     #######################################################
                     |                                                     |
-                    | Let's just say I have big problems. And those       |
-                    | people who are looking for me can harm my brother.  |
+                    | 
+                    | people who are looking for me can harm myLet's just say I have big problems. And those       | brother.  |
                     | My brother doesn't know anything about it, so I     |
                     | need you to kidnap him and bring him to me.         |
                     |                                                     |  
@@ -344,7 +344,7 @@ class Quests:
                     |                                                     |
                     | You did a good deed. However, they had no way to    |
                     | thank you so they give you a potion of strength that|
-                    | increased your strength by 10                      |
+                    | increased your strength by 10                       |
                     |                                                     |  
                     #######################################################
                     #######################################################\n""")
@@ -2558,7 +2558,7 @@ class Quests:
                     self.parent.text.system(text=""" This could be an occasion for quick money\n""")
                     print("""
                     #######################################################
-                    ~~~~~~~~       !   Work for the day            ~~~~~~~~
+                        ~~~~~~~~       !   Work for the day            ~~~~~~~~
                     #######################################################
                     |                                                     |
                     |  You have found booklet about a job                 |  
@@ -2704,6 +2704,122 @@ class Quests:
 
     def quest_c1(self):
         print(" ")
+
+        def crying_girl():
+            self.parent.text.system("You seen crying girl\n")
+            self.parent.text.system(" Do you wanna to come to her:\n  1. Yes\n  2. No\n")
+            help_girl = input(" > ")
+            if help_girl == '1':
+                self.parent.text.you("Hello, what`s going on , why are you crying ?\n")
+                self.parent.text.npc("Hello, my stepmother ordered to collect cherries from this tree. But I can't get any cherries.\n", begin_txt="Little girl")
+                print("""
+                
+                                    ###############################################################
+                                    ~~~~~~       There is no peak that I cannot conquer      ~~~~~~
+                                    ###############################################################
+                                    |                                                             |
+                                    |  Help the girl to pick cherries.                            |
+                                    |                                                             |
+                                    | Requirment: 10 cheries                                      |
+                                    |                                                             |
+                                    ###############################################################
+                                    |            1.Accept           |       2.Decline             |
+                                    ###############################################################\n""")
+                accepting = input(" > ")
+                if accepting == "1":
+                    cheries = 10
+                    self.parent.text.system("Write 'look' to find the cherry and then 'take' to take her\n")
+                    while cheries != -1:
+                        if cheries > 0:
+                            look = input(" > ")
+                            if look == 'look':
+                                self.parent.text.system("You have found one!\n")
+                                take = input(" > ")
+                                if take == 'take':
+                                    self.parent.text.system("You take one!\n")
+                                    cheries -= 1
+                            else:
+                                self.parent.text.system("You didn`t find any!\n")
+                        elif cheries == 0:
+                            self.parent.text.npc(
+                                "Thank you good man!\n",
+                                begin_txt="Little girl")
+                            break
+
+        def farmer_help():
+            self.parent.text.npc("Hello young man, could you help me?\n", begin_txt="Old farmer")
+            print("""
+                    #######################################################
+                    ~~~~~~~~           ! White gold                ~~~~~~~~
+                    #######################################################
+                    |                                                     |
+                    | The farmer asked you for help. Do you want to help  |
+                    | him grind the grain?                                |
+                    |                                                     |
+                    | Reward:  80 coins                                   |
+                    |                                                     |
+                    #######################################################
+                    |        1. Accept        |        2. Decline         |
+                    #######################################################\n""")
+            farmers_help = input(" > ")
+            if farmers_help == "1":
+                self.parent.text.npc("""All right, I'll pour the grain now and you turn the wheel.
+             When I say hurry up, write 'hurry', when i say slow down, write 'slow' , 
+             we will end wen i will say stop. When you would be ready write 'start'. \n""", begin_txt="Old farmer")
+                start = input(" > ")
+                if start == 'start':
+                    end = False
+                    fails = 0
+                    while end is not True:
+                        tries = 1
+                        moves = random.randint(0, 10)
+                        if fails < 3:
+                            if moves in [9, 10] and tries == 1:
+                                moves = 1
+                            if moves <= 5:
+                                self.parent.text.npc("Hurry up!\n", begin_txt="Old farmer")
+                                hurry_up = input(" > ")
+                                if hurry_up == 'hurry':
+                                    self.parent.text.npc("Well job!\n", begin_txt="Old farmer")
+                                    tries += 1
+                                else:
+                                    self.parent.text.npc("Noooo !\n", begin_txt="Old farmer")
+                                    fails += 1
+                                    tries += 1
+                            elif 5 < moves <= 7:
+                                self.parent.text.npc("Slow dow!\n", begin_txt="Old farmer")
+                                slow_down = input(" > ")
+                                if slow_down == 'slow':
+                                    self.parent.text.npc("Well job!\n", begin_txt="Old farmer")
+                                    tries += 1
+                                else:
+                                    self.parent.text.npc("Noooo !\n", begin_txt="Old farmer")
+                                    tries += 1
+                                    fails += 1
+                            elif 7 < moves < 10:
+                                self.parent.text.npc("Ok that`s all !\n", begin_txt="Old farmer")
+                                print("""
+                    #######################################################
+                    ~~~~~~~~           ! White gold                ~~~~~~~~
+                    #######################################################
+                    |                       DONE                          |
+                    | The farmer asked you for help. Do you want to help  |
+                    | him grind the grain?                                |
+                    |                                                     |
+                    |                    +80 coins                        |
+                    |                                                     |
+                    #######################################################
+                    #######################################################\n""")
+                                self.parent.myPlayer.cash += 80
+                                self.parent.myPlayer.xp += 50
+                                self.parent.zonemap['c1']['SOLVED3'] = True
+                                break
+                        else:
+                            self.parent.text.npc("You`ve failed", begin_txt="Old farmer")
+                            break
+                else:
+                    self.parent.text.you("Meeeeh\n")
+
         def fishman_help():
             print("""
                 ###############################################
@@ -2770,7 +2886,7 @@ class Quests:
         tryies_part3 = 0
         self.parent.text.system("""\n  -  Wyllowwood - \n""", txt_only=True)
         print(' ')
-        self.parent.text.system(""" You can go to:\n  1. Wyllowwood lake\n  2. Spellshop\n  3. Dragar colleague\n""",txt_only=True)
+        self.parent.text.system(""" You can go to:\n  1. Wyllowwood lake\n  2. Spellshop\n  3. Dragar colleague\n  4. Far foothills\n  5. Cherry gardens\n""",txt_only=True)
         player_choise1 = input(" > ")
         if player_choise1 == "1" and self.parent.zonemap['c1']['SOLVED1'] is False:
 
@@ -3308,11 +3424,16 @@ class Quests:
                         self.parent.text.system(" You`ve done this part\n")
                     else:
                         self.parent.text.system("Wrong input")
-
+        elif player_choise1 == "4" and self.parent.zonemap['c1']['SOLVED3'] is False:
+            farmer_help()
+        elif player_choise1 == "5" and self.parent.zonemap['c1']['SOLVED4'] is False:
+            crying_girl()
         elif player_choise1 == "1" and self.parent.zonemap['c1']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to the spellshop if you have something to refactor')
         elif player_choise1 == "3" and self.parent.zonemap['c1']['SOLVED2'] is True:
             self.parent.text.system(' You have already passed this quest')
+        elif player_choise1 == "4" and self.parent.zonemap['c1']['SOLVED3'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go somewhere else')
 
     def quest_c2(self):
         def chicken_find():
@@ -3636,10 +3757,173 @@ class Quests:
                 self.quest_c2()
 
     def quest_c3(self):
+        def angry_elf():
+            word_base_dic = {
+                'graduate': 'du-gra-ate',
+                'grapes': 'p-ra-g-es',
+                'transport': 'p-ra-ns-port-t',
+                'marriage': 'rr-ma-age-i',
+                'unbelievable': 'evab-beli-un-le',
+                'immortal': 'mm-tal-or-i',
+                'courage': 'ra-ou-c-ge',
+                'simple': 'mp-si-le',
+                'stomach': 'ch-to-ma-s',
+                'appetite': 'pp-te-a-e-ti',
+                'unpunished': 'sh-un-pu-ed-ni'
+            }
+            word_base = ['du-gra-ate', 'p-ra-g-es', 'p-ra-ns-port-t', 'rr-ma-age-i', 'evab-beli-un-le', 'mm-tal-or-i',
+                     'ra-ou-c-ge', 'mp-si-le', 'ch-to-ma-s', 'pp-te-a-e-ti', 'sh-un-pu-ed-ni']
+            self.parent.text.npc("I'm shocked at how stupid all people are. My servants can't even read. Hahaha...\n",
+                                 begin_txt="disgusting elf")
+            self.parent.text.system(
+                " Do you wanna tell him someting?\n        1. Or maybe you're not smart enough to teach them\n        2. Do not tell him nothing\n")
+            angry_elfs = input(" > ")
+            if angry_elfs == "1":
+                self.parent.text.you("Or maybe you're not smart enough to teach them\n")
+                self.parent.text.npc("What did you said ?!?!\n", begin_txt="disgusting elf")
+                self.parent.text.system("That you as stupid as humans !\n")
+                self.parent.text.npc("Yeaa, so lets`s find it out !\n")
+                print("""
+            ###############################################
+            ~~~~~~         ! Random meeting          ~~~~~~
+            ###############################################
+            |                                             |
+            | You have been challenged. Play word guessing|
+            | with an elf to prove that people are not so |
+            | stupid.                                     |
+            |                                             |
+            |                                             |
+            ###############################################
+            |     1.Accept          |        2.Decline    |
+            ###############################################\n""")
+                guess_word = input(" > ")
+                if guess_word == "1":
+                    self.parent.text.you("Ok lets do this\n")
+                    self.parent.text.system(
+                        " ! You will be shown the words broken into parts. You need to make a word from those parts and write it. The game lasts up to 3 defeats on either side.\n")
+                    input(" Press Enter to start\n")
+                    win = False
+                    your_defeats = 3
+                    elf_defeats = 3
+                    while win is not True:
+                        elf_choose = random.choice(word_base)
+                        if your_defeats == 0:
+                            self.parent.text.system("You lose!\n")
+                            win = True
+                        elif elf_defeats == 0:
+                            self.parent.text.system("You Win!\n")
+                            win = True
+                        elif your_defeats != 0 and elf_defeats != 0:
+                            self.parent.text.npc(
+                                f"{elf_choose}\n",
+                                begin_txt="disgusting elf")
+                            your_answer = input(" > ")
+                            if elf_choose == 'du-gra-ate':
+                                if your_answer == 'graduate':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                    print(your_defeats)
+                                    print(elf_defeats)
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                                    print(your_defeats)
+                                    print(elf_defeats)
+                            elif elf_choose == 'p-ra-g-es':
+                                if your_answer == 'grapes':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                    print(your_defeats)
+                                    print(elf_defeats)
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                                    print(your_defeats)
+                                    print(elf_defeats)
+                            if elf_choose == 'du-gra-ate':
+                                if your_answer == 'graduate':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'p-ra-g-es':
+                                if your_answer == 'grapes':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'p-ra-ns-port-t':
+                                if your_answer == 'transport':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats = 1
+                            elif elf_choose == 'rr-ma-age-i':
+                                if your_answer == 'marriage':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'evab-beli-un-le':
+                                if your_answer == 'unbelievable':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'mm-tal-or-i':
+                                if your_answer == 'immortal':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'ra-ou-c-ge':
+                                if your_answer == 'courage':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'mp-si-le':
+                                if your_answer == 'simple':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'ch-to-ma-s':
+                                if your_answer == 'stomach':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'pp-te-a-e-ti':
+                                if your_answer == 'appetite':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+                            elif elf_choose == 'sh-un-pu-ed-ni':
+                                if your_answer == 'unpunished':
+                                    self.parent.text.system(" Your answer is correct\n", txt_only=True)
+                                    elf_defeats -= 1
+                                else:
+                                    self.parent.text.danger(" Your answer if incorrect\n", txt_only=True)
+                                    your_defeats -= 1
+
+            else:
+                self.parent.text.you("Meeeh\n")
         print(' ')
         self.parent.text.system(text=""" - Welcome to the Well of Dragons -\n""")
         self.parent.text.system(
-            " Choose where you wanna go? \n  1. Go to tavern\n  2. Go to town market\n  3. House of the Sage\n  4. Get out\n", txt_only=True)
+        " Choose where you wanna go? \n  1. Go to tavern\n  2. Go to town market\n  3. House of the Sage\n  4. Go have a drink at the tavern\n  5. Trading house\n  6. Get out\n", txt_only=True)
         response = input(" >  ")
         response = str(response).lower()
         if response == '1' and self.parent.zonemap['c3']['SOLVED1'] is False:
@@ -4026,9 +4310,45 @@ class Quests:
                 self.parent.text.you("Meeeh\n")
             else:
                 self.parent.text.you("Meeeh\n")
-        elif response == "4":
+        elif response == '4' and self.parent.zonemap['c3']['SOLVED4'] is False:
+            self.parent.text.you("Hmm, some weird tavern. Well, okay.\n")
+            self.parent.text.system(" *noize of the door opening*\n", txt_only=True)
+            self.parent.text.you("Hello, please give me a mug of beer please\n")
+            self.parent.text.danger("WHAT?! How did you get here mortal ?!\n",begin_txt="Skary loud voise")
+            self.parent.text.you("Um, I guess I didn't get where i was going. I thought it was a tavern.\n")
+            self.parent.text.danger("What tavern ?! it is the castle of the great Frey, now you will not leave here alive !\n", begin_txt="Skary loud voise")
+            self.parent.text.you("oh, great....\n")
+            self.parent.text.danger("But if you guess my riddle, I'll let you out\n", begin_txt="Skary loud voise")
+            print("""
+            #######################################################
+            ~~~~~~~~        ! How did I get there?         ~~~~~~~~
+            #######################################################
+            |                                                     |
+            | You have miraculously appeared in the castle of the |
+            | great Freya. The guard said she would let you go if |
+            | you solved her riddle.                              |  
+            |                                                     |
+            #######################################################
+            #######################################################\n""")
+            self.parent.text.danger("""The one who creates me does not need me when he does it. The one who buys me doesn't need me for himself.
+    Whoever uses me will not know it. What am i ?\n""", begin_txt="Skary loud voise")
+            puzzle = input(" > ")
+            if puzzle == "coffin":
+                self.parent.text.danger("Hmm, and you're mortal smart enough. Ok i`ll let you go , but could you tell me how did you get here?\n", begin_txt="Skary loud voise")
+                self.parent.text.you("I'm telling the truth. I went to have a drink at the tavern. Went to the first that came to hand and I'm here.\n")
+                self.parent.text.danger(
+                    "HAHAHA...It's so ridiculously stupid. But i believe you, mortal...\n",
+                    begin_txt="Skary loud voise")
+                self.parent.zonemap['c3']['SOLVED4'] = True
+            else:
+                self.parent.text.danger("You didn't guess. That`s your end!\n", begin_txt="Skary loud voise")
+        elif response == '5' and self.parent.zonemap['c3']['SOLVED5'] is False:
+            angry_elf()
+        elif response == "6":
             self.parent.text.system("Have a nice day !\n")
-        elif response == '3' and self.parent.zonemap['c3']['SOLVED3'] is False:
+        elif response == '4' and self.parent.zonemap['c3']['SOLVED4'] is True:
+            self.parent.text.system(' You have already passed this quest, try to go somewhere else\n')
+        elif response == '3' and self.parent.zonemap['c3']['SOLVED3'] is True:
             self.parent.text.system(' You have already passed this quest\n')
         elif response == '1' and self.parent.zonemap['c3']['SOLVED1'] is True:
             self.parent.text.system(' You have already passed this quest, try to go to town market\n')
