@@ -2,6 +2,7 @@ import os
 import random
 import sys
 import time
+from global_variables import Name, playerHp, playerDEF, playerSTR, playerMP
 
 roadswrongs = 1
 sproby = 0
@@ -1016,7 +1017,7 @@ class Quests:
                                     o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
 
                                              You were convicted and executed for a crime you did not commit  \n""")
-                    sys.exit()
+                    self.parent.myPlayer.game_over = True
             elif belive_or_not1 == "2":
                 self.parent.text.you("I`m sorry... He is here !\n")
                 self.parent.text.npc("Thank you, good man!\n")
@@ -1990,10 +1991,10 @@ class Quests:
                 elif chanse_1 == 2:
                     self.parent.text.system(" Thieves heard your screams, they decided to shoot you and pick up your things\n")
                     self.parent.text.danger("You're dead !\n", begin_txt='SYSTEM')
-                    sys.exit()
+                    self.parent.myPlayer.game_over = True
                 elif chanse_1 == 3:
                     self.parent.text.danger(" You died of starvation !\n", begin_txt="SYSTEM")
-                    sys.exit()
+                    self.parent.myPlayer.game_over = True
             else:
                 self.parent.text.danger('Wrong input\n', begin_txt='SYSTEM')
                 p_choise()
@@ -4579,7 +4580,7 @@ class Quests:
             o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
                                                                                            
                      You were convicted and executed for a crime you did not commit  \n""")
-                            sys.exit()
+                            self.parent.myPlayer.game_over = True
                         else:
                             self.parent.myPlayer.inventory.pop(10)
                             self.parent.myPlayer.inventory.insert(10, '-')
@@ -4639,7 +4640,7 @@ class Quests:
                             o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
 
                                      You were convicted and executed for a crime you did not commit  \n""")
-                            sys.exit()
+                            self.parent.myPlayer.game_over = True
                         else:
                             self.parent.myPlayer.inventory.pop(10)
                             self.parent.myPlayer.inventory.insert(10, '-')
@@ -4699,7 +4700,7 @@ class Quests:
                             o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
 
                                      You were convicted and executed for a crime you did not commit  \n""")
-                            sys.exit()
+                            self.parent.myPlayer.game_over = True
                         else:
                             self.parent.myPlayer.inventory.pop(10)
                             self.parent.myPlayer.inventory.insert(10, '-')
@@ -4759,7 +4760,7 @@ class Quests:
                             o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
 
                                      You were convicted and executed for a crime you did not commit  \n""")
-                            sys.exit()
+                            self.parent.myPlayer.game_over = True
                         else:
                             self.parent.myPlayer.inventory.pop(10)
                             self.parent.myPlayer.inventory.insert(10, '-')
@@ -4816,7 +4817,7 @@ class Quests:
                                 o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
 
                                          You were convicted and executed for a crime you did not commit  \n""")
-                    sys.exit()
+                    self.parent.myPlayer.game_over = True
                 else:
                     print("""
                                                                                /%/@&@%@&&%%###%
@@ -4868,7 +4869,7 @@ class Quests:
                                                     o888o      `Y8bood8P'     `YbodP'         o888bood8P'   o888o o888ooooood8 o888bood8P'   
 
                                                              You were convicted and executed for a crime you did not commit  \n""")
-                    sys.exit()
+                    self.parent.myPlayer.game_over = True
             if self.parent.zonemap['c4']['SOLVED2'] is False:
                 self.parent.text.system("Not a bad place, I may come back here someday...\n")
         elif player_choose == "3" and self.parent.zonemap['c4']['SOLVED3'] is False:
@@ -6048,7 +6049,7 @@ class Quests:
                         self.parent.text.system("You continued to search\n")
                     elif destiny == "give up":
                         self.parent.text.system("You have accepted your destiny\n")
-                        sys.exit()
+                        self.parent.myPlayer.game_over = True
                 self.parent.text.system("You are lucky to cross the magic barrier\n")
                 random_road = random.randint(1, 4)
                 if random_road == 1:
