@@ -133,6 +133,14 @@ class Game:
                     self.myPlayer.die()
                     break
                 self.myPlayer.show()
+                if self.zonemap['a5']['STRANGE_GOBLIN'] is True:
+                    self.text.npc("Ouch!", begin_txt="Strange goblin")
+                    self.zonemap['a5']['STRANGE_GOBLIN_HP'] -= 10
+                    print(self.zonemap['a5']['STRANGE_GOBLIN_HP'])
+                    if self.zonemap['a5']['STRANGE_GOBLIN_HP'] < 0:
+                        self.text.danger("Goblin is dead", begin_txt="SYSTEM")
+                        self.zonemap['a5']['STRANGE_GOBLIN'] = False
+
             elif choice == "2":
                 self.myPlayer.heal()
                 self.myPlayer.show()
@@ -299,22 +307,24 @@ class Game:
         while local != 4:
             informator = input(" > ")
             if informator == 'look' and local == 1:
-                self.text.system("""Not far from you noticed a stranger. 
-         You think you can get some info from him. 
-         Maybe you will know where you are and what i\n""", txt_only=True)
+                self.text.system("""  Not far from you noticed a stranger. 
+  You think you can get some info from him. 
+  Maybe you will know where you are and what is going on\n""", txt_only=True)
+                print(" ")
                 self.text.npc("""I'm a visitor myself, I don't know much.you are in the kingdom of Wellock. 
-         It consists of a total of 16 quarters,and we are now in the Docks .\n """)
+           It consists of a total of 16 quarters,and we are now in the Docks .\n""")
                 self.text.you("Thank you, for that!\n")
                 self.text.npc("Your welcome\n")
                 local += 1
             elif informator == 'look' and local == 2:
                 self.text.system(
-                    "You noticed a strange old man standing nearby. You didn't notice his face, but decided to question him.\n",
+                    "  You noticed a strange old man standing nearby. You didn't notice his face, but decided to question him.\n",
                     txt_only=True)
                 self.text.npc("""Oh young man,After the young princess is kidnapped by the great magician Elminster,
-                the King is still looking for a brave hero who will save her from captivity.Recently things are 
-                going very badly in this kingdom. A lot has happened this year, who knows what awaits us in the future ...\n""")
+           the King is still looking for a brave hero who will save her from captivity.Recently things are 
+           going very badly in this kingdom. A lot has happened this year, who knows what awaits us in the future ...\n""")
                 input(" You > ")
+                print(" ")
                 print(" ### The old man just disappeared ###\n")
                 self.text.danger(
                     f"Who knows, maybe the hero I've been waiting for so long is you...{self.myPlayer.name}, the {self.myPlayer.job}\n")
@@ -322,11 +332,11 @@ class Game:
                 local += 1
             elif informator == 'look' and local == 3:
                 self.text.system("""You are in a misunderstanding after the previous resident.
-            You noticed a young woman. Maybe she will explain everything to you.\n""")
+         You noticed a young woman. Maybe she will explain everything to you.\n""")
                 self.text.npc("""Oh hi there, so things in our kingdom are really going not well. 
-                When moving between cities you can meet many monsters or thieves.
-                However, I have heard many legends about special magical items that can give the owner the opportunity to kill even the greatest magician. 
-                If someone gathered them all, he could save our kingdom from disaster\n""", begin_txt="Young women")
+              When moving between cities you can meet many monsters or thieves.
+              However, I have heard many legends about special magical items that can give the owner the opportunity to kill even the greatest magician. 
+              If someone gathered them all, he could save our kingdom from disaster\n""", begin_txt="Young women")
                 self.text.you("Thank you\n")
                 self.text.npc("You look tired. Here take, it's not a lot, but you can buy an apple or bread.\n",
                                      begin_txt="Young women")
@@ -335,8 +345,30 @@ class Game:
                 self.myPlayer.cash += 10
                 local += 1
             else:
-                self.text.danger("Wrong input!", begin_txt="SYSTEM")
+                self.text.danger("Wrong input!\n", begin_txt="SYSTEM")
                 game.quest_a0()
+                break
+
+    def witch_fight(self):
+        self.myEnemy.name = 'Angry witch'
+        self.myEnemy.job = 'defendant'
+        self.myEnemy.HP = 90
+        self.myEnemy.MP = 100
+        self.myEnemy.maxDEF = 2
+        self.myEnemy.STR = 70
+        self.text.danger("You don't understand anything...\n")
+        self.fight()
+
+    def frog_fight(self):
+        self.myEnemy.name = 'Huge frog'
+        self.myEnemy.job = 'animal'
+        self.myEnemy.HP = 120
+        self.myEnemy.MP = 0
+        self.myEnemy.maxDEF = 2
+        self.myEnemy.STR = 80
+        self.text.danger("Krogh...\n")
+        self.fight()
+
 
     #### PRINTING
     def location_print(self):
@@ -717,13 +749,14 @@ def shop():
         print(" I'm sorry you don't have enough money")
         main_game_loop()
 
-###### GAME FUNCTIONALITY ######
 
+###### GAME FUNCTIONALITY ######
 
 def main_game_loop():
     while game.myPlayer.game_over is False:
         # game.myPlayer.__pass_time()
         prompt()
+
 
 def prompt():
     print("\n" + " =======================")
@@ -840,7 +873,7 @@ def setup_game():
         game.myPlayer.STR = 45
         game.myPlayer.maxDEF = 15
         game.myPlayer.cash = 0
-        game.myPlayer.xp = 0
+        game.myPlayer.xp = 500
         game.myPlayer.spells = [game.FireSword, game.blizzard]
     if game.myPlayer.job == 'mage':
         game.myPlayer.STR = 15
@@ -850,7 +883,7 @@ def setup_game():
         game.myPlayer.MP = 120
         game.myPlayer.maxDEF = 4
         game.myPlayer.cash = 0
-        game.myPlayer.xp = 0
+        game.myPlayer.xp = 500
         game.myPlayer.spells = [game.fire, game.thunder, game.meteor, game.cure, game.cura, game.curaga]
     if game.myPlayer.job == 'ranger':
         game.myPlayer.STR = 70
@@ -860,7 +893,7 @@ def setup_game():
         game.myPlayer.MP = 60
         game.myPlayer.maxDEF = 6
         game.myPlayer.cash = 0
-        game.myPlayer.xp = 0
+        game.myPlayer.xp = 500
         game.myPlayer.spells = [game.bloodKing, game.DarkDaggerTechnique]
 
     #### INTRODUCTION

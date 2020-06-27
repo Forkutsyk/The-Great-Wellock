@@ -16,11 +16,14 @@ DESCRIPTION = 'description'
 SOLVED = 'SOLVED'
 UNDERQUEST1 = 'SOLVED1'
 UNDERQUEST2 = 'SOLVED2'
+UNDERQUEST3 = 'SOLVED3'
 UP = 'up', 'north'
 DOWN = 'down', 'south'
 LEFT = 'left', 'west'
 RIGHT = 'right', 'east'
 HOME = 'HOME'
+SMALL_STONE = 'Small_stone_number'
+HUGE_STONE = 'Huge_stone_number'
 ASISTANT1 = 'ASISTANT-HEALER'
 ASISTANT2 = 'ASISTANT-WARRIOR'
 
@@ -53,6 +56,9 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
+        'SOLVED4': False,
+        'SOLVED5': False,
         'ASISTANT-HEALER': False,
         UP: "b2",
         DOWN: "1",
@@ -65,12 +71,13 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
         'ASISTANT-WARRIOR': False,
         UP: "b3",
         DOWN: "a0",
         LEFT: "a2",
         RIGHT: "a4"
-    },# done 3
+    },
     'a4': {
         ZONENAME: 'Dwarven Valley',
         DESCRIPTION: """ Dwarven Valley, has been corrupted by dwarves from the Hammerstone dig up black ice, 
@@ -89,6 +96,10 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
+        'SOLVED4': False,
+        'STRANGE_GOBLIN': False,
+        'STRANGE_GOBLIN_HP': 60,
         UP: "b5",
         DOWN: "1",
         LEFT: "a4",
@@ -130,6 +141,7 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
         UP: "c4",
         DOWN: "a4",
         LEFT: "b3",
@@ -149,6 +161,9 @@ zonemap = {
         DESCRIPTION: " The city is surrounded by dense forest ",
         'SOLVED': False,
         'SOLVED1': False,
+        'SOLVED2': False,
+        'SOLVED3': False,
+        'SOLVED4': False,
         UP: "4",
         DOWN: "b1",
         LEFT: "2",
@@ -171,6 +186,10 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
+        'SOLVED4': False,
+        'SOLVED5': False,
+        'Ring_of_Deth': False,
         UP: "4",
         DOWN: "b3",
         LEFT: "c2",
@@ -183,6 +202,9 @@ zonemap = {
         'SOLVED': False,
         'SOLVED1': False,
         'SOLVED2': False,
+        'SOLVED3': False,
+        "Small_stone_number": 0,
+        "Huge_stone_number": 0,
         UP: "4",
         DOWN: "b4",
         LEFT: "c3",
